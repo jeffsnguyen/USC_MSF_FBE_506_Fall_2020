@@ -1,0 +1,44 @@
+---
+title: "assignment01"
+author: "Jeff Nguyen 6524885309"
+date: "20/08/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<style>
+body {
+text-align: justify}
+</style>
+
+<div align="center">
+## University of Southern California
+#### Marshall School of Business
+#### FBE 506 Quantitative Method in Finance
+# Assignment 01
+Student Name: Ngoc Son (Jeff) Nguyen
+Student ID: 6524885309
+</div align>
+
+##### Question 1
+##### a. Solve $x^2 +2x -8 =0$
+
+Solving polynomial equations in R, the "polyroot" code:
+
+```{r}
+polyroot(c(-8, 2, 1))
+```
+
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
