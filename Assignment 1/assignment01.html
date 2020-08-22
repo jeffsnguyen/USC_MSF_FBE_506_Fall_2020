@@ -518,7 +518,7 @@ perpetuity(1,.05)</code></pre>
 <p>IRR is the break-even root of the equation <span class="math inline">\(I_0 = \frac{R_1}{(1+r)^1} + \frac{R_2}{(1+r)^2} + \frac{R_3}{(1+r)^3} + ... + \frac{R_n}{(1+r)^n}\)</span><br />
 Thus the problem turns into finding the non-complex root of the polynomial equation in the form of <span class="math inline">\(I_0 - \frac{R_1}{(1+r)^1} - \frac{R_2}{(1+r)^2} - \frac{R_3}{(1+r)^3} - ... - \frac{R_n}{(1+r)^n} = 0\)</span><br />
 Note that the root will be in the form <span class="math inline">\(\frac{1}{1+r}\)</span></p>
-<p>Using the parameters in question 4</p>
+<p>Using the parameters in <strong>Question 4</strong></p>
 <pre class="r"><code>R &lt;- c(22000, 28500, 32000, 18000, 12000 + 52000) # Future returns, adding the scrap value to the final year
 
 init_investment &lt;- 120000 # initial investment

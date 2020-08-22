@@ -184,7 +184,7 @@ IRR is the break-even root of the equation $I_0 = \frac{R_1}{(1+r)^1} + \frac{R_
 Thus the problem turns into finding the non-complex root of the polynomial equation in the form of $I_0 - \frac{R_1}{(1+r)^1} - \frac{R_2}{(1+r)^2} - \frac{R_3}{(1+r)^3} - ... - \frac{R_n}{(1+r)^n} = 0$  
 Note that the root will be in the form $\frac{1}{1+r}$
 
-Using the parameters in question 4
+Using the parameters in **Question 4**
 ```{r}
 R <- c(22000, 28500, 32000, 18000, 12000 + 52000) # Future returns, adding the scrap value to the final year
 
