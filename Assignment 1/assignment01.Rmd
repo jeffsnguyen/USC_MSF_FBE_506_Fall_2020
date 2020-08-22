@@ -3,8 +3,8 @@ title: "assignment01"
 author: "Jeff Nguyen 6524885309"
 date: "20/08/2020"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -41,7 +41,7 @@ polyroot(c(-9, 0, 1))
 
 ## c. Solve $x^3 -x^2 +4x -4 =0$
 
-Solving polynomial equations in R using polyroot. The cubic equation is expected to have 3 roots.
+Solving polynomial equations in R using polyroot. The cubic equation is expected to have three roots.
 
 ```{r}
 polyroot(c(-4, 4, -1, 1))
