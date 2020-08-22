@@ -15,30 +15,198 @@ text-align: justify}
 </style>
 
 <div align="center">
-## University of Southern California
-#### Marshall School of Business
-#### FBE 506 Quantitative Method in Finance
+## **University of Southern California**
+#### **Marshall School of Business**
+#### **FBE 506 Quantitative Method in Finance**
 # Assignment 01
 Student Name: Ngoc Son (Jeff) Nguyen
 Student ID: 6524885309
 </div align>
+&nbsp;
 
-##### Question 1
-##### a. Solve $x^2 +2x -8 =0$
+##### **Question 1**
+&nbsp;
 
-Solving polynomial equations in R, the "polyroot" code:
+###### a. Solve $x^2 +2x -8 =0$
+
+Solving polynomial equations in R using polyroot. The quadratic equation is expected to have 2 roots in the form of $x= \frac{-b \pm \sqrt{b^2-4ac}}{2a}$
 
 ```{r}
 polyroot(c(-8, 2, 1))
 ```
+&nbsp;  
 
+###### b. Solve $x^2 -9 =0$
 
-## Including Plots
+Solving polynomial equations in R using polyroot. The quadratic equation is expected to have 2 roots in the form of $x= \frac{-b \pm \sqrt{b^2-4ac}}{2a}$
 
-You can also embed plots, for example:
+```{r}
+polyroot(c(-9, 0, 1))
+```
+&nbsp;
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+###### c. Solve $x^3 -x^2 +4x -4 =0$
+
+Solving polynomial equations in R using polyroot. The cubic equation is expected to have 3 roots.
+
+```{r}
+polyroot(c(-4, 4, -1, 1))
+```
+&nbsp;
+
+###### d. Solve $x^5 +3x^2 -8 =0$
+
+Solving polynomial equations in R using polyroot. The equation is expected to have 5 roots.
+
+```{r}
+polyroot(c(-8, 0, 3, 0, 0, 1))
+```
+&nbsp
+
+##### **Question 2**
+
+For discrete compounding (presented in a,b,c,d), we use the formula $S = A(1+\frac{r}{n})^{nt}$ ,substitute $A=100$, $r= 6\%$, $t=5$ and use the correct value for n based on the number compounding period per year. Then we use the below custom function in R to solve it.
+
+```{r definition-fv}
+# Discrete Compounding Function
+# Compounding a=100 at an interest rate r=6% incurring with frequency n a year, for 5 years.
+fv_discrete <- function(n) {
+  100*(1+0.06/n)^(n*5)
+}
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+###### a. Compound annually
+```{r}
+# compounded annually, so n=1
+fv_discrete(1)
+```
+
+###### b. Compound quarterly
+```{r}
+# compounded quarterly, so n=4
+fv_discrete(4)
+```
+
+###### c. Compound monthly
+```{r}
+# compounded monthly, so n=12
+fv_discrete(12)
+```
+
+###### d. Compound quarterly
+```{r}
+# compounded daily, so n=365
+fv_discrete(365)
+```
+
+
+For continuous compounding, we use the formula $S = Ae^{rt}$ ,substitute $A=100$, $r= 6\%$, $t=5$. Thus:
+
+```{r}
+fv_continuous <- 100*exp(0.06*5)
+fv_continuous
+```
+&nbsp;
+
+##### **Question 3**
+Using the two formulas:&nbsp;
+Present value of cash flow (future returns): $PV_{CF} = \frac{R_1}{(1+r)^1} + \frac{R_2}{(1+r)^2} + \frac{R_3}{(1+r)^3} + ... + \frac{R_n}{(1+r)^n}$
+
+Present value of the investment $PV_{investment} = PV_{CF} + \frac{MV}{(1+r)^n}$  
+with $R_1$, $R_2$, $R_3$, ..., and $R_n$ be the return each year and $MV$ the market value at the end of the final year.  
+Establishing the r functions
+```{r definition-pv}
+# Present value of cash flow (future returns)
+pv_cf <- function(R,r) {
+  sum(R/((1+r)^(1:length(R))))
+}
+
+pv_investment <- function(R,r,MV) {
+  pv_cf(R,r) + MV/((1+r)^length(R))
+}
+```
+
+Substituting the given value of future returns:  
+$R_1 = 22000$, $R_2 = 28500$, $R_3 = 32000$, $R_4 = 18000$, $R_5 = 12000$ and the final year market value $MV = 52000$, we have:
+
+Present value of future returns:
+```{r}
+R <- c(22000, 28500, 32000, 18000, 12000) # Future returns
+r <- 0.06 # interest rate
+
+pv_cf(R,r) # PV of future returns
+```
+
+Present value of investment:
+```{r}
+R <- c(22000, 28500, 32000, 18000, 12000) # Future returns
+r <- 0.06 # interest rate
+MV <- 52000 # market value of investment in the final year
+
+pv_investment(R,r,MV) #PV of investment
+```
+&nbsp;
+
+##### **Question 4**
+Calculate NPV using this function $NPV = PV_{Investment} - Initial\:Investment$
+
+Using the method and parameters in **Question 3** to calculate $PV_{Investment}$ and the initial investment valued at $120,000, we have:
+
+```{r}
+R <- c(22000, 28500, 32000, 18000, 12000) # Future returns
+r <- 0.06 # interest rate
+MV <- 52000 # market value of investment in the final year
+init_investment <- 120000 # initial investment
+
+npv <- pv_investment(R,r,MV) - init_investment #NPV
+npv
+```
+&nbsp;
+
+##### **Question 5**
+Calculate PV of the perpetuity using the formula  $PV_{CF} = \frac{R_1}{(1+r)^1} + \frac{R_2}{(1+r)^2} + \frac{R_3}{(1+r)^3} + ... + \frac{R_n}{(1+r)^n} = \frac{R}{r}$ with $R_1 = R_2 = R_3 = ... = R_n$ and $n = \infty$
+
+Subtituing the parameters $R=1$ and $r=5\%$, we have
+```{r}
+perpetuity <- function(R,r) {
+  R/r
+}
+
+R <- 1
+r <- .05
+
+perpetuity(1,.05)
+```
+&nbsp;
+
+##### **Question 6**
+###### a. Find IRR of question 4
+
+IRR is the break-even root of the equation $I_0 = \frac{R_1}{(1+r)^1} + \frac{R_2}{(1+r)^2} + \frac{R_3}{(1+r)^3} + ... + \frac{R_n}{(1+r)^n}$  
+Thus the problem turns into finding the non-complex root of the polynomial equation in the form of $I_0 - \frac{R_1}{(1+r)^1} - \frac{R_2}{(1+r)^2} - \frac{R_3}{(1+r)^3} - ... - \frac{R_n}{(1+r)^n} = 0$  
+Note that the root will be in the form $\frac{1}{1+r}$
+
+Using the parameters in question 4
+```{r}
+R <- c(22000, 28500, 32000, 18000, 12000 + 52000) # Future returns, adding the scrap value to the final year
+
+init_investment <- 120000 # initial investment
+R_combine <- c(init_investment, R*(-1)) # rearrange the polynomial equation
+r <- polyroot(R_combine) # find roots of the polynomial equation, the return will be 1+r
+
+(1/(Re(r)[abs(Im(r)) < 1e-6])) - 1 # find only the non-complex root of said equation and subtract 1
+```  
+###### b. Find the rate of return on a $24,000 investment with an annual return of $4,500 for five years and a scrap value of $2,500 at the end of the fifth year.
+
+In this case $I_0 = 24000$, $R_1 = R_2 = R_3 = R_4 = R_5 = 4500$, and $MV = 2500$
+Using similar method in a. with the new parameters
+```{r}
+R <- c(4500, 4500, 4500, 4500, 4500 + 2500) # Future returns, adding the scrap value to the final year
+
+init_investment <- 24000 # initial investment
+R_combine <- c(init_investment, R*(-1)) # rearrange the polynomial equation
+r <- polyroot(R_combine) # find roots of the polynomial equation, the return will be 1+r
+
+(1/(Re(r)[abs(Im(r)) < 1e-6])) - 1 # find only the non-complex root of said equation and subtract 1
+
+```
