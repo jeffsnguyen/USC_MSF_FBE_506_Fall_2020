@@ -87,7 +87,7 @@ fv_discrete(4)
 fv_discrete(12)
 ```
 
-###### d. Compound quarterly
+###### d. Compound daily
 ```{r}
 # compounded daily, so n=365
 fv_discrete(365)
