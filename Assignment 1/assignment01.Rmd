@@ -2,7 +2,9 @@
 title: "assignment01"
 author: "Jeff Nguyen 6524885309"
 date: "20/08/2020"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -15,17 +17,17 @@ text-align: justify}
 </style>
 
 <div align="center">
-## **University of Southern California**
-#### **Marshall School of Business**
-#### **FBE 506 Quantitative Method in Finance**
-# Assignment 01
-Student Name: Ngoc Son (Jeff) Nguyen
-Student ID: 6524885309
+**University of Southern California**  
+**Marshall School of Business**  
+**FBE 506 Quantitative Method in Finance**  
+Assignment 01  
+Student Name: Ngoc Son (Jeff) Nguyen  
+Student ID: 6524885309  
 </div align>
 &nbsp;
 
-##### **Question 1**
-###### a. Solve $x^2 +2x -8 =0$
+# **Question 1**
+## a. Solve $x^2 +2x -8 =0$
 
 Solving polynomial equations in R using polyroot. The quadratic equation is expected to have 2 roots in the form of $x= \frac{-b \pm \sqrt{b^2-4ac}}{2a}$
 
@@ -34,7 +36,7 @@ polyroot(c(-8, 2, 1))
 ```
 &nbsp;  
 
-###### b. Solve $x^2 -9 =0$
+## b. Solve $x^2 -9 =0$
 
 Solving polynomial equations in R using polyroot. The quadratic equation is expected to have 2 roots in the form of $x= \frac{-b \pm \sqrt{b^2-4ac}}{2a}$
 
@@ -43,7 +45,7 @@ polyroot(c(-9, 0, 1))
 ```
 &nbsp;
 
-###### c. Solve $x^3 -x^2 +4x -4 =0$
+## c. Solve $x^3 -x^2 +4x -4 =0$
 
 Solving polynomial equations in R using polyroot. The cubic equation is expected to have 3 roots.
 
@@ -52,7 +54,7 @@ polyroot(c(-4, 4, -1, 1))
 ```
 &nbsp;
 
-###### d. Solve $x^5 +3x^2 -8 =0$
+## d. Solve $x^5 +3x^2 -8 =0$
 
 Solving polynomial equations in R using polyroot. The equation is expected to have 5 roots.
 
@@ -61,7 +63,7 @@ polyroot(c(-8, 0, 3, 0, 0, 1))
 ```
 &nbsp;
 
-##### **Question 2**
+# **Question 2**
 
 For discrete compounding (presented in a,b,c,d), we use the formula $S = A(1+\frac{r}{n})^{nt}$ ,substitute $A=100$, $r= 6\%$, $t=5$ and use the correct value for n based on the number compounding period per year. Then we use the below custom function in R to solve it.
 
@@ -106,7 +108,7 @@ fv_continuous
 ```
 &nbsp;
 
-##### **Question 3**
+# **Question 3**
 Using the two formulas:&nbsp;
 Present value of cash flow (future returns): $PV_{CF} = \frac{R_1}{(1+r)^1} + \frac{R_2}{(1+r)^2} + \frac{R_3}{(1+r)^3} + ... + \frac{R_n}{(1+r)^n}$
 
@@ -145,7 +147,7 @@ pv_investment(R,r,MV) #PV of investment
 ```
 &nbsp;
 
-##### **Question 4**
+# **Question 4**
 Calculate NPV using this function $NPV = PV_{Investment} - Initial\:Investment$
 
 Using the method and parameters in **Question 3** to calculate $PV_{Investment}$ and the initial investment valued at $120,000, we have:
@@ -161,7 +163,7 @@ npv
 ```
 &nbsp;
 
-##### **Question 5**
+# **Question 5**
 Calculate PV of the perpetuity using the formula  $PV_{CF} = \frac{R_1}{(1+r)^1} + \frac{R_2}{(1+r)^2} + \frac{R_3}{(1+r)^3} + ... + \frac{R_n}{(1+r)^n} = \frac{R}{r}$ with $R_1 = R_2 = R_3 = ... = R_n$ and $n = \infty$
 
 Subtituing the parameters $R=1$ and $r=5\%$, we have
@@ -177,8 +179,8 @@ perpetuity(1,.05)
 ```
 &nbsp;
 
-##### **Question 6**
-###### a. Find IRR of question 4
+# **Question 6**
+## a. Find IRR of question 4
 
 IRR is the break-even root of the equation $I_0 = \frac{R_1}{(1+r)^1} + \frac{R_2}{(1+r)^2} + \frac{R_3}{(1+r)^3} + ... + \frac{R_n}{(1+r)^n}$  
 Thus the problem turns into finding the non-complex root of the polynomial equation in the form of $I_0 - \frac{R_1}{(1+r)^1} - \frac{R_2}{(1+r)^2} - \frac{R_3}{(1+r)^3} - ... - \frac{R_n}{(1+r)^n} = 0$  
@@ -194,7 +196,7 @@ r <- polyroot(R_combine) # find roots of the polynomial equation, the return wil
 
 (1/(Re(r)[abs(Im(r)) < 1e-6])) - 1 # find only the non-complex root of said equation and subtract 1
 ```  
-###### b. Find the rate of return on a $24,000 investment with an annual return of $4,500 for five years and a scrap value of $2,500 at the end of the fifth year.
+## b. Find the rate of return on a $24,000 investment with an annual return of $4,500 for five years and a scrap value of $2,500 at the end of the fifth year.
 
 In this case $I_0 = 24000$, $R_1 = R_2 = R_3 = R_4 = R_5 = 4500$, and $MV = 2500$
 Using similar method in a. with the new parameters

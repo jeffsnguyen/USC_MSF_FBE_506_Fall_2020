@@ -374,38 +374,39 @@ body {
 text-align: justify}
 </style>
 <div align="center">
-<h2 id="university-of-southern-california"><strong>University of Southern California</strong></h2>
-<h4 id="marshall-school-of-business"><strong>Marshall School of Business</strong></h4>
-<h4 id="fbe-506-quantitative-method-in-finance"><strong>FBE 506 Quantitative Method in Finance</strong></h4>
-<h1 id="assignment-01">Assignment 01</h1>
-<p>Student Name: Ngoc Son (Jeff) Nguyen Student ID: 6524885309</p>
+<p><strong>University of Southern California</strong><br />
+<strong>Marshall School of Business</strong><br />
+<strong>FBE 506 Quantitative Method in Finance</strong><br />
+Assignment 01<br />
+Student Name: Ngoc Son (Jeff) Nguyen<br />
+Student ID: 6524885309</p>
 </div>
 <p> </p>
-<div id="question-1" class="section level5">
-<h5><strong>Question 1</strong></h5>
-<div id="a.-solve-x2-2x--8-0" class="section level6">
-<h6>a. Solve <span class="math inline">\(x^2 +2x -8 =0\)</span></h6>
+<div id="question-1" class="section level1">
+<h1><strong>Question 1</strong></h1>
+<div id="a.-solve-x2-2x--8-0" class="section level2">
+<h2>a. Solve <span class="math inline">\(x^2 +2x -8 =0\)</span></h2>
 <p>Solving polynomial equations in R using polyroot. The quadratic equation is expected to have 2 roots in the form of <span class="math inline">\(x= \frac{-b \pm \sqrt{b^2-4ac}}{2a}\)</span></p>
 <pre class="r"><code>polyroot(c(-8, 2, 1))</code></pre>
 <pre><code>## [1]  2-0i -4+0i</code></pre>
 <p> </p>
 </div>
-<div id="b.-solve-x2--9-0" class="section level6">
-<h6>b. Solve <span class="math inline">\(x^2 -9 =0\)</span></h6>
+<div id="b.-solve-x2--9-0" class="section level2">
+<h2>b. Solve <span class="math inline">\(x^2 -9 =0\)</span></h2>
 <p>Solving polynomial equations in R using polyroot. The quadratic equation is expected to have 2 roots in the form of <span class="math inline">\(x= \frac{-b \pm \sqrt{b^2-4ac}}{2a}\)</span></p>
 <pre class="r"><code>polyroot(c(-9, 0, 1))</code></pre>
 <pre><code>## [1]  3+0i -3+0i</code></pre>
 <p> </p>
 </div>
-<div id="c.-solve-x3--x2-4x--4-0" class="section level6">
-<h6>c. Solve <span class="math inline">\(x^3 -x^2 +4x -4 =0\)</span></h6>
+<div id="c.-solve-x3--x2-4x--4-0" class="section level2">
+<h2>c. Solve <span class="math inline">\(x^3 -x^2 +4x -4 =0\)</span></h2>
 <p>Solving polynomial equations in R using polyroot. The cubic equation is expected to have 3 roots.</p>
 <pre class="r"><code>polyroot(c(-4, 4, -1, 1))</code></pre>
 <pre><code>## [1] 1-0i 0+2i 0-2i</code></pre>
 <p> </p>
 </div>
-<div id="d.-solve-x5-3x2--8-0" class="section level6">
-<h6>d. Solve <span class="math inline">\(x^5 +3x^2 -8 =0\)</span></h6>
+<div id="d.-solve-x5-3x2--8-0" class="section level2">
+<h2>d. Solve <span class="math inline">\(x^5 +3x^2 -8 =0\)</span></h2>
 <p>Solving polynomial equations in R using polyroot. The equation is expected to have 5 roots.</p>
 <pre class="r"><code>polyroot(c(-8, 0, 3, 0, 0, 1))</code></pre>
 <pre><code>## [1]  0.673841+1.598073i -1.305358+0.633886i -1.305358-0.633886i
@@ -413,8 +414,8 @@ text-align: justify}
 <p> </p>
 </div>
 </div>
-<div id="question-2" class="section level5">
-<h5><strong>Question 2</strong></h5>
+<div id="question-2" class="section level1">
+<h1><strong>Question 2</strong></h1>
 <p>For discrete compounding (presented in a,b,c,d), we use the formula <span class="math inline">\(S = A(1+\frac{r}{n})^{nt}\)</span> ,substitute <span class="math inline">\(A=100\)</span>, <span class="math inline">\(r= 6\%\)</span>, <span class="math inline">\(t=5\)</span> and use the correct value for n based on the number compounding period per year. Then we use the below custom function in R to solve it.</p>
 <pre class="r"><code># Discrete Compounding Function
 # Compounding a=100 at an interest rate r=6% incurring with frequency n a year, for 5 years.
@@ -451,8 +452,8 @@ fv_continuous</code></pre>
 <p> </p>
 </div>
 </div>
-<div id="question-3" class="section level5">
-<h5><strong>Question 3</strong></h5>
+<div id="question-3" class="section level1">
+<h1><strong>Question 3</strong></h1>
 <p>Using the two formulas:  Present value of cash flow (future returns): <span class="math inline">\(PV_{CF} = \frac{R_1}{(1+r)^1} + \frac{R_2}{(1+r)^2} + \frac{R_3}{(1+r)^3} + ... + \frac{R_n}{(1+r)^n}\)</span></p>
 <p>Present value of the investment <span class="math inline">\(PV_{investment} = PV_{CF} + \frac{MV}{(1+r)^n}\)</span><br />
 with <span class="math inline">\(R_1\)</span>, <span class="math inline">\(R_2\)</span>, <span class="math inline">\(R_3\)</span>, …, and <span class="math inline">\(R_n\)</span> be the return each year and <span class="math inline">\(MV\)</span> the market value at the end of the final year.<br />
@@ -482,8 +483,8 @@ pv_investment(R,r,MV) #PV of investment</code></pre>
 <pre><code>## [1] 135069.6</code></pre>
 <p> </p>
 </div>
-<div id="question-4" class="section level5">
-<h5><strong>Question 4</strong></h5>
+<div id="question-4" class="section level1">
+<h1><strong>Question 4</strong></h1>
 <p>Calculate NPV using this function <span class="math inline">\(NPV = PV_{Investment} - Initial\:Investment\)</span></p>
 <p>Using the method and parameters in <strong>Question 3</strong> to calculate <span class="math inline">\(PV_{Investment}\)</span> and the initial investment valued at $120,000, we have:</p>
 <pre class="r"><code>R &lt;- c(22000, 28500, 32000, 18000, 12000) # Future returns
@@ -496,8 +497,8 @@ npv</code></pre>
 <pre><code>## [1] 15069.64</code></pre>
 <p> </p>
 </div>
-<div id="question-5" class="section level5">
-<h5><strong>Question 5</strong></h5>
+<div id="question-5" class="section level1">
+<h1><strong>Question 5</strong></h1>
 <p>Calculate PV of the perpetuity using the formula <span class="math inline">\(PV_{CF} = \frac{R_1}{(1+r)^1} + \frac{R_2}{(1+r)^2} + \frac{R_3}{(1+r)^3} + ... + \frac{R_n}{(1+r)^n} = \frac{R}{r}\)</span> with <span class="math inline">\(R_1 = R_2 = R_3 = ... = R_n\)</span> and <span class="math inline">\(n = \infty\)</span></p>
 <p>Subtituing the parameters <span class="math inline">\(R=1\)</span> and <span class="math inline">\(r=5\%\)</span>, we have</p>
 <pre class="r"><code>perpetuity &lt;- function(R,r) {
@@ -511,10 +512,10 @@ perpetuity(1,.05)</code></pre>
 <pre><code>## [1] 20</code></pre>
 <p> </p>
 </div>
-<div id="question-6" class="section level5">
-<h5><strong>Question 6</strong></h5>
-<div id="a.-find-irr-of-question-4" class="section level6">
-<h6>a. Find IRR of question 4</h6>
+<div id="question-6" class="section level1">
+<h1><strong>Question 6</strong></h1>
+<div id="a.-find-irr-of-question-4" class="section level2">
+<h2>a. Find IRR of question 4</h2>
 <p>IRR is the break-even root of the equation <span class="math inline">\(I_0 = \frac{R_1}{(1+r)^1} + \frac{R_2}{(1+r)^2} + \frac{R_3}{(1+r)^3} + ... + \frac{R_n}{(1+r)^n}\)</span><br />
 Thus the problem turns into finding the non-complex root of the polynomial equation in the form of <span class="math inline">\(I_0 - \frac{R_1}{(1+r)^1} - \frac{R_2}{(1+r)^2} - \frac{R_3}{(1+r)^3} - ... - \frac{R_n}{(1+r)^n} = 0\)</span><br />
 Note that the root will be in the form <span class="math inline">\(\frac{1}{1+r}\)</span></p>
@@ -528,8 +529,8 @@ r &lt;- polyroot(R_combine) # find roots of the polynomial equation, the return 
 (1/(Re(r)[abs(Im(r)) &lt; 1e-6])) - 1 # find only the non-complex root of said equation and subtract 1</code></pre>
 <pre><code>## [1] 0.09894825</code></pre>
 </div>
-<div id="b.-find-the-rate-of-return-on-a-24000-investment-with-an-annual-return-of-4500-for-five-years-and-a-scrap-value-of-2500-at-the-end-of-the-fifth-year." class="section level6">
-<h6>b. Find the rate of return on a $24,000 investment with an annual return of $4,500 for five years and a scrap value of $2,500 at the end of the fifth year.</h6>
+<div id="b.-find-the-rate-of-return-on-a-24000-investment-with-an-annual-return-of-4500-for-five-years-and-a-scrap-value-of-2500-at-the-end-of-the-fifth-year." class="section level2">
+<h2>b. Find the rate of return on a $24,000 investment with an annual return of $4,500 for five years and a scrap value of $2,500 at the end of the fifth year.</h2>
 <p>In this case <span class="math inline">\(I_0 = 24000\)</span>, <span class="math inline">\(R_1 = R_2 = R_3 = R_4 = R_5 = 4500\)</span>, and <span class="math inline">\(MV = 2500\)</span> Using similar method in a. with the new parameters</p>
 <pre class="r"><code>R &lt;- c(4500, 4500, 4500, 4500, 4500 + 2500) # Future returns, adding the scrap value to the final year
 
