@@ -475,7 +475,6 @@ gspc &lt;- getSymbols(&quot;^GSPC&quot;, src = &quot;yahoo&quot;) # S&amp;P500</
 ## options(&quot;getSymbols.warning4.0&quot;=FALSE). See ?getSymbols for details.</code></pre>
 <pre class="r"><code>aapl &lt;- getSymbols(&quot;AAPL&quot;, src = &quot;yahoo&quot;) # AAPL
 real_gdpc1 &lt;- getSymbols(&quot;GDPC1&quot;, src = &quot;FRED&quot;) # Real GDP</code></pre>
-<p> </p>
 <p>Convert S&amp;P 500 index from daily to monthly and generate returns data.</p>
 <pre class="r"><code># Convert S&amp;P 500 from daily to monthly
 monthly_gspc &lt;- to.monthly(GSPC)

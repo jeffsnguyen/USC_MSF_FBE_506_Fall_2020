@@ -97,7 +97,7 @@ gspc <- getSymbols("^GSPC", src = "yahoo") # S&P500
 aapl <- getSymbols("AAPL", src = "yahoo") # AAPL
 real_gdpc1 <- getSymbols("GDPC1", src = "FRED") # Real GDP
 ```
-&nbsp;
+  
 
 Convert S&P 500 index from daily to monthly and generate returns data.
 ```{r}
