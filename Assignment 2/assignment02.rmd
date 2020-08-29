@@ -67,22 +67,22 @@ curve(x^3  - x^2 + 12*x + 20, from = -1000000, to = 1000000, ylab = "Y", xlab = 
 The function is an exponential function. The function is strictly decreasing as the base is less than 1.
 ```{r}
 # Graph $Y = .5^{T}
-curve(.5^x, from = -8, to = 6, ylab = "Y", xlab = "T", main = "Y = .5^T")
+curve(.5^x, from = 0, to = 20, ylab = "Y", xlab = "T", main = "Y = .5^T")
 ```
   
 ## b. Graph $Y = 2^{T}$
 The function is an exponential function, the function is stricly increasing as the base is greater than 1.
 ```{r}
 # Graph $Y = 2^{T}
-curve(2^x, from = -5, to = 6, ylab = "Y", xlab = "T", main = "Y = 2^T")
+curve(2^x, from = 0, to = 20, ylab = "Y", xlab = "T", main = "Y = 2^T")
 ```
   
 ## c. Graph $Y = (-.5)^{T}$
 The function is an oscillating function.
 ```{r}
-x = c(-2:6)
+x = c(0:20)
 # Graph $Y = (-.5)^{T}
-plot(x, (-.5)^(x), type = "l", main = "Y = (-.5)^T")
+plot(x, (-.5)^(x), type = "l", main = "Y = (-.5)^T", xlab = "T", ylab = "Y")
 ```
   
 # **Question 3**
@@ -119,7 +119,7 @@ chartSeries(monthly_gspc, name = "Monthly S&P 500", type = "candlesticks", theme
 Graphing monthly S&P 500 returns
 ```{r}
 # Graphing monthly S&P 500 returns
-chartSeries(returns_monthly_gspc, name = "Monthly Returns to S&P 500", type = "candlesticks", theme = chartTheme("white"))
+chartSeries(returns_monthly_gspc$GSPC.Adjusted, name = "Monthly Returns to S&P 500", type = "candlesticks", theme = chartTheme("white"))
 ```
   
 
@@ -162,34 +162,34 @@ chartSeries(monthly_aapl, name = "Monthly AAPL", type = "candlesticks", theme = 
 Graphing monthly AAPL returns
 ```{r}
 # Graphing monthly AAPL returns
-chartSeries(returns_monthly_aapl, name = "Monthly Returns AAPL", type = "candlesticks", theme = chartTheme("white"))
+chartSeries(returns_monthly_aapl$AAPL.Adjusted, name = "Monthly Returns AAPL", type = "candlesticks", theme = chartTheme("white"))
 ```
   
 
 # **Question 6**
 Graph monthly AAPL and monthly S&P500 on one coordinate system:
 ```{r}
-# Initialize xts objects contain close price for S&P 500 and AAPL and merge
-gspc_xts <- as.xts(monthly_gspc[,"GSPC.Close"])
-aapl_xts <- as.xts(monthly_aapl[,"AAPL.Close"])
+# Initialize xts objects contain adjusted price for S&P 500 and AAPL and merge
+gspc_xts <- as.xts(monthly_gspc[,"GSPC.Adjusted"])
+aapl_xts <- as.xts(monthly_aapl[,"AAPL.Adjusted"])
 price_compare <- merge.xts(gspc_xts, aapl_xts)
 
 # Graph monthly AAPL and monthly S&P500 on one coordinate system
 # Plot S&P 500
-plot(as.zoo(price_compare[, "GSPC.Close"]), screens = 1, main = "S&P 500 and APPL closing price overlay", 
+plot(as.zoo(price_compare[, "GSPC.Adjusted"]), screens = 1, main = "S&P 500 and APPL Adjusted Price Overlay", 
      xlab = "Year", ylab = "Price", col = "Red")
 
 # Keep working on the same plot
 par(new = TRUE)
 
 # Plot AAPL and suppress axis value
-plot(as.zoo(price_compare[, "AAPL.Close"]), screens = 1, xaxt = "n", yaxt = "n", xlab = "", ylab = "", col = "Blue")
+plot(as.zoo(price_compare[, "AAPL.Adjusted"]), screens = 1, xaxt = "n", yaxt = "n", xlab = "", ylab = "", col = "Blue")
 
 # Add right-handed axis to display AAPL price
 axis(4)
 
 # Add legend
-legend("topleft", c("S&P 500", "AAPL"), lty = 1:3, cex = 0.75, fill = c("red", "blue"))
+legend("topleft", c("S&P 500 Adjusted Price", "AAPL Adjusted Price"), lty = 1:3, cex = 0.75, fill = c("red", "blue"))
 ```
   
 
@@ -204,27 +204,27 @@ Observations from the overlay chart above regarding S&P 500 and AAPL:
 Graph monthly AAPL and monthly S&P500 on one coordinate system:
 ```{r}
 # Initialize xts objects contain close price returns for S&P 500 and AAPL and merge
-returns_gspc_xts <- as.xts(returns_monthly_gspc[,"GSPC.Close"])
-returns_aapl_xts <- as.xts(returns_monthly_aapl[,"AAPL.Close"])
+returns_gspc_xts <- as.xts(returns_monthly_gspc[,"GSPC.Adjusted"])
+returns_aapl_xts <- as.xts(returns_monthly_aapl[,"AAPL.Adjusted"])
 returns_compare <- merge.xts(returns_gspc_xts, returns_aapl_xts)
 
 # Graph monthly AAPL and monthly S&P 500 returns on one coordinate system
 # Plot S&P 500 monthly returns
-plot(as.zoo(returns_compare[, "GSPC.Close"]), screens = 1, main = "S&P 500 and APPL closing price overlay", 
+plot(as.zoo(returns_compare[, "GSPC.Adjusted"]), screens = 1, main = "S&P 500 and APPL Adjusted Price Overlay", 
      xlab = "Year", ylab = "Returns", col = "Red")
 
 # Keep working on the same plot
 par(new = TRUE)
 
 # Plot AAPL monthly returnsand suppress axis value
-plot(as.zoo(returns_compare[, "AAPL.Close"]), screens = 1, xaxt = "n", yaxt = "n",
+plot(as.zoo(returns_compare[, "AAPL.Adjusted"]), screens = 1, xaxt = "n", yaxt = "n",
      xlab = "", ylab = "", col = "Blue")
 
 # Add right-handed axis to display AAPL price
 axis(4)
 
 # Add legend
-legend("bottom", c("S&P 500 Returns", "AAPL Returns"), lty = 1:3, cex = 0.75, fill = c("red", "blue"))
+legend("bottom", c("S&P 500 Adjusted Returns", "AAPL Adjusted Returns"), lty = 1:3, cex = 0.75, fill = c("red", "blue"))
 ```
   
 
