@@ -3,8 +3,8 @@ title: "assignment02"
 author: "Jeff Nguyen 6524885309"
 date: "28/08/2020"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -210,7 +210,7 @@ returns_compare <- merge.xts(returns_gspc_xts, returns_aapl_xts)
 
 # Graph monthly AAPL and monthly S&P 500 returns on one coordinate system
 # Plot S&P 500 monthly returns
-plot(as.zoo(returns_compare[, "GSPC.Adjusted"]), screens = 1, main = "S&P 500 and APPL Adjusted Price Overlay", 
+plot(as.zoo(returns_compare[, "GSPC.Adjusted"]), screens = 1, main = "S&P 500 and APPL Adjusted Returns Overlay", 
      xlab = "Year", ylab = "Returns", col = "Red")
 
 # Keep working on the same plot
