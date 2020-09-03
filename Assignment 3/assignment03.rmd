@@ -1,0 +1,188 @@
+---
+title: "assignment03"
+author: "Jeff Nguyen"
+date: "03/09/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**University of Southern California**  
+**Marshall School of Business**  
+**FBE 506 Quantitative Method in Finance**
+
+Assignment 03  
+Student Name: Ngoc Son (Jeff) Nguyen  
+Student ID: 6524885309  
+
+
+# **Question 1**
+
+For continuous functions defined by $y= f(x)$, the point $(x_0,f(x_0))$ is a maxima or minima if $x_0$ is in the domain of the function and $f'(x) = 0$. Thus, for the below, we find and test extrema values $x_0$ for which $f'(x_0) = 0$.
+
+
+## a. $y = x^2 - 6x + 5$
+
+This is a polynomial function, thus, it is continuous everywhere.
+We know:
+
+\begin{equation} \label {eq_a_first_derivative}
+\begin{split}
+  f'(x_0) & = 0 \\
+  \frac{dy}{dx} & = 0 \\
+  2x - 6 & = 0 \\
+  x & = 3
+\end{split}
+\end{equation}
+
+Thus we have the extrema $x_0 = 3$
+Graph of the function:
+```{r}
+curve(x^2 - 6*x + 5, -100,100)
+```
+
+Finding min, max:
+\begin{equation} \label {eq_a_minmax}
+\begin{split}
+  f(x_0) & = f(3) \\
+  f(x_0) & = 3^2 - 6*3 + 5  \\
+  f(x_0) & = -4 < 0
+\end{split}
+\end{equation}
+
+Thus, the minima of the equation is at $(3,-4)$
+
+Finding inflection point:
+\begin{equation} \label {eq_a_second_derivative}
+\begin{split}
+  f''(x_0) & = 0 \\
+  \frac{d^2 y}{dx^2} & = 0 \\
+  2 & = 0 \text{ (not possible)} \\
+\end{split}
+\end{equation}
+
+Thus the inflection point does not exist.
+  
+
+
+
+
+## b. $y = -x^2 + 6x - 5$
+
+This is a polynomial function, thus, it is continuous everywhere.
+We know:
+
+\begin{equation} \label {eq_b_first_derivative}
+\begin{split}
+  f'(x_0) & = 0 \\
+  \frac{dy}{dx} & = 0 \\
+  -2x + 6 & = 0 \\
+  x & = 3
+\end{split}
+\end{equation}
+
+Thus we have the extrema $x_0 = 3$
+Graph of the function:
+```{r}
+curve(-x^2 + 6*x - 5, -100,100)
+```
+
+Finding min, max:
+\begin{equation} \label {eq_b_minmax}
+\begin{split}
+  f(x_0) & = f(3) \\
+  f(x_0) & = -3^2 + 6*3 - 5  \\
+  f(x_0) & = 4 > 0\\
+\end{split}
+\end{equation}
+
+Thus, the maxima of the equation is at $(3,4)$
+
+Finding inflection point:
+\begin{equation} \label {eq_b_second_derivative}
+\begin{split}
+  f''(x_0) & = 0 \\
+  \frac{d^2 y}{dx^2} & = 0 \\
+  -2 & = 0 \text{ (not possible)} \\
+\end{split}
+\end{equation}
+
+Thus the inflection point does not exist.
+    
+
+
+
+
+
+
+## c. $y = 2x^3 - 15x^2 + 36x + 10$
+
+This is a polynomial function, thus, it is continuous everywhere.
+We know:
+
+\begin{equation} \label {eq_c_first_derivative}
+\begin{split}
+  f'(x_0) & = 0 \\
+  \frac{dy}{dx} & = 0 \\
+  6x^2 - 30x +36 & = 0 \\
+  x & = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} \\
+  x & = \frac{-(-30) \pm \sqrt{(-30)^2 - 4(6)(36)}}{2(6)} \\
+  x & = \frac{30 \pm \sqrt{36}}{12} \\
+  x & = 
+        \left\{
+        \begin{array} {11}
+          3 \\
+          2
+        \end{array}
+        \right.
+\end{split}
+\end{equation}
+
+Thus we have the extremas $x_0 = 3$ and $x_0 = 2$
+Graph of the function:
+```{r}
+curve(2*x^3 - 15*x^2 + 36*x + 10, -100,100)
+```
+
+Finding min, max:
+\begin{equation} \label {eq_c_minmax}
+\begin{split}
+  f(x_0) & = f(3)                              &        f(x_0) & = f(2) \\
+  f(x_0) & = 2(3^3) - 15(3^2) + 36(3) + 10     &        f(x_0) & = 2(2^3) - 15(2^2) + 36(2) + 10 \\
+  f(x_0) & = 37 > 0                            &        f(x_0) & = 38 > 0 \\
+\end{split}
+\end{equation}
+
+There are 2 saddle points but neither are extremas
+
+Finding inflection point:
+\begin{equation} \label {eq_c_second_derivative}
+\begin{split}
+  f''(x_0) & = 0 \\
+  \frac{d^2 y}{dx^2} & = 0 \\
+  12x - 30 & = 0 \\
+  x & = \frac{5}{2}
+\end{split}
+\end{equation}
+
+We see:
+\begin{equation} \label {eq_c1_inflection_point}
+\begin{split}
+  f''(x_0 + \frac{1}{2}) & =  f''(3) \\
+  f''(3) & =  36 - 30\\
+  f''(3) & = 6 > 0 \\
+\end{split}
+\end{equation}
+
+Also:
+\begin{equation} \label {eq_c2_inflection_point}
+\begin{split}
+  f''(x_0 - \frac{1}{2}) & =  f''(2) \\
+  f''(2) & = 24 - 30  \\
+  f''(2) & = -6 < 0 \\
+\end{split}
+\end{equation}
+
+Thus $(3, \frac{75}{2})$ is an inflection point and the function is increasing on its domain.
