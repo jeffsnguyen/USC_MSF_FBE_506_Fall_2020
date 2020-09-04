@@ -247,62 +247,419 @@ Finding $f(\frac{5}{2})$:
 This is a polynomial function, thus, it is continuous everywhere.
 We know:
 
-\begin{equation} \label {eq_d_first_derivative}
+\begin{equation}
   \begin{aligned}
-  f'(x_0) & = 0 \\
-  \frac{dy}{dx} & = 0 \\
-  3x^2 -6x +3 & = 0 \\
-  x & = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} \\
-  x & = \frac{-(-6) \pm \sqrt{(-6)^2 - 4(3)(3)}}{2(3)} \\
-  x & = \frac{6 \pm \sqrt{0}}{6} \\
-  x & = 1
+    f'(x_0) & = 0 \\
+    \frac{dy}{dx} & = 0 \\
+    3x^2 -6x + 3 & = 0 \\
+    x & = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} \\
+    x & = \frac{-(-6) \pm \sqrt{(-6)^2 - 4(3)(3)}}{2(3)} \\
+    x & = \frac{6 \pm \sqrt{0}}{6} \\
+    x & = 1
        
   \end{aligned}
 \end{equation}
 
-Thus we have the extremas $x_0 = 1$
+Thus we have the potential extrema $x_0 = 1$
+  
 Graph of the function:
 ```{r}
 curve(x^3 -3*x^2 +3*x, -100,100)
 ```
 
-Finding min, max:
-\begin{equation} \label {eq_c_minmax}
-\begin{split}
-  f(x_0) & = f(1)                    
-  f(x_0) & = 1^3 - 3(1)^2 + 3(1)     
-  f(x_0) & = 1 > 0                   
-\end{split}
+
+Testing min, max with $x_0 = 1$
+\begin{equation} 
+  \begin{aligned}
+    f'(x_0 - 1) & = f'(0)       \qquad  &   f'(x_0 + 1) & = f'(2) \\
+    f'(x_0 - 1) & = 3(0)^2 - 6(0) + 3   &   f'(x_0 + 1) & = 3(2)^2 - 6(2) + 3 \\
+    f'(x_0 - 1) & = 3 > 0               &   f'(x_0 + 1) & = 3 > 0
+  \end{aligned}
 \end{equation}
 
-There are 2 saddle points but neither are extremas
+Finding $f(1)$:
+\begin{equation} 
+  \begin{aligned}
+    f(1) & = 1^3 - 3(1)^2 + 3(1) \\
+    f(1) & = 1
+  \end{aligned}
+\end{equation}
+
+**From the above, we know the function increasing past $(1,1)$ and there is no local or absolute minima or maxima.**
+  
 
 Finding inflection point:
-\begin{equation} \label {eq_c_second_derivative}
-\begin{split}
-  f''(x_0) & = 0 \\
-  \frac{d^2 y}{dx^2} & = 0 \\
-  12x - 30 & = 0 \\
-  x & = \frac{5}{2}
-\end{split}
+\begin{equation} 
+  \begin{aligned}
+    f''(x_0) & = 0 \\
+    \frac{d^2 y}{dx^2} & = 0 \\
+    6x - 6 & = 0 \\
+    x & = 1
+  \end{aligned}
 \end{equation}
 
-We see:
-\begin{equation} \label {eq_c1_inflection_point}
-\begin{split}
-  f''(x_0 + \frac{1}{2}) & =  f''(3) \\
-  f''(3) & =  36 - 30\\
-  f''(3) & = 6 > 0 \\
-\end{split}
+Testing the potential inflection point at $x_0 = 1$
+\begin{equation} 
+  \begin{aligned}
+    f''(x_0 - 1) & = f''(0)   \qquad  &   f''(x_0 + 1) & = f''(2) \\
+    f''(x_0 - 1) & = 6(0) - 6         &   f''(x_0 + 1) & = 6(2) - 6 \\
+    f''(x_0 - 1) & = -6 < 0           &   f''(x_0 + 1) & = 6 > 0
+  \end{aligned}
 \end{equation}
 
-Also:
-\begin{equation} \label {eq_c2_inflection_point}
-\begin{split}
-  f''(x_0 - \frac{1}{2}) & =  f''(2) \\
-  f''(2) & = 24 - 30  \\
-  f''(2) & = -6 < 0 \\
-\end{split}
+**From the test, we see that the function curvature changes from concave to convex at $(1,1)$, thus $(1,1)$ is an inflection point.**
+  
+## e. $y = (x-1)^3$
+
+This is a polynomial function, thus, it is continuous everywhere.
+Expanding:
+
+\begin{equation}
+  \begin{aligned}
+    f(x) & = (x-1) ^3 \\
+         & = (x-1)(x^2 - 2x + 1) \\
+         & = x^3 - 2x^2 + x - x^2 + 2x - 1 \\
+         & = x^3 - 3x^2 + 3x - 1 \\
+  \end{aligned}
 \end{equation}
 
-Thus $(3, \frac{75}{2})$ is an inflection point and the function is increasing on its domain.
+Finding min, max:
+
+\begin{equation}
+  \begin{aligned}
+    f'(x_0) & = 0 \\
+    \frac{dy}{dx} & = 0 \\
+    3x^2 - 6x + 3 & = 0 \\
+    x^2 - 2x + 1 & = 0 \\
+    (x-1)^2 & = 0 \\
+    x & = 1
+  \end{aligned}
+\end{equation}
+
+Thus we have the potential extrema $x_0 = 1$
+  
+Graph of the function:
+```{r}
+curve(x^3 - 3*x^2 + 3*x - 1, -100,100)
+```
+
+
+Testing min, max with $x_0 = 1$
+\begin{equation} 
+  \begin{aligned}
+    f'(x_0 - 1) & = f'(0)   \qquad  &   f'(x_0 + 1) & = f'(2) \\
+    f'(x_0 - 1) & = (0-1)^2         &   f'(x_0 + 1) & = (2-1)^2 \\
+    f'(x_0 - 1) & = 1 > 0           &   f'(x_0 + 1) & = 1 > 0
+  \end{aligned}
+\end{equation}
+
+Finding $f(1)$:
+\begin{equation} 
+  \begin{aligned}
+    f(1) & = (1-1)^3 \\
+    f(1) & = 0
+  \end{aligned}
+\end{equation}
+
+**From the above, we know the function increasing past $(1,0)$ and there is no local or absolute minima or maxima.**
+  
+
+Finding inflection point:
+\begin{equation} 
+  \begin{aligned}
+    f''(x_0) & = 0 \\
+    \frac{d^2 y}{dx^2} & = 0 \\
+    2x - 2 & = 0 \\
+    x & = 1
+  \end{aligned}
+\end{equation}
+
+Testing the potential inflection point at $x_0 = 1$
+\begin{equation} 
+  \begin{aligned}
+    f''(x_0 - 1) & = f''(0)   \qquad  &   f''(x_0 + 1) & = f''(2) \\
+    f''(x_0 - 1) & = 2(0) - 2         &   f''(x_0 + 1) & = 2(2) - 2 \\
+    f''(x_0 - 1) & = -2 < 0            &   f''(x_0 + 1) & = 2 > 0
+  \end{aligned}
+\end{equation}
+
+**From the test, we see that the function curvature changes from concave to convex at $(1,0)$, thus $(1,0)$ is an inflection point.**
+  
+
+
+
+
+
+## f. $y = (x^2 - 1)^2$
+
+This is a polynomial function, thus, it is continuous everywhere.
+Expanding:
+
+\begin{equation}
+  \begin{aligned}
+    f(x) & = (x^2 - 1)^2 \\
+         & = x^4 - 2x^2 + 1
+  \end{aligned}
+\end{equation}
+
+Finding min, max:
+
+\begin{equation}
+  \begin{aligned}
+    f'(x_0) & = 0 \\
+    \frac{dy}{dx} & = 0 \\
+    4x^3 - 4x & = 0 \\
+    4x(x^2 - 1) & = 0 \\
+    4x(x - 1)(x + 1) & = 0 \\
+    x & =
+      \left\{
+        \begin{array} {11}
+          0 \\
+          1 \\
+          -1
+        \end{array}
+      \right.
+  \end{aligned}
+\end{equation}
+
+Thus we have the potential extrema $x_0 = -1$, $x_0 = 0$ and $x_0 = 1$
+  
+Graph of the function:
+```{r}
+curve(x^4 - 2*x^2 + 1, -2,2)
+```
+
+
+Testing min, max with $x_0 = -1$
+\begin{equation} 
+  \begin{aligned}
+    f'(x_0 - 1) & = f'(-2)   \qquad  &   f'(x_0 + \frac{1}{4}) & = f'(-3/4) \\
+    f'(x_0 - 1) & = 4(-2)^3 - 4(-2)  &   f'(x_0 + \frac{1}{4}) & = 4(-3/4)^3 - 4(-3/4) \\
+    f'(x_0 - 1) & = -24 < 0          &   f'(x_0 + \frac{1}{4}) & = 21/16 > 0
+  \end{aligned}
+\end{equation}
+
+Finding $f(-1)$:
+\begin{equation} 
+  \begin{aligned}
+    f(1) & = (-1)^4 - 2(-1)^2 + 1 \\
+    f(1) & = 0
+  \end{aligned}
+\end{equation}
+
+**From the above, we know the function has a local min at $(-1,0)$.**
+  
+  
+Testing min, max with $x_0 = 0$
+\begin{equation} 
+  \begin{aligned}
+    f'(x_0 - \frac{1}{4}) & = f'(-\frac{1}{4})               \qquad  &   f'(x_0 + \frac{1}{4}) & = f'(1/4) \\
+    f'(x_0 - \frac{1}{4}) & = 4(-\frac{1}{4})^3 - 4(-\frac{1}{4})   &   f'(x_0 + \frac{1}{4}) & = 4(1/4)^3 - 4(1/4) \\
+    f'(x_0 - \frac{1}{4}) & = \frac{15}{16} > 0                     &   f'(x_0 + \frac{1}{4}) & = -15/16 < 0
+  \end{aligned}
+\end{equation}
+
+Finding $f(0)$:
+\begin{equation} 
+  \begin{aligned}
+    f(1) & = (0)^4 - 2(0)^2 + 1 \\
+    f(1) & = 1
+  \end{aligned}
+\end{equation}
+
+**From the above, we know the function has a local max at $(0,1)$.**
+  
+Testing min, max with $x_0 = 1$
+\begin{equation} 
+  \begin{aligned}
+    f'(x_0 - \frac{1}{4}) & = f'(frac{3}{4})               \qquad  &   f'(x_0 + 1) & = f'(2) \\
+    f'(x_0 - \frac{1}{4}) & = 4(\frac{3}{4})^3 - 4(\frac{3}{4})    &   f'(x_0 + 1) & = 4(2)^3 - 4(2) \\
+    f'(x_0 - \frac{1}{4}) & = -\frac{21}{16} < 0                   &   f'(x_0 + 1) & = 24 > 0
+  \end{aligned}
+\end{equation}
+
+Finding $f(1)$:
+\begin{equation} 
+  \begin{aligned}
+    f(1) & = (1)^4 - 2(1)^2 + 1 \\
+    f(1) & = 0
+  \end{aligned}
+\end{equation}
+
+**From the above, we know the function has a local min at $(1,0)$.**
+**To recap, the function has local minimas at $(-1,0)$, $(1,0)$ and local maxima at $(0,1)$. It has no absolute minima or maxima.**
+  
+Finding inflection point:
+\begin{equation} 
+  \begin{aligned}
+    f''(x_0) & = 0 \\
+    \frac{d^2 y}{dx^2} & = 0 \\
+    12x^2 - 4 & = 0 \\
+    3x^2 - 1 & = 0 \\
+    x^2 & = \frac{1}{3} \\
+    x & = 
+      \left\{
+        \begin{array} {11}
+          \frac{1}{\sqrt{3}} \\
+          -\frac{1}{\sqrt{3}}
+        \end{array}
+      \right.
+  \end{aligned}
+\end{equation}
+
+Testing the potential inflection point at $x_0 = -\frac{1}{\sqrt{3}}$
+\begin{equation} 
+  \begin{aligned}
+    f''(x_0 - \frac{2}{\sqrt{3}}) & = f''(-\sqrt{3})   \qquad  &   f''(x_0 + \frac{1}{\sqrt{3}}) & = f''(0) \\
+    f''(x_0 - \frac{2}{\sqrt{3}}) & = 12(-\sqrt{3})^2 - 4      &   f''(x_0 + \frac{1}{\sqrt{3}}) & = 12(0)^2 - 4 \\
+    f''(x_0 - \frac{2}{\sqrt{3}}) & = 32 > 0                  &   f''(x_0 + \frac{1}{\sqrt{3}}) & = -4 < 0
+  \end{aligned}
+\end{equation}
+
+Finding $f(-\frac{1}{\sqrt{3})$:
+\begin{equation} 
+  \begin{aligned}
+    f(-\frac{1}{\sqrt{3}}) & = (-\frac{1}{\sqrt{3}})^4 - 2(-\frac{1}{\sqrt{3}})^2 + 1 \\
+    f(-\frac{1}{\sqrt{3}}) & = \frac{2}{9}
+  \end{aligned}
+\end{equation}
+
+**From the test, we see that the function curvature changes from convex to concave at $(-\frac{1}{\sqrt{3}},\frac{2}{9})$, thus $(-\frac{1}{\sqrt{3}},\frac{2}{9})$ is an inflection point.**
+
+Testing the potential inflection point at $x_0 = \frac{1}{\sqrt{3}}$
+\begin{equation} 
+  \begin{aligned}
+    f''(x_0 - \frac{1}{\sqrt{3}}) & = f''(0)   \qquad  &   f''(x_0 + \frac{2}{\sqrt{3}}) & = f''(\sqrt{3}) \\
+    f''(x_0 - \frac{1}{\sqrt{3}}) & = 12(0)^2 - 4      &   f''(x_0 + \frac{2}{\sqrt{3}}) & = 12(\sqrt{3})^2 - 4 \\
+    f''(x_0 - \frac{1}{\sqrt{3}}) & = -4 < 0           &   f''(x_0 + \frac{2}{\sqrt{3}}) & = 32 > 0
+  \end{aligned}
+\end{equation}
+
+Finding $f(\frac{1}{\sqrt{3})$:
+\begin{equation} 
+  \begin{aligned}
+    f(\frac{1}{\sqrt{3}}) & = (\frac{1}{\sqrt{3}})^4 - 2(\frac{1}{\sqrt{3}})^2 + 1 \\
+    f(\frac{1}{\sqrt{3}}) & = \frac{4}{9}
+  \end{aligned}
+\end{equation}
+
+**From the test, we see that the function curvature changes from concave to convex at $(\frac{1}{\sqrt{3}},\frac{4}{9})$, thus $(\frac{1}{\sqrt{3}},\frac{4}{9})$ is also an inflection point.**
+  
+## g. $y = \ln{\frac{x+1}{x^2+3}}$
+
+We know that $\ln(X)$ is continuous on $(0,\infty)$.
+
+Thus the domain of y is:
+\begin{equation} 
+  \begin{aligned}
+    \left\{
+        \begin{array} {11}
+          x^2 + 3 > 0 \forall x \in \R \\
+          x + 1 > 0 \Leftrightarrow \forall x \in (-1,\infty)
+        \end{array}
+      \right.
+  \end{aligned}
+\end{equation}
+
+Finding min, max:
+\begin{equation}
+  \begin{aligned}
+    f'(x_0) & = 0 \\
+    \frac{dy}{dx} & = 0 \\
+    \frac{d(\ln{\frac{x+1}{x^2+3}})}{dx} & = 0 \\
+    \frac{\frac{1}{\frac{x+1}{x^2+3}}.d\frac{x+1}{x^2+3}}{dx} & = 0 \\
+    \frac{x^2+3}{x+1}.\Big[(x+1).d(\frac{1}{x^2+3}) + d(x+1).\frac{1}{x^2+3} \Big] & = 0 \\
+    \frac{x^2+3}{x+1}.\Big[\frac{-(x+1).d(x^2+3)}{(x^2+3)^2} + \frac{1}{x^2+3} \Big] & = 0 \\
+    \frac{x^2+3}{x+1}.\frac{-2x(x+1) + x^2 + 3}{(x^2 + 3)^2} & = 0 \\
+    \frac{-2x^2 - 2x + x^2 + 3}{(x^2+3)(x+1)} & = 0 \\
+    \frac{-x^2 - 2x + 3}{(x^2+3)(x+1)} & = 0 \\
+    -x^2 - 2x + 3 & = 0 \\
+    x & = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} \\
+    x & = \frac{-(-2) \pm \sqrt{(-2)^2 - 4(-1)(3)}}{2(-1)} \\
+    x & = \frac{2 \pm \sqrt{16}}{-2} \\
+    x & = 
+      \left\{
+        \begin{array} {11}
+          1 \\
+          -3 \text{  ,not valid as x > -1}
+        \end{array}
+      \right. 
+  \end{aligned}
+\end{equation}
+
+Thus we have the potential extrema $x_0 = 1$
+
+Graph of the function:
+```{r}
+curve(log((x+1)/(x^2+3)), 0.0000001,10)
+```
+Testing min, max with $x_0 = 1$
+\begin{equation} 
+  \begin{aligned}
+    f'(x_0 - \frac{1}{2}) & = f'(\frac{1}{2})                       \qquad  &   f'(x_0 + \frac{1}{2}) & = f'(\frac{3}{2}) \\ 
+    f'(x_0 - \frac{1}{2}) & = \frac{-(\frac{1}{2})^2 - 2(\frac{1}{2}) + 3}
+      {((\frac{1}{2})^2+3)(\frac{1}{2}+1)}                                  &   f'(x_0 + \frac{1}{2}) & = \frac{-(\frac{3}{2})^2 - 2(\frac{3}{2})+                                                                                       3}{((\frac{3}{2})^2+3)(\frac{3}{2}+1)} \\
+    f'(x_0 - \frac{1}{2}) & = \frac{14}{39} > 0                             &   f'(x_0 + \frac{1}{2}) & = -\frac{6}{35} < 0 
+  \end{aligned}
+\end{equation}
+
+Finding $f(1)$:
+\begin{equation} 
+  \begin{aligned}
+    f(1) & = \ln{\frac{1+1}{1+3}} \\
+    f(1) & = \ln{\frac{2}{4}} \\
+    f(1) & = \ln{\frac{1}{2}} \\
+    f(1) & = -\ln{2}
+  \end{aligned}
+\end{equation}
+
+**From the above, we know the function has an absolute max at $(1,-\ln{2})$.**
+
+Finding inflection point:
+\begin{equation} 
+  \begin{aligned}
+    f''(x_0) & = 0 \\
+    \frac{d^2 y}{dx^2} & = 0 \\
+    \frac{d\Big[\frac{-x^2 - 2x + 3}{(x^2 + 3)(x + 1)}\Big]}{dx^2} & = 0 \\
+    \frac{d\Big[\frac{-x^2 - 2x + 3}{x^3 + x^2 + 3x + 3}\Big]}{dx^2} & = 0 \\
+    \frac{\Big[(-x^2 - 2x + 3).d(\frac{1}{x^3 + x^2 + 3x + 3}) + d(-x^2 - 2x + 3).(\frac{1}{x^3 + x^2 + 3x + 3}) \Big]}{dx^2} & = 0 \\
+    \frac{(x^2 + 2x - 3)(3x^2 + 2x + 3)}{(x^3 + x^2 + 3x + 3)^2} - \frac{2x+2}{x^3+x^2+3x+3} & = 0 \\
+    \frac{3x^4 + 6x^3 - 9x^2 + 2x^3 + 4x^2 - 6x + 3x^2 + 6x -9 - (2x + 2)(x^3 + x^2 + 3x + 3)}{(x^3 + x^2 + 3x +3)^2} & = 0 \\
+    \frac{3x^4 + 8x^3 - 2x^2 - 9 - (2x^4 + 2x^3 + 2x^3 + 2x^2 + 6x^2 + 6x + 6x + 6)}{(x^3 + x^2 + 3x +3)^2} & = 0 \\
+    \frac{3x^4 + 8x^3 - 2x^2 - 9 - (2x^4 + 4x^3 + 8x^2 + 12x + 6)}{(x^3 + x^2 + 3x +3)^2} & = 0 \\
+    \frac{x^4 + 4x^3 - 10x^2 - 12x - 15}{(x^3 + x^2 + 3x +3)^2} & = 0
+  \end{aligned}
+\end{equation}
+
+I don't think it's in the scope of this assignment to find analytical roots of a 4th order polynomial equation by hand so here are approximate real roots from R:
+```{r}
+root <- polyroot(c(-15, -12, -10, 4, 1))
+# The equation has 2 non-complex roots:
+Re(root)[abs(Im(root)) < 1e-6]
+```
+
+Since $(-1,\infty)$ is the domain. The only root is approximately 2.574355.
+
+Testing the potential inflection point at $x_0 = 2.574355$
+\begin{equation} 
+  \begin{aligned}
+    f''(x_0 - 1) & = f''(1.574355)                    \qquad  &   f''(x_0 + 1) & = f''(3.574355) \\
+    f''(x_0 - 1) & =  \frac{(1.574355)^4 + 4(1.574355)^3 - 
+      10(1.574355)^2- 12(1.574355) - 15}
+      {((1.574355)^3 + (1.574355)^2 + 3(1.574355) + 3)^2}     &   f''(x_0 + 1) & = \frac{(3.574355)^4 + 4(3.574355)^3 - 10(3.574355)^2-                                                                                  12(3.574355) - 15}{((3.574355)^3 + (3.574355)^2 + 3(3.574355) + 3)^2)} \\
+    f''(x_0 - 1) & \approx -.185634 < 0                             &   f''(x_0 + 1) & \approx  0.03076888 > 0
+  \end{aligned}
+\end{equation}
+
+Finding $f(2.574355)$:
+\begin{equation} 
+  \begin{aligned}
+    f(2.574355) & = \ln{\frac{2.574355+1}{(2.574355)^2+3}} \\
+    f(2.574355) & \approx -0.9908185 
+  \end{aligned}
+\end{equation}
+
+**From the test, we see that the function curvature changes from concave to convex at $(2.574355,-0.9908185)$, thus $(2.574355,-0.9908185)$ is an inflection point.**
+  
+
+# **Question 2**
