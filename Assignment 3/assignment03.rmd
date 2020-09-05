@@ -381,9 +381,6 @@ Testing the potential inflection point at $x_0 = 1$
   
 
 
-
-
-
 ## f. $y = (x^2 - 1)^2$
 
 This is a polynomial function, thus, it is continuous everywhere.
@@ -514,7 +511,7 @@ Finding $f(-\frac{1}{\sqrt{3}})$:
 \begin{equation} 
   \begin{aligned}
     f(-\frac{1}{\sqrt{3}}) & = (-\frac{1}{\sqrt{3}})^4 - 2(-\frac{1}{\sqrt{3}})^2 + 1 \\
-    f(-\frac{1}{\sqrt{3}}) & = \frac{2}{9}
+    f(-\frac{1}{\sqrt{3}}) & = \frac{4}{9}
   \end{aligned}
 \end{equation}
 
