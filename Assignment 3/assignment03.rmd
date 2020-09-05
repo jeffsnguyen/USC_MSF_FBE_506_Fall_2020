@@ -3,8 +3,8 @@ title: "assignment03"
 author: "Jeff Nguyen"
 date: "03/09/2020"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -200,7 +200,7 @@ Finding $f(2)$:
 \end{equation}
 
 **From the above, we gather the function is increasing just before $(2,38)$ and decreasing right after $(2,38)$**
-**Thus, the function has a local minima at $(3,37)$**
+**Thus, the function has a local maxima at $(2,38)$**
 
 **The function does not have absolute minima nor maxima.**
 
@@ -231,7 +231,7 @@ Finding $f(\frac{5}{2})$:
   \end{aligned}
 \end{equation}
 
-**Thus $(3, \frac{75}{2})$ is an inflection point and is where the function curvature changes from concave to convex.**
+**Thus $(\frac{5}{2}, \frac{75}{2})$ is an inflection point and is where the function curvature changes from concave to convex.**
   
 
 
@@ -510,7 +510,7 @@ Testing the potential inflection point at $x_0 = -\frac{1}{\sqrt{3}}$
   \end{aligned}
 \end{equation}
 
-Finding $f(-\frac{1}{\sqrt{3})$:
+Finding $f(-\frac{1}{\sqrt{3}})$:
 \begin{equation} 
   \begin{aligned}
     f(-\frac{1}{\sqrt{3}}) & = (-\frac{1}{\sqrt{3}})^4 - 2(-\frac{1}{\sqrt{3}})^2 + 1 \\
@@ -529,7 +529,7 @@ Testing the potential inflection point at $x_0 = \frac{1}{\sqrt{3}}$
   \end{aligned}
 \end{equation}
 
-Finding $f(\frac{1}{\sqrt{3})$:
+Finding $f(\frac{1}{\sqrt{3}})$:
 \begin{equation} 
   \begin{aligned}
     f(\frac{1}{\sqrt{3}}) & = (\frac{1}{\sqrt{3}})^4 - 2(\frac{1}{\sqrt{3}})^2 + 1 \\
@@ -817,7 +817,7 @@ We know the price elasticity of demand \epsilon_p is given by:
     \epsilon_p & = \frac{dq}{dp}.\frac{p}{q} \\
                & = (-1.6).\frac{45}{28} \\
                & = -\frac{18}{7} \\
-               \approx -2.571429
+               & \approx -2.571429
   \end{aligned}
 \end{equation}
   
