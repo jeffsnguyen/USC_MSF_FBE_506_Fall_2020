@@ -515,7 +515,7 @@ Finding $f(-\frac{1}{\sqrt{3}})$:
   \end{aligned}
 \end{equation}
 
-**From the test, we see that the function curvature changes from convex to concave at $(-\frac{1}{\sqrt{3}},\frac{2}{9})$, thus $(-\frac{1}{\sqrt{3}},\frac{2}{9})$ is an inflection point.**
+**From the test, we see that the function curvature changes from convex to concave at $(-\frac{1}{\sqrt{3}},\frac{4}{9})$, thus $(-\frac{1}{\sqrt{3}},\frac{4}{9})$ is an inflection point.**
 
 Testing the potential inflection point at $x_0 = \frac{1}{\sqrt{3}}$
 \begin{equation} 
