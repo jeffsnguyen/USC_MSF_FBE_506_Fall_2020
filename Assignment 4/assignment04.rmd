@@ -1,0 +1,773 @@
+---
+title: "assignment04"
+author: "Jeff Nguyen"
+date: "12/09/2020"
+output: html_document
+---
+
+**University of Southern California**  
+**Marshall School of Business**  
+**FBE 506 Quantitative Method in Finance**
+
+Assignment 04  
+Student Name: Ngoc Son (Jeff) Nguyen  
+Student ID: 6524885309  
+
+
+# **Question 1**
+
+```{r definition-observations}
+x <- c(14, 20, 18, 10, 8, 14, 16, 17, 9, 16, 16, 22, 20, 25, 15)
+x
+plot(density(x), main = "Distribution of x value")
+```
+
+## a. Sample mean
+\begin{equation}
+  \begin{aligned}
+    \overline{x}  & = \frac{\sum_{i=1}^{n} x_i}{n} \\
+                  & = \frac{14 + 20 + 18 + 10 + 8 + \\
+                            14 + 16 + 17 + 9 + 16 + \\
+                            16 + 22 + 20 + 25 + 15}{15} \\
+                  & = \frac{140}{15} \\
+                  & = 16 \\
+  \end{aligned}
+\end{equation}
+**The sample mean is 16.**
+  
+## b. Sample variance
+\begin{equation}
+  \begin{aligned}
+    s^2 & = \frac{\sum_{i=1}^{n} (x_i - \overline{x})^2}{n - 1} \\
+        & = \frac{(14 - 16)^2 + (20 - 16)^2 + (18 - 16)^2 + (10 - 16)^2 + (8 - 16)^2 + \\
+                  (14 - 16)^2 + (16 - 16)^2 + (17 - 16)^2 + (9 - 16)^2 + (16 - 16)^2 + \\
+                  (16 - 16)^2 + (22 - 16)^2 + (20 - 16)^2 + (25 - 16)^2 + (15 - 16)^2}{15 - 1} \\
+        & = \frac{(-2)^2 + (4)^2 + (2)^2 + (-6)^2 + (-8)^2 + \\
+                  (-2)^2 + (0)^2 + (1)^2 + (-7)^2 + (0)^2 + \\
+                  (0)^2 + (6)^2 + (4)^2 + (9)^2 + (-1)^2}{14} \\
+        & = \frac{4 + 16 + 4 + 36 + 64 + \\
+                  4 + 0 + 1 + 49 + 0 + \\
+                  0 + 36 + 16 + 81 + 1}{14} \\
+        & = \frac{312}{14} \\
+        & = 22.28571
+  \end{aligned}
+\end{equation}
+  
+## c. Sample standard deviaton
+\begin{equation}
+  \begin{aligned}
+    s & = \sqrt{S^2} \\
+      & = \sqrt{22.28571} \\
+      & = 4.720775
+  \end{aligned}
+\end{equation}
+**The sample standard deviation is 4.720775.**
+  
+## d. Population mean
+Hypotheses:   
+$H_0$: The population mean is equal 16.   
+$H_a$: The population mean is different than 16.  
+We also choose $\alpha = .05$  
+
+**Note that the assumption here is that the sample is random and unbiased.**
+\begin{equation}
+  \begin{aligned}
+    \left\{
+        \begin{array} {l}
+          H_0: \mu = 16 \\
+          H_1: \mu \neq 16
+        \end{array}
+      \right.
+  \end{aligned}
+\end{equation}
+
+Since the data is quantitative, i.e. x is a set of numerical values: We do a one sample t-test here. 
+Test statistic formula:
+\begin{equation}
+  \begin{aligned}
+    t & = \frac{\overline{x} - \mu}{s_{\overline{x}}} \\
+    \text {where} \\
+    s_{\overline{x}} & = \frac{s}{\sqrt{n}} \\
+    \text {where} \\
+    \mu & = \text {Proposed constant for the population mean} \\
+    \overline{x} & = \text {Sample mean} \\
+    n & = \text {Sample size (i.e., number of observations)} \\
+    s & = \text {Sample standard deviation} \\
+    s_{\overline{x}} & = \text {Estimated standard error of the mean}
+  \end{aligned}
+\end{equation}
+
+Plug in:
+\begin{equation}
+  \begin{aligned}
+    s_{\overline{x}} & = \frac{s}{\sqrt{n}} \\
+                     & = \frac{4.720775}{\sqrt{15}} \\
+                     & = 0.3147183 \\
+    \text {So:} \\
+    t & = \frac{\overline{x} - \mu}{s_{\overline{x}}} \\
+      & = \frac{16 - 16}{0.3147183} \\
+      & = 0
+  \end{aligned}
+\end{equation}
+
+For a one-sample t test, the degree of freedom is $df = n - 1$. In this case: $df = 15 - 1 = 14$  
+Comparing $t = 0$ to a t-distribution with $df = 14$ at 95% confidence interval using the t table is $t_{critical} = 2.145$.  
+We can see that $t < t_{critical}$.  
+Again, looking up the t table, we see that probability of observing this test statistic, assuming $H_0$ at $df = 14$ and $t=0$ is $p_{value} = 1 > .05$ is not small enough.  
+
+**Conclusion: On a 95% confidence interval, we failed to reject the null hypothesis H_0 that the population mean equal to 16. Thus, the point estimate of the population mean is 16.**  
+We see similar result in R:
+```{r}
+t.test(x, mu = 16, confit = .95)
+```
+    
+
+## e. Population variance
+Calculating estimate of population variance
+\begin{equation}
+  \begin{aligned}
+    \sigma^2 & = \frac{\sum_{i=1}^{n} (x_i - \mu)^2}{n} \\
+             & = \frac{(14 - 16)^2 + (20 - 16)^2 + (18 - 16)^2 + (10 - 16)^2 + (8 - 16)^2 + \\
+                       (14 - 16)^2 + (16 - 16)^2 + (17 - 16)^2 + (9 - 16)^2 + (16 - 16)^2 + \\
+                       (16 - 16)^2 + (22 - 16)^2 + (20 - 16)^2 + (25 - 16)^2 + (15 - 16)^2}{15} \\
+             & = \frac{(-2)^2 + (4)^2 + (2)^2 + (-6)^2 + (-8)^2 + \\
+                       (-2)^2 + (0)^2 + (1)^2 + (-7)^2 + (0)^2 + \\
+                       (0)^2 + (6)^2 + (4)^2 + (9)^2 + (-1)^2}{15} \\
+             & = \frac{4 + 16 + 4 + 36 + 64 + \\
+                       4 + 0 + 1 + 49 + 0 + \\
+                       0 + 36 + 16 + 81 + 1}{14} \\
+             & = \frac{312}{15} \\
+             & = 20.8
+  \end{aligned}
+\end{equation}
+**The point estimate of the population variance is 20.8.**  
+
+Hypotheses:   
+$H_0$: The population variance is equal 20.8.  
+$H_a$: The population variance is not equal 20.8.  
+
+**Again, note that the assumption here is that the sample is random and unbiased.**
+\begin{equation}
+  \begin{aligned}
+    \left\{
+        \begin{array} {l}
+          H_0: \sigma^2 = 20.8 \\
+          H_1: \sigma^2 \neq 20.8
+        \end{array}
+      \right.
+  \end{aligned}
+\end{equation}
+
+We do Chi-square test for variance
+Test statistic formula:
+\begin{equation}
+  \begin{aligned}
+    {\chi}^2 & = \frac{\sum (Observed - Expected)^2}{Expected} \\
+    {\chi}^2 & = \frac{\sum_{i=1}^{n} (x_i - \mu)^2}{\mu} \\
+    \text {where} \\
+    n & = \text {Sample size (i.e., number of observations)} \\
+  \end{aligned}
+\end{equation}
+
+Plug in:
+\begin{equation}
+  \begin{aligned}
+    {\chi}^2 & = \frac{(14 - 16)^2 + (20 - 16)^2 + (18 - 16)^2 + (10 - 16)^2 + (8 - 16)^2 + \\
+                       (14 - 16)^2 + (16 - 16)^2 + (17 - 16)^2 + (9 - 16)^2 + (16 - 16)^2 + \\
+                       (16 - 16)^2 + (22 - 16)^2 + (20 - 16)^2 + (25 - 16)^2 + (15 - 16)^2}{16} \\
+             & = \frac{312}{16} \\
+             & = 19.5
+  \end{aligned}
+\end{equation}
+
+For a one-sample Chi-Square test, the degree of freedom is $df = n - 1$. In this case: $df = 15 - 1 = 14$  
+Comparing ${\chi} = 15$ to a ChiSquare distribution with $df = 14$ at $\alpha = .05$ using the Chi-Square table is ${\chi}_{critical} = 23.685$.  
+We can see that ${\chi} < {\chi}_{critical}$.  
+Using R to find p-value:
+```{r}
+chisq.test(x)
+```
+We have $p_{value} = .1467 > .05$. The $p_{value}$, in this case, is not small enough.  
+
+**Conclusion: We failed to reject the null hypothesis $H_0$ that the population variance equal to 20.8.**  
+  
+## f. Population standard deviation
+\begin{equation}
+  \begin{aligned}
+    \sigma & = \sqrt{\sigma^2} \\
+           & = \sqrt{20.8} \\
+           & = 4.560702
+  \end{aligned}
+\end{equation}
+**The population standard deviation is 4.560702.**
+
+Hypotheses:   
+$H_0$: The population standard deviation is equal 4.560702.  
+$H_a$: The population standard deviation is not equal 4.560702.  
+
+**Again, note that the assumption here is that the sample is random and unbiased.**
+\begin{equation}
+  \begin{aligned}
+    \left\{
+        \begin{array} {l}
+          H_0: \sigma = 4.560702 \\
+          H_1: \sigma \neq 4.560702
+        \end{array}
+      \right.
+  \end{aligned}
+\end{equation}
+
+Doing the exat Chi-Square test in e. with identical attribute values, we reach the same conclusion:  
+
+**Conclusion: We failed to reject the null hypothesis $H_0$ that the population standard deviation equal to 4.560702.**  
+
+## g. Standard deviation of the sample mean
+We know:
+\begin{equation}
+  \begin{aligned}
+    \sigma_{\overline{x}} & = \frac{\sigma}{\sqrt{n}} \\
+                          & = \frac{4.720775}{\sqrt{15}} \\
+                          & = 1.218899 \\
+    \text {where} \\
+    \sigma_{\overline{x}} & = \text {Point estimate of the standard deviation of the sample mean} \\
+    \sigma & = \text {Point estimate of the standard deviation of the population} \\
+    n & = \text {Sample size (i.e., number of observations)} \\
+  \end{aligned}
+\end{equation}
+**The standard deviation of the sample mean is .3040468.**  
+
+## h. Variance of the sample mean
+We know
+\begin{equation}
+  \begin{aligned}
+    \sigma_{\overline{x}}^2 & = 1.218899^2 \\
+                            & = 1.485715 \\
+    \text {where} \\
+    \sigma_{\overline{x}}^2 & = \text {Point estimate of the variance of the sample mean} \\
+  \end{aligned}
+\end{equation}
+**The variance of the sample mean is .09244446.**  
+
+# **Question 2**
+Given:
+
+Portfolio | 2011  | 2012  | 2013  | 2014  | 2015  | 2016  | 2017  | 2018  | 2019
+---       | ---   | ---   | ---   | ---   | ---   | ---   | ---   | ---   | --- 
+A         | 123.5 | 121.3 | 106.5 | 102.8 | 118.9 | 129.6 | 137.9 | 142.9 | 153.7
+B         | 108.6 | 101.4 | 93.8  | 101.9 | 112.0 | 119.6 | 128.7 | 139.5 | 145.8  
+
+Calculating the returns years over year by calculating the percentage change in the closing price of the portfolio in the current year compare to that of the previous year. We have:  
+
+Portfolio | 2011  | 2012  | 2013  | 2014  | 2015  | 2016  | 2017  | 2018  | 2019
+---       | ---   | ---   | ---   | ---   | ---   | ---   | ---   | ---   | --- 
+A         | NA |-.01781377 | -.12201154 | -.03474178 | .15661479 | .08999159 | .06404321 | .03625816 | .07557733
+B         | NA |-.06629834 | -.07495069 |  .08635394 | .09911678 | .06785714 | .07608696 | .08391608 | .04516129 
+
+```{r definition-portfiolioAB}
+# Assigning portfolios' closing price
+a_close <- c(123.5, 121.3, 106.5, 102.8, 118.9, 129.6, 137.9, 142.9, 153.7)
+a_close
+plot(density(a_close), main = "Distribution of Portfolios' Annual Closing Prices", col = "red")
+par(new = TRUE)
+b_close <- c(108.6, 101.4, 93.8, 101.9, 112.0, 119.6, 128.7, 139.5, 145.8)
+b_close
+plot(density(b_close), xaxt = "n", yaxt = "n", xlab = "", ylab = "", main = "", col = "blue")
+legend("topright", c("Portfolio A", "Portfolio B"), cex = 0.75, fill = c("red", "blue"))
+
+ra <- (diff(a_close) / a_close)[1:8]
+ra
+rb <- (diff(b_close) / b_close)[1:8]
+rb
+```
+Calculating the sample mean of annual returns of A
+\begin{equation}
+  \begin{aligned}
+    \overline{x_A}  & = \frac{\sum_{i=1}^{n} x_i}{n} \\
+                    & = \frac{-0.01781377 + -0.12201154 + -0.03474178 + 0.15661479 + \\
+                              0.08999159 + 0.06404321  + 0.03625816  + 0.07557733}{8} \\
+                    & = \frac{.247918}{8} \\
+                    & = .03098975 \\
+  \end{aligned}
+\end{equation}
+
+Calculating the sample variance of annual returns of A
+\begin{equation}
+  \begin{aligned}
+    s_A^2 & = \frac{\sum_{i=1}^{n} (x_i - \overline{x})^2}{n - 1} \\
+          & = \frac{(-0.01781377 - .03098975)^2 + (-0.12201154 - .03098975)^2 + \\
+                    (-0.03474178  - .03098975)^2 + (0.15661479 - .03098975)^2 + \\
+                    (0.08999159 - .03098975)^2 + (0.06404321 - .03098975)^2  + \\
+                    (0.03625816 - .03098975)^2  + (0.07557733 - .03098975)^2}{8 - 1} \\
+          & = \frac{0.05248302}{7} \\
+          & = 0.007497574
+  \end{aligned}
+\end{equation}
+
+Calculating the sample standard deviation of annual returns of A
+\begin{equation}
+  \begin{aligned}
+    s_A & = \sqrt{S_A^2} \\
+        & = \sqrt{0.007497574} \\
+        & = .08658853
+  \end{aligned}
+\end{equation}
+
+Calculating the sample mean of annual returns of B
+\begin{equation}
+  \begin{aligned}
+    \overline{x_B}  & = \frac{\sum_{i=1}^{n} x_i}{n} \\
+                    & = \frac{-0.06629834 + -0.07495069 + 0.08635394 + 0.09911678 + \\
+                              0.06785714 + 0.07608696  + 0.08391608 +  0.04516129}{8} \\
+                    & = \frac{.3172432}{8} \\
+                    & = .0396554 \\
+  \end{aligned}
+\end{equation}
+
+Calculating the sample variance of annual returns of B
+\begin{equation}
+  \begin{aligned}
+    s_B^2 & = \frac{\sum_{i=1}^{n} (x_i - \overline{x})^2}{n - 1} \\
+        & = \frac{(-0.06629834 - .0396554)^2 + (-0.07495069 - .0396554)^2 + \\
+                  (0.08635394 - .0396554)^2 + (0.09911678 - .0396554)^2 + \\
+                  (0.06785714 - .0396554)^2 + (0.07608696 - .0396554)^2 + \\
+                  (0.08391608 - .0396554)^2 + (0.04516129 - .0396554)^2 }{8} \\
+        & = \frac{.03418908}{7} \\
+        & = .004884154
+  \end{aligned}
+\end{equation}
+
+Calculating the sample standard deviation of annual returns of B
+\begin{equation}
+  \begin{aligned}
+    s_B & = \sqrt{S_B^2} \\
+        & = \sqrt{.004884154} \\
+        & = .06988672
+  \end{aligned}
+\end{equation}
+
+## a.
+Hypotheses:   
+$H_0$: The mean returns of A during 2011-2019 is .026.  
+$H_a$: The mean returns of A during 2011-2019 is not .026.  
+We also choose $\alpha = .05 $  
+
+**Note that the assumption here is that the sample is random and unbiased.**
+\begin{equation}
+  \begin{aligned}
+    \left\{
+        \begin{array} {l}
+          H_0: \mu = .026 \\
+          H_1: \mu \neq .026
+        \end{array}
+      \right.
+  \end{aligned}
+\end{equation}
+
+We do a one sample t-test here. 
+Test statistic formula:
+\begin{equation}
+  \begin{aligned}
+    t & = \frac{\overline{x} - \mu}{s_{\overline{x}}} \\
+    \text {where} \\
+    s_{\overline{x}} & = \frac{s}{\sqrt{n}} \\
+    \text {where} \\
+    \mu & = \text {Proposed constant for the population mean} \\
+    \overline{x} & = \text {Sample mean} \\
+    n & = \text {Sample size (i.e., number of observations)} \\
+    s & = \text {Sample standard deviation} \\
+    s_{\overline{x}} & = \text {Estimated standard error of the mean}
+  \end{aligned}
+\end{equation}
+
+Plug in:
+\begin{equation}
+  \begin{aligned}
+    s_{\overline{x}} & = \frac{s}{\sqrt{n}} \\
+                     & = \frac{.08658853}{\sqrt{8}} \\
+                     & = .03061367 \\
+    \text {So:} \\
+    t & = \frac{\overline{x} - \mu}{s_{\overline{x}}} \\
+      & = \frac{.03098975 - .026}{.03061367} \\
+      & = .1629909
+  \end{aligned}
+\end{equation}
+
+For a one-sample t test, the degree of freedom is $df = n - 1$. In this case: $df = 8 - 1 = 7$  
+Comparing $t = .1629909$ to a t-distribution with $df = 7$ at 95% confidence interval using the t table is $t_{critical} = 2.365$.  
+We can see that $t < t_{critical}$.  
+Again, looking up the t table, we see that probability of observing this test statistic, assuming $H_0$ at $df = 7$ and $t = .1629909$ is in the range of $(.5,1)$ which is more than $\alpha = .05$. Thus the p-value is not small enough.  
+
+**Conclusion: On a 95% confidence interval, we failed to reject the null hypothesis H_0 that the mean return of portfolio A during 2011-2019 is equal $2.6%$, which is also the mean return on government T-Bill for the same period.**    
+
+## b.
+Hypotheses:   
+$H_0$: The mean returns of B during 2011-2019 is .026.  
+$H_a$: The mean returns of B during 2011-2019 is not .026.  
+We also choose $\alpha = .05 $  
+
+**Note that the assumption here is that the sample is random and unbiased.**
+\begin{equation}
+  \begin{aligned}
+    \left\{
+        \begin{array} {l}
+          H_0: \mu = .026 \\
+          H_1: \mu \neq .026
+        \end{array}
+      \right.
+  \end{aligned}
+\end{equation}
+
+We do a one sample t-test here. 
+Test statistic formula:
+\begin{equation}
+  \begin{aligned}
+    t & = \frac{\overline{x} - \mu}{s_{\overline{x}}} \\
+    \text {where} \\
+    s_{\overline{x}} & = \frac{s}{\sqrt{n}} \\
+    \text {where} \\
+    \mu & = \text {Proposed constant for the population mean} \\
+    \overline{x} & = \text {Sample mean} \\
+    n & = \text {Sample size (i.e., number of observations)} \\
+    s & = \text {Sample standard deviation} \\
+    s_{\overline{x}} & = \text {Estimated standard error of the mean}
+  \end{aligned}
+\end{equation}
+
+Plug in:
+\begin{equation}
+  \begin{aligned}
+    s_{\overline{x}} & = \frac{s}{\sqrt{n}} \\
+                     & = \frac{.06988672}{\sqrt{8}} \\
+                     & = .02470869 \\
+    \text {So:} \\
+    t & = \frac{\overline{x} - \mu}{s_{\overline{x}}} \\
+      & = \frac{.0396554 - .026}{.02470869} \\
+      & = .5526558
+  \end{aligned}
+\end{equation}
+
+For a one-sample t test, the degree of freedom is $df = n - 1$. In this case: $df = 8 - 1 = 7$  
+Comparing $t = .5526558$ to a t-distribution with $df = 7$ at 95% confidence interval using the t table is $t_{critical} = 2.365$.  
+We can see that $t < t_{critical}$.  
+Again, looking up the t table, we see that probability of observing this test statistic, assuming $H_0$ at $df = 7$ and $t = .5526558$ is in the range of $(.5,1)$ which is more than $\alpha = .05$. Thus the p-value is not small enough.  
+
+**Conclusion: On a 95% confidence interval, we failed to reject the null hypothesis H_0 that the mean return of portfolio B during 2011-2019 is equal $2.6%$, which is also the mean return on government T-Bill for the same period.**  
+
+## c.
+Hypotheses:   
+$H_0$: The mean returns of A during 2011-2019 is statistically similar to that of B.  
+$H_a$: The mean returns of A during 2011-2019 is statistically difference from that of B.  
+We also choose $\alpha = .05 $  
+
+**Note that the assumption here is that the sample is random and unbiased. In addition, from calculation above, we know that $\sigma_A^2 \neq \sigma_B^2$.**
+\begin{equation}
+  \begin{aligned}
+    \left\{
+        \begin{array} {l}
+          H_0: \mu_A = \mu_B \\
+          H_1: \mu_A \neq \mu_B
+        \end{array}
+      \right.
+  \end{aligned}
+\end{equation}
+
+We do a two sample t-test here. 
+Test statistic formula:
+\begin{equation}
+  \begin{aligned}
+    t & = \frac{\overline{x_A} - \overline{x_B}}{\sqrt{\frac{s_A^2}{n_A} + \frac{s_B^2}{n_B}}}
+  \end{aligned}
+\end{equation}
+
+Plug in:
+\begin{equation}
+  \begin{aligned}
+    t & = \frac{\overline{x_A} - \overline{x_B}}{\sqrt{\frac{s_A^2}{n_A} + \frac{s_B^2}{n_B}}}  \\
+      & = \frac{.03098975 - .0396554}{\sqrt{\frac{0.007497574}{8} + \frac{.004884154}{8}}}  \\
+      & = \frac{-0.00866565}{\sqrt{0.0009371967 + .0006105192}} \\
+      & = \frac{-0.00866565}{0.03934102} \\
+      & = -0.2202701
+  \end{aligned}
+\end{equation}
+
+Calculating degree of freedom:
+\begin{equation}
+  \begin{aligned}
+    df & = \frac{(\frac{s_A^2}{n_A} + \frac{s_B^2}{n_B})^2}{(\frac{(\frac{s_A^2}{n_A})^2}{n_A - 1})+(\frac{(\frac{s_B^2}{n_B})^2}{n_B - 1})} \\
+       & = \frac{(\frac{.007497574}{8} + \frac{.004884154}{8})^2}{(\frac{(\frac{.007497574}{8})^2}{8 - 1}) + 
+                  (\frac{(\frac{.004884154}{8})^2}{8 - 1})} \\
+       & = 13.403
+  \end{aligned}
+\end{equation}
+ 
+Comparing $t = -0.2202701$ to a t-distribution with $df = 13.403$ at 95% confidence interval using the t table is $t_{critical} = 2.160$.  
+We can see that $t < t_{critical}$.  
+Again, looking up the t table, we see that probability of observing this test statistic, assuming $H_0$ at $df = 7$ and $t = .5526558$ is in the range of $(.5,1)$ which is more than $\alpha = .05$. Thus the p-value is not small enough.  
+
+**Conclusion: On a 95% confidence interval, we failed to reject the null hypothesis H_0 that the mean returns of A during 2011-2019 is statistically similar to that of B.**  
+
+## d.
+Hypotheses:   
+$H_0$: The risk (represented by variance of returns) of A during 2011-2019 is statistically similar to that of B.  
+$H_a$: The risk (represented by variance of returns) of A during 2011-2019 is statistically difference from that of B.  
+We also choose $\alpha = .05 $  
+
+**Note that the assumption here is that the sample is random and unbiased.**
+\begin{equation}
+  \begin{aligned}
+    \left\{
+        \begin{array} {l}
+          H_0: \sigma_A = \sigma_B \\
+          H_1: \sigma_A \neq \sigma_B
+        \end{array}
+      \right.
+  \end{aligned}
+\end{equation}
+
+We a F-test here:
+Test statistic formula:
+\begin{equation}
+  \begin{aligned}
+    F & = \frac{s_A^2}{s_B^2}
+  \end{aligned}
+\end{equation}
+
+Plug in:
+\begin{equation}
+  \begin{aligned}
+    F & = \frac{s_A^2}{s_B^2}  \\
+      & = \frac{0.007497574}{.004884154} \\
+      & = 1.535081
+  \end{aligned}
+\end{equation}
+
+For an F test, the degrees of freedom is $df = n - 1$. In this case: $df = 8 - 1 = 7$   
+Comparing $F = 1.535081$ to a F-distribution with $df = 7$ using the F table with $\alpha = .05$ is $F_{critical} = 3.7870$.  
+We can see that $t < F_{critical}$.  
+Using R to find the p-value:  
+
+```{r}
+var.test(ra,rb, alternative = "two.sided")
+```
+We see $p_{value} = .5857 > .05$. Thus the p-value is not small enough in this case.  
+**Conclusion: At $\alpha = .05$, we failed to reject the null hypothesis H_0 that the risk (represented by variance of returns) of A during 2011-2019 is statistically similar to that of B.**  
+
+## e.
+Hypotheses:   
+$H_0$: The mean returns of A is higher than that of B.  
+$H_a$: The mean returns of A is less than or equal to that of B.  
+We also choose $\alpha = .05 $  
+
+**Note that the assumption here is that the sample is random and unbiased. In addition, from calculation above, we know that $\sigma_A^2 \neq \sigma_B^2$.**
+\begin{equation}
+  \begin{aligned}
+    \left\{
+        \begin{array} {l}
+          H_0: \mu_A - \mu_B > 0\\
+          H_1: \mu_A - \mu_B \leq 0
+        \end{array}
+      \right.
+  \end{aligned}
+\end{equation}
+
+We do a two sample t-test here. 
+Test statistic formula:
+\begin{equation}
+  \begin{aligned}
+    t & = \frac{\overline{x_A} - \overline{x_B}}{\sqrt{\frac{s_A^2}{n_A} + \frac{s_B^2}{n_B}}}
+  \end{aligned}
+\end{equation}
+
+Plug in:
+\begin{equation}
+  \begin{aligned}
+    t & = \frac{\overline{x_A} - \overline{x_B}}{\sqrt{\frac{s_A^2}{n_A} + \frac{s_B^2}{n_B}}}  \\
+      & = \frac{.03098975 - .0396554}{\sqrt{\frac{0.007497574}{8} + \frac{.004884154}{8}}}  \\
+      & = \frac{-0.00866565}{\sqrt{0.0009371967 + .0006105192}} \\
+      & = \frac{-0.00866565}{0.03934102} \\
+      & = -0.2202701
+  \end{aligned}
+\end{equation}
+
+Calculating degree of freedom:
+\begin{equation}
+  \begin{aligned}
+    df & = \frac{(\frac{s_A^2}{n_A} + \frac{s_B^2}{n_B})^2}{(\frac{(\frac{s_A^2}{n_A})^2}{n_A - 1})+(\frac{(\frac{s_B^2}{n_B})^2}{n_B - 1})} \\
+       & = \frac{(\frac{.007497574}{8} + \frac{.004884154}{8})^2}{(\frac{(\frac{.007497574}{8})^2}{8 - 1}) + 
+                  (\frac{(\frac{.004884154}{8})^2}{8 - 1})} \\
+       & = 13.403
+  \end{aligned}
+\end{equation}
+ 
+Comparing $t = -0.2202701$ to a t-distribution with $df = 13.403$ at 95% confidence interval using the t table is $t_{critical} = 2.160$.  
+We can see that $t < t_{critical}$. 
+
+Using R to calculate the actual p-value of:
+
+```{r}
+t.test(ra, rb, var.equal=TRUE, confit=.95)
+```
+We find that the two-tailed $p_{value (2 tail)} = .8288$. Since we are doing the 1 tailed test, the actual p-value should be $p_{value (2 tail)} = .4144$. This is still greater than our $\alpha = .05$ Thus the p-value is not small enough. 
+
+**Conclusion: On a 95% confidence interval, we failed to reject the null hypothesis H_0 that the mean returns of A during 2011-2019 is statistically greater than that of B. Thus, we reject the analyst's claim.**  
+
+# **Question 3**
+## a.
+\begin{equation}
+  \begin{aligned}
+    E(X) & = \sum_{i=1}^n P_i * X_i \\
+         & = (10)(.1) + (6)(.15) + (5)(.3) + (8)(.2) + (3)(.05) + (4)(.1) + (4.5)(.1) \\
+         & = 6
+  \end{aligned}
+\end{equation}
+
+E(X) represent the expected value of X.  
+
+## b.
+\begin{equation}
+  \begin{aligned}
+    V(X) & = \sum_{i=1}^n (X^2P_i) - E(X)^2 \\
+         & = (10^2)(.1) + (6^2)(.15) + (5^2)(.3) + (8^2)(.2) + (3^2)(.05) + (4^2)(.1) + (4.5^2)(.1) - 6^2\\
+         & = 3.775
+  \end{aligned}
+\end{equation}
+
+V(X) represents the theoretcal limit of the variance of a sample of the distribution as the sample size approaches infinity.
+
+## c.
+Not a question
+
+## d.
+\begin{equation}
+  \begin{aligned}
+    E(Z) & = E(10X + 3Y) \\
+         & = E(10X) + E(3Y) \\
+         & = 10E(X) + 3E(Y) \\
+         & = 10(6) + 3(5) \\
+         & = 60 + 15 \\
+         & = 75
+  \end{aligned}
+\end{equation}
+
+## e.
+\begin{equation}
+  \begin{aligned}
+    V(Z) & = V(10X + 3Y) \\
+         & = V(10X) + V(3Y) + 2Cov(10X,3Y) \\
+         & = 100V(X) + 9V(Y) + 2(E(10X*3Y) - E(10X)E(3Y)) \\
+         & = 100(3.775) + 9(82) + 2(30E(XY) - 30E(X)(E(Y))) \\
+         & = 1115.5 + 60(15.2) - 60(6)(5) \\
+         & = 227.5
+  \end{aligned}
+\end{equation}
+
+
+## f.
+\begin{equation}
+  \begin{aligned}
+    Cov(X,Y) & = E(XY) - E(X)E(Y) \\
+             & = 15.2 - 6(5) \\
+             & = 15.2 - 30 \\
+             & = -14.8
+  \end{aligned}
+\end{equation}
+
+## g.
+\begin{equation}
+  \begin{aligned}
+    corr(X,Y) & = \frac{Cov(X,Y)}{\sqrt{V(X)V(Y)}} \\
+              & = \frac{-14.8}{\sqrt{3.775(82)}} \\
+              & = -0.8411943
+  \end{aligned}
+\end{equation}
+
+# **Question 4**
+## a.
+\begin{equation}
+  \begin{aligned}
+    V(X) & = E(X^2) - E(X)^2 \\
+         & = 68 - 25 \\
+         & = 43
+  \end{aligned}
+\end{equation}
+
+## b.
+\begin{equation}
+  \begin{aligned}
+    V(Y) & = E(Y^2) - E(Y)^2 \\
+         & = 75 - 64 \\
+         & = 11
+  \end{aligned}
+\end{equation}
+
+## c.
+\begin{equation}
+  \begin{aligned}
+    E(5 + 3X) & = 3E(X) + 5 \\
+              & = 3(5) + 5 \\
+              & = 15 + 5 \\
+              & = 20
+  \end{aligned}
+\end{equation}
+
+## d.
+\begin{equation}
+  \begin{aligned}
+    E(2X - 2Y) & = 2E(X) - 2E(Y) \\
+               & = 2(5) - 2(8) \\
+               & = 10 - 16 \\
+               & = -6
+  \end{aligned}
+\end{equation}
+
+## f.
+\begin{equation}
+  \begin{aligned}
+    E(3X^2) & = 3E(X^2) \\
+            & = 3(68) \\
+            & = 204
+  \end{aligned}
+\end{equation}
+
+## g.
+\begin{equation}
+  \begin{aligned}
+    V(2 + 4Y) & = 16V(Y) \\
+              & = 16(11) \\
+              & = 176
+  \end{aligned}
+\end{equation}
+
+## i.
+Not enough information.
+
+## j.
+\begin{equation}
+  \begin{aligned}
+    Cov(X,Y) & = corr(X,Y)\sqrt{V(X)V(Y)} \\
+             & = .35\sqrt{43(11)} \\
+             & = 7.611997
+  \end{aligned}
+\end{equation}
+
+## e.
+\begin{equation}
+  \begin{aligned}
+    E(5XY) & = 5E(XY) \\
+           & = 5(Cov(X,Y) + E(X)E(Y)) \\
+           & = 5(7.611997 + 5(8)) \\
+           & = 238.06
+  \end{aligned}
+\end{equation}
+
+## h.
+\begin{equation}
+  \begin{aligned}
+    V(5X - 2Y) & = V(5X) + V(-2Y) + 2Cov(5X,-2Y) \\
+               & = 25V(X) + 4V(Y) + 2E(-10XY) - 2E(5X)E(-2Y) \\
+               & = 25(43) + 4(11) - 20E(XY) + 20E(X)E(Y) \\
+               & = 1119 - 20(\frac{238.06}{5}) + 20(5)(8) \\
+               & = 1119 - 952.24 + 800 \\
+               & = 966.76
+  \end{aligned}
+\end{equation}
