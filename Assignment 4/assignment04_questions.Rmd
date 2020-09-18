@@ -1,0 +1,76 @@
+---
+title: "assignment04_questions"
+author: "Jeff Nguyen"
+date: "18/09/2020"
+output: html_document
+---
+
+UNIVERSITY OF SOUTHERN CALIFORNIA 
+Marshall School of Business 
+FBE 506 Quantitative Methods in Finance 
+
+M. Safarzadeh				
+Assignment #4					Student Name: _______________
+
+1.  Given the following observations on X:
+
+X:  14, 20, 18, 10, 8, 14, 16, 17, 9, 16, 16, 22, 20, 25, 15
+
+a. Find the point estimate of the sample mean ...................................... 
+b.  Find the point estimate of the sample variance  .......................................
+c.  Find the point estimate of the sample standard deviation .......................................
+d.  Find the point estimate of the population mean .......................................
+e.  Find the point estimate of the population variance .............................
+f.  Find the point estimate of the population standard deviation  .......................................
+g.  Find the point estimate of the standard deviation of the sample mean ........................
+h.  Find the point estimate of the variance of the sample mean ........................
+
+2. A financial analyst is testing the performance of two portfolios where the end of the year index on each portfolio for the past nine years are indexed as follows: (Note: For each question you are required to define your hypothesis clearly, find the relevant statistics, and express, statistically, what your conclusions are.) 
+
+Portfolios	2011      2012      2013	2014       2015	2016     2017	2018        2019
+    A	123.5   121.3       106.5	102.8      118.9	129.6    137.9	142.9        153.7
+    B	108.6   101.4         93.8	101.9      112.0	119.6    128.7	139.5        145.8
+a. Test the hypothesis that the mean return for portfolio A during 2011-2019 is no different from the mean return on government’s T-Bill of 2.6% for the same time period.
+b. Test the hypothesis that the mean return for portfolio B during 2011-2019 is no different from the mean return on government’s T-Bill of 2.6% for the same time period.
+c. Test the hypothesis that the mean returns of the two portfolios are not statistically different from each other.
+d.  Test the hypothesis that the risk of the two portfolios (measured by the variances of the returns) are not statistically different from each other.
+e.  A financial analyst claims that portfolio A has higher performance than portfolio B.  Test for the claim of the financial analyst? Do you agree?
+
+
+3.  Given the distribution of the following variable (X), find the mean, E(X), and the variance V(X) of the variable X.
+
+X: 		10,	   6,	  5, 	8,	 3, 	4, 	4.5
+Probability:	.1, 	.15, 	 .3,      .2,	.05,	.1,	.1	
+
+a.   E(X) =	__________________				
+
+What does E(X) represent?  ________________________________________________
+
+b.   V(X) =   ____________________
+
+What does V(X) represent?  ________________________
+
+c. Y is a variable with E(Y) = 5, V(Y) = 82, and E(XY) = 15.2 . 
+
+d.  Find E(Z), where Z = 10X + 3Y  ____________________________________
+
+e.  Find V(Z). _______________________________
+
+f.  Find covariance of X and Y. __________________
+
+g.  Find the correlation coefficient between X and Y.
+
+4.  Given that E(X) = 5, E(Y) = 8, E(X2) = 68, E(Y2) = 75 and rx,y = .35, find the followings.
+
+a.  Find V(X) _________________		b. Find V(Y) _________________
+
+c. Find E(5 + 3X) ____________		d. Find E(2X - 2Y) _____________
+
+e. Find E(5XY) _______________		f. Find E(3X2)__________________
+
+g. Find V(2 + 4Y) ____________		h. Find V(5X - 2Y) _____________
+
+i. Find V(X*Y) _______________		j. Find Cov(X,Y) _________________
+
+
+

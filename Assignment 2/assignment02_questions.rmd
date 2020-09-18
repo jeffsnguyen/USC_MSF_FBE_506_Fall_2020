@@ -1,0 +1,34 @@
+---
+title: "assignment02_questions"
+author: "Jeff Nguyen"
+date: "18/09/2020"
+output: html_document
+---
+UNIVERSITY OF SOUTHERN CALIFORNIA
+Marshall School of Business
+FBE 506 Quantitative Methods in Finance
+M. Safarzadeh
+
+
+Assignment # 2					Student Name: _______________
+
+1. Graph the following functions:
+
+a. Y = 1.5X + 4	b. Y = Ln(X)		c. Y = eX 	d. Y = 5/(X – 1)   		          
+
+e. Y = X2 – 2X + 20	f.  Y = X3 - X2 + 12X + 20	
+
+2. Graph the following functions where T is time:
+
+a.  Y = .5T 	b. Y = 2T 	c. Y = (-.5)T 							
+
+3.  Download S&P500 index.  Convert the index from daily to monthly.  Convert the monthly index to monthly return to S&P500.  Graph the monthly index.  Graph the monthly return to S&P500
+
+4.  Download the quarterly real GDP from Fred and graph the GDP.  Convert the real GDP to real GDP growth and graph the real GDP growth.
+
+5. Download AAPL (Apple stock prices).  Convert AAPL to monthly AAPL. Graph the monthly price data.  Convert monthly AAPL price to return to monthly AAPL and graph the return to monthly AAPL.
+
+6.  Graph monthly AAPL and monthly S&P500 on one coordinate system and comment on the relation between the two variables.
+
+7. Graph returns to monthly AAPL and monthly S&P500 on one coordinate system and comment on their relation.
+
