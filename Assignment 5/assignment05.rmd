@@ -1,0 +1,218 @@
+---
+title: "assignment05"
+author: "Jeff Nguyen"
+date: "18/09/2020"
+output: html_document
+---
+
+**University of Southern California**  
+**Marshall School of Business**  
+**FBE 506 Quantitative Method in Finance**
+
+Assignment 05  
+Student Name: Ngoc Son (Jeff) Nguyen  
+Student ID: 6524885309  
+
+
+# **Question 1**
+
+```{r definition data-question1}
+library(quantmod)
+
+# Get data for JPM, FB and the 10 year T-bill for 01/2014 only
+jpm <- getSymbols("JPM", src = "yahoo", from = "2014-01-01", to = "2014-01-31") # JPM
+fb <- getSymbols("FB", src = "yahoo", , from = "2014-01-01", to = "2014-01-31") # FB
+tnx <- getSymbols("^TNX", src = "yahoo", , from = "2014-01-01", to = "2014-01-31") # TNX (10-year T-bill)
+
+# Get adjusted returns data for 01/2014
+rAdj_012014_JPM <- diff(log(JPM$JPM.Adjusted))
+rAdj_012014_FB <- diff(log(FB$FB.Adjusted))
+rAdj_012014_TNX <- TNX$TNX.Adjusted^(1/252)-1  # Convert to daily rate
+
+# Calculate statistics
+mean_rAdj_012014_JPM <- mean(rAdj_012014_JPM, na.rm = TRUE)
+mean_rAdj_012014_FB <- mean(rAdj_012014_FB, na.rm = TRUE)
+mean_TNX <- mean(rAdj_012014_TNX, na.rm = TRUE)
+
+stdev_rAdj_012014_JPM <- sd(rAdj_012014_JPM, na.rm = TRUE)
+stdev_rAdj_012014_FB <- sd(rAdj_012014_FB, na.rm = TRUE)
+
+```
+
+## a. Coefficient of variation
+For JPM:
+```{r}
+# Standard deviation of Adjusted Returns of JPM
+stdev_rAdj_012014_JPM
+
+# Mean of Adjusted Returns of JPM
+mean_rAdj_012014_JPM
+```
+\begin{equation}
+  \begin{aligned}
+    CV_{JPM} & = \frac{\sigma}{\mu}  \\
+             & = \frac{0.01281773}{-0.002037134}  \\
+             & = -6.292041  \\
+    \text {where} \\
+    \sigma & = \text {Standard deviation of Adjusted Returns} \\
+    \mu & = \text {Mean of Adjusted Returns} \\
+  \end{aligned}
+\end{equation}
+
+For FB:
+```{r}
+# Standard deviation of Adjusted Returns of FB
+stdev_rAdj_012014_FB
+
+# Mean of Adjusted Returns of FB
+mean_rAdj_012014_FB
+```
+\begin{equation}
+  \begin{aligned}
+    CV_{FB} & = \frac{\sigma}{\mu}  \\
+            & = \frac{0.03932831}{0.005796738}  \\
+            & = 6.784559  \\
+    \text {where} \\
+    \sigma & = \text {Standard deviation of Adjusted Returns} \\
+    \mu & = \text {Mean of Adjusted Returns } \\
+  \end{aligned}
+\end{equation}
+
+## b. Sharpe Ratio
+In this case, each portfolio carry 100% of JPM of FB so weighting is 100% of each stock for each portfolio.
+
+Using 10 year US Treasury bill mean daily rate for Jan 2014, we have the daily risk free rate $r_f = 0.004163561$
+
+For JPM:
+```{r}
+# Standard deviation of Adjusted Returns of JPM
+stdev_rAdj_012014_JPM
+
+# Mean of Adjusted Returns of JPM
+mean_rAdj_012014_JPM
+
+# Risk free rate 
+mean_TNX
+```
+\begin{equation}
+  \begin{aligned}
+    S_{JPM} & = \frac{E(r_p) - r_f}{\sigma_p}  \\
+            & = \frac{-0.002037134 - 0.004163561}{0.01281773}  \\
+            & = -0.4837592  \\
+    \text {where} \\
+    r_p & = \text {Mean of Adjusted Returns} \\
+    r_f & = \text {Risk free rate} \\
+    \sigma_p & = \text {Standard deviation of adjusted returns}
+  \end{aligned}
+\end{equation}
+
+For FB:
+```{r}
+# Standard deviation of Adjusted Returns of FB
+stdev_rAdj_012014_FB
+
+# Mean of Adjusted Returns of FB
+mean_rAdj_012014_FB
+
+# Risk free rate 
+mean_TNX
+```
+\begin{equation}
+  \begin{aligned}
+    S_{FB} & = \frac{E(r_p) - r_f}{\sigma_p}  \\
+           & = \frac{0.005796738 - 0.004163561}{0.03932831}  \\
+           & = 0.04152676  \\
+    \text {where} \\
+    r_p & = \text {Mean of Adjusted Returns} \\
+    r_f & = \text {Risk free rate} \\
+    \sigma_p & = \text {Standard deviation of adjusted returns}
+  \end{aligned}
+\end{equation}
+
+## b. Sortino Ratio
+For the purpose of calculating the Sortino ratio, we'll the mean of the Jan 2014 daily risk-free rate as the Minimum Acceptable Returns (MAR), which is $r_f = 0.004163561$
+
+For JPM:
+```{r}
+# Standard deviation of Adjusted Returns of JPM
+stdev_rAdj_012014_JPM
+
+# Mean of Adjusted Returns of JPM
+mean_rAdj_012014_JPM
+
+# Risk-free rate
+mean_TNX
+
+# Minimum Acceptable Returns
+mar <- mean_TNX
+mar
+
+# Calculating downside deviation
+# Selecting the JPM returns that is less than the MAR
+# Subtract them from the MAR
+# Square each results
+# Add them together
+# Divide it by the number of returns value in the data frame
+# Take root
+downsideDev_JPM <- sqrt(sum(((mean_TNX - subset(rAdj_012014_JPM, rAdj_012014_JPM < mar))**2)[,"JPM.Adjusted"]) / nrow(rAdj_012014_JPM))
+downsideDev_JPM
+```
+\begin{equation}
+  \begin{aligned}
+    SortinoRatio_{JPM} & = \frac{r_p - r_f}{\sigma_{downside}}  \\
+                       & = \frac{-0.002037134 - 0.004163561}{0.01206187}  \\
+                       & = -0.5140741  \\
+    \text {where} \\
+    r_p & = \text {Mean of Adjusted Returns} \\
+    r_f & = \text {Risk free rate} \\
+    \sigma_{downside} & = \text {Standard deviation of the downside}
+  \end{aligned}
+\end{equation}
+
+For FB:
+```{r}
+# Standard deviation of Adjusted Returns of JPM
+stdev_rAdj_012014_FB
+
+# Mean of Adjusted Returns of JPM
+mean_rAdj_012014_FB
+
+# Risk-free rate
+mean_TNX
+
+# Minimum Acceptable Returns
+mar
+
+# Calculating downside deviation
+# Selecting the JPM returns that is less than the MAR
+# Subtract them from the MAR
+# Square each results
+# Add them together
+# Divide it by the number of returns value in the data frame
+# Take root
+downsideDev_FB <- sqrt(sum(((mar - subset(rAdj_012014_FB, rAdj_012014_FB < mar))**2)[,"FB.Adjusted"]) / nrow(rAdj_012014_FB))
+downsideDev_FB
+```
+\begin{equation}
+  \begin{aligned}
+    SortinoRatio_{FB} & = \frac{r_p - r_f}{\sigma_{downside}}  \\
+                      & = \frac{0.005796738 - 0.004163561}{0.01867006}  \\
+                      & = 0.08747572  \\
+    \text {where} \\
+    r_p & = \text {Mean of Adjusted Returns} \\
+    r_f & = \text {Risk free rate} \\
+    \sigma_{downside} & = \text {Standard deviation of the downside}
+  \end{aligned}
+\end{equation}
+  
+In summary:  
+
+Portfolio | Coefficient of Variation | Sharpe Ratio  | Sortino Ratio
+---       | ---                      | ---           | ---    
+JPM       | −6.292041                | −0.4837592    | −0.5140741 
+FB        | 6.784559                 | 0.04152676    | 0.08747572 
+
+For the period of Jan 2014:  
+In terms of coefficient of variation, both JPM and FB are highly volatile with JPM showing a negative drift from the mean returns.   
+In terms of Sharpe Ratio, FB has better risk-adjusted returns performance compared to JPM.  
+In terms of Sortino Ratio, FB also generates better risk-adjusted performance with more weighting on the downside risk.  
