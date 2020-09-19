@@ -390,8 +390,12 @@ Student ID: 6524885309</p>
 ##   method            from
 ##   as.zoo.data.frame zoo</code></pre>
 <pre><code>## Version 0.4-0 included new data defaults. See ?getSymbols.</code></pre>
-<pre class="r"><code># Get data for JPM, FB and the 10 year T-bill for 01/2014 only
-jpm &lt;- getSymbols(&quot;JPM&quot;, src = &quot;yahoo&quot;, from = &quot;2014-01-01&quot;, to = &quot;2014-01-31&quot;) # JPM</code></pre>
+<pre class="r"><code># Set start date and end date of data
+start_date &lt;- &quot;2014-01-02&quot;
+end_date &lt;- &quot;2014-01-31&quot;
+
+# Get data for JPM, FB and the 10 year T-bill (TNX)
+getSymbols(&quot;JPM&quot;, src = &quot;yahoo&quot;, from = start_date, to = end_date) # JPM</code></pre>
 <pre><code>## &#39;getSymbols&#39; currently uses auto.assign=TRUE by default, but will
 ## use auto.assign=FALSE in 0.5-0. You will still be able to use
 ## &#39;loadSymbols&#39; to automatically load data. getOption(&quot;getSymbols.env&quot;)
@@ -400,54 +404,50 @@ jpm &lt;- getSymbols(&quot;JPM&quot;, src = &quot;yahoo&quot;, from = &quot;2014
 ## 
 ## This message is shown once per session and may be disabled by setting 
 ## options(&quot;getSymbols.warning4.0&quot;=FALSE). See ?getSymbols for details.</code></pre>
-<pre class="r"><code>fb &lt;- getSymbols(&quot;FB&quot;, src = &quot;yahoo&quot;, , from = &quot;2014-01-01&quot;, to = &quot;2014-01-31&quot;) # FB
-tnx &lt;- getSymbols(&quot;^TNX&quot;, src = &quot;yahoo&quot;, , from = &quot;2014-01-01&quot;, to = &quot;2014-01-31&quot;) # TNX (10-year T-bill)</code></pre>
+<pre><code>## [1] &quot;JPM&quot;</code></pre>
+<pre class="r"><code>getSymbols(&quot;FB&quot;, src = &quot;yahoo&quot;, , from = start_date, to = end_date) # FB</code></pre>
+<pre><code>## [1] &quot;FB&quot;</code></pre>
+<pre class="r"><code>getSymbols(&quot;^TNX&quot;, src = &quot;yahoo&quot;, from = start_date, to = end_date) # TNX (10-year T-bill)</code></pre>
 <pre><code>## Warning: ^TNX contains missing values. Some functions will not work if objects
 ## contain missing values in the middle of the series. Consider using na.omit(),
 ## na.approx(), na.fill(), etc to remove or replace them.</code></pre>
+<pre><code>## [1] &quot;^TNX&quot;</code></pre>
 <pre class="r"><code># Get adjusted returns data for 01/2014
-rAdj_012014_JPM &lt;- diff(log(JPM$JPM.Adjusted))
-rAdj_012014_FB &lt;- diff(log(FB$FB.Adjusted))
-rAdj_012014_TNX &lt;- TNX$TNX.Adjusted^(1/252)-1  # Convert to daily rate
+rJPM &lt;- diff(log(JPM$JPM.Adjusted))
+rFB &lt;- diff(log(FB$FB.Adjusted))
+rTNX &lt;- (to.monthly(TNX)$TNX.Adjusted) / 1200 # Using monthly rate</code></pre>
+<pre><code>## Warning in to.period(x, &quot;months&quot;, indexAt = indexAt, name = name, ...): missing
+## values removed from data</code></pre>
+<pre class="r"><code># Calculate statistics
+mean_rJPM &lt;- mean(rJPM, na.rm = TRUE)
+mean_rFB &lt;- mean(rFB, na.rm = TRUE)
+mean_rTNX &lt;- mean(rTNX, na.rm = TRUE)
 
-# Calculate statistics
-mean_rAdj_012014_JPM &lt;- mean(rAdj_012014_JPM, na.rm = TRUE)
-mean_rAdj_012014_FB &lt;- mean(rAdj_012014_FB, na.rm = TRUE)
-mean_TNX &lt;- mean(rAdj_012014_TNX, na.rm = TRUE)
-
-stdev_rAdj_012014_JPM &lt;- sd(rAdj_012014_JPM, na.rm = TRUE)
-stdev_rAdj_012014_FB &lt;- sd(rAdj_012014_FB, na.rm = TRUE)</code></pre>
+sd_rJPM &lt;- sd(rJPM, na.rm = TRUE)
+sd_rFB &lt;- sd(rFB, na.rm = TRUE)</code></pre>
 <div id="a.-coefficient-of-variation" class="section level2">
 <h2>a. Coefficient of variation</h2>
 <p>For JPM:</p>
-<pre class="r"><code># Standard deviation of Adjusted Returns of JPM
-stdev_rAdj_012014_JPM</code></pre>
-<pre><code>## [1] 0.01281773</code></pre>
-<pre class="r"><code># Mean of Adjusted Returns of JPM
-mean_rAdj_012014_JPM</code></pre>
-<pre><code>## [1] -0.002037134</code></pre>
+<pre class="r"><code># Coefficient of variation of Adjusted Returns of JPM
+cv_rJPM &lt;- sd_rJPM / mean_rJPM</code></pre>
 <p><span class="math display">\[\begin{equation}
   \begin{aligned}
     CV_{JPM} &amp; = \frac{\sigma}{\mu}  \\
-             &amp; = \frac{0.01281773}{-0.002037134}  \\
-             &amp; = -6.292041  \\
+             &amp; = \frac{0.0128177}{-0.0020371}  \\
+             &amp; = -6.2920387  \\
     \text {where} \\
     \sigma &amp; = \text {Standard deviation of Adjusted Returns} \\
     \mu &amp; = \text {Mean of Adjusted Returns} \\
   \end{aligned}
 \end{equation}\]</span></p>
 <p>For FB:</p>
-<pre class="r"><code># Standard deviation of Adjusted Returns of FB
-stdev_rAdj_012014_FB</code></pre>
-<pre><code>## [1] 0.03932831</code></pre>
-<pre class="r"><code># Mean of Adjusted Returns of FB
-mean_rAdj_012014_FB</code></pre>
-<pre><code>## [1] 0.005796738</code></pre>
+<pre class="r"><code># Coefficient of variation of Adjusted Returns of FB
+cv_rFB &lt;- sd_rFB / mean_rFB</code></pre>
 <p><span class="math display">\[\begin{equation}
   \begin{aligned}
     CV_{FB} &amp; = \frac{\sigma}{\mu}  \\
-            &amp; = \frac{0.03932831}{0.005796738}  \\
-            &amp; = 6.784559  \\
+            &amp; = \frac{0.0393283}{0.0057967}  \\
+             &amp; = 6.7845581  \\
     \text {where} \\
     \sigma &amp; = \text {Standard deviation of Adjusted Returns} \\
     \mu &amp; = \text {Mean of Adjusted Returns } \\
@@ -457,22 +457,14 @@ mean_rAdj_012014_FB</code></pre>
 <div id="b.-sharpe-ratio" class="section level2">
 <h2>b. Sharpe Ratio</h2>
 <p>In this case, each portfolio carry 100% of JPM of FB so weighting is 100% of each stock for each portfolio.</p>
-<p>Using 10 year US Treasury bill mean daily rate for Jan 2014, we have the daily risk free rate <span class="math inline">\(r_f = 0.004163561\)</span></p>
 <p>For JPM:</p>
-<pre class="r"><code># Standard deviation of Adjusted Returns of JPM
-stdev_rAdj_012014_JPM</code></pre>
-<pre><code>## [1] 0.01281773</code></pre>
-<pre class="r"><code># Mean of Adjusted Returns of JPM
-mean_rAdj_012014_JPM</code></pre>
-<pre><code>## [1] -0.002037134</code></pre>
-<pre class="r"><code># Risk free rate 
-mean_TNX</code></pre>
-<pre><code>## [1] 0.004163561</code></pre>
+<pre class="r"><code># Sharpe Ratio of a 100% JPM portfolio
+sharpe_rJPM &lt;- (mean_rJPM - mean_rTNX) / sd_rJPM </code></pre>
 <p><span class="math display">\[\begin{equation}
   \begin{aligned}
     S_{JPM} &amp; = \frac{E(r_p) - r_f}{\sigma_p}  \\
-            &amp; = \frac{-0.002037134 - 0.004163561}{0.01281773}  \\
-            &amp; = -0.4837592  \\
+            &amp; = \frac{-0.0020371 - 0.0022442}{0.0128177}  \\
+            &amp; = -0.334014 \\
     \text {where} \\
     r_p &amp; = \text {Mean of Adjusted Returns} \\
     r_f &amp; = \text {Risk free rate} \\
@@ -480,20 +472,13 @@ mean_TNX</code></pre>
   \end{aligned}
 \end{equation}\]</span></p>
 <p>For FB:</p>
-<pre class="r"><code># Standard deviation of Adjusted Returns of FB
-stdev_rAdj_012014_FB</code></pre>
-<pre><code>## [1] 0.03932831</code></pre>
-<pre class="r"><code># Mean of Adjusted Returns of FB
-mean_rAdj_012014_FB</code></pre>
-<pre><code>## [1] 0.005796738</code></pre>
-<pre class="r"><code># Risk free rate 
-mean_TNX</code></pre>
-<pre><code>## [1] 0.004163561</code></pre>
+<pre class="r"><code># Sharpe Ratio of a 100% JPM portfolio
+sharpe_rFB &lt;- (mean_rFB - mean_rTNX) / sd_rFB </code></pre>
 <p><span class="math display">\[\begin{equation}
   \begin{aligned}
     S_{FB} &amp; = \frac{E(r_p) - r_f}{\sigma_p}  \\
-           &amp; = \frac{0.005796738 - 0.004163561}{0.03932831}  \\
-           &amp; = 0.04152676  \\
+           &amp; = \frac{0.0057967 - 0.0022442}{0.0393283}  \\
+            &amp; = 0.0903312 \\
     \text {where} \\
     r_p &amp; = \text {Mean of Adjusted Returns} \\
     r_f &amp; = \text {Risk free rate} \\
@@ -503,36 +488,31 @@ mean_TNX</code></pre>
 </div>
 <div id="b.-sortino-ratio" class="section level2">
 <h2>b. Sortino Ratio</h2>
-<p>For the purpose of calculating the Sortino ratio, we’ll the mean of the Jan 2014 daily risk-free rate as the Minimum Acceptable Returns (MAR), which is <span class="math inline">\(r_f = 0.004163561\)</span></p>
+<p>For the purpose of calculating the Sortino ratio, we’ll the mean of the Jan 2014 daily risk-free rate as the Minimum Acceptable Returns (MAR).</p>
 <p>For JPM:</p>
-<pre class="r"><code># Standard deviation of Adjusted Returns of JPM
-stdev_rAdj_012014_JPM</code></pre>
-<pre><code>## [1] 0.01281773</code></pre>
-<pre class="r"><code># Mean of Adjusted Returns of JPM
-mean_rAdj_012014_JPM</code></pre>
-<pre><code>## [1] -0.002037134</code></pre>
-<pre class="r"><code># Risk-free rate
-mean_TNX</code></pre>
-<pre><code>## [1] 0.004163561</code></pre>
-<pre class="r"><code># Minimum Acceptable Returns
-mar &lt;- mean_TNX
-mar</code></pre>
-<pre><code>## [1] 0.004163561</code></pre>
-<pre class="r"><code># Calculating downside deviation
-# Selecting the JPM returns that is less than the MAR
-# Subtract them from the MAR
-# Square each results
-# Add them together
-# Divide it by the number of returns value in the data frame
-# Take root
-downsideDev_JPM &lt;- sqrt(sum(((mean_TNX - subset(rAdj_012014_JPM, rAdj_012014_JPM &lt; mar))**2)[,&quot;JPM.Adjusted&quot;]) / nrow(rAdj_012014_JPM))
-downsideDev_JPM</code></pre>
-<pre><code>## [1] 0.01206187</code></pre>
+<pre class="r"><code># Calculating downside deviation using lower partial moment of order 2
+# Assuming the 10 year T-bill returns as minimum acceptable returns MAR
+mar &lt;- mean_rTNX
+
+# Deviation from MAR, this is a data frame, remove NA values
+dev_rJPM_mar &lt;- na.omit(rJPM - mar)
+
+# Set positive deviations to be 0 as we only want downside value
+devNegative_rJPM_mar &lt;- replace(dev_rJPM_mar, dev_rJPM_mar &gt; 0, 0)
+
+# Calculate the Lower Partial Moment
+downsideDev_JPM &lt;- var(devNegative_rJPM_mar)
+
+# Downside deviation
+sd_downsideDev_JPM &lt;- sqrt(downsideDev_JPM)
+
+# Sortino Ratio
+sortino_rJPM &lt;- (mean_rJPM - mean_rTNX) / sd_downsideDev_JPM </code></pre>
 <p><span class="math display">\[\begin{equation}
   \begin{aligned}
     SortinoRatio_{JPM} &amp; = \frac{r_p - r_f}{\sigma_{downside}}  \\
-                       &amp; = \frac{-0.002037134 - 0.004163561}{0.01206187}  \\
-                       &amp; = -0.5140741  \\
+                       &amp; = \frac{-0.0020371 - 0.0022442}{0.0084284}  \\
+                       &amp; = -0.5079624  \\
     \text {where} \\
     r_p &amp; = \text {Mean of Adjusted Returns} \\
     r_f &amp; = \text {Risk free rate} \\
@@ -540,33 +520,29 @@ downsideDev_JPM</code></pre>
   \end{aligned}
 \end{equation}\]</span></p>
 <p>For FB:</p>
-<pre class="r"><code># Standard deviation of Adjusted Returns of JPM
-stdev_rAdj_012014_FB</code></pre>
-<pre><code>## [1] 0.03932831</code></pre>
-<pre class="r"><code># Mean of Adjusted Returns of JPM
-mean_rAdj_012014_FB</code></pre>
-<pre><code>## [1] 0.005796738</code></pre>
-<pre class="r"><code># Risk-free rate
-mean_TNX</code></pre>
-<pre><code>## [1] 0.004163561</code></pre>
-<pre class="r"><code># Minimum Acceptable Returns
-mar</code></pre>
-<pre><code>## [1] 0.004163561</code></pre>
-<pre class="r"><code># Calculating downside deviation
-# Selecting the JPM returns that is less than the MAR
-# Subtract them from the MAR
-# Square each results
-# Add them together
-# Divide it by the number of returns value in the data frame
-# Take root
-downsideDev_FB &lt;- sqrt(sum(((mar - subset(rAdj_012014_FB, rAdj_012014_FB &lt; mar))**2)[,&quot;FB.Adjusted&quot;]) / nrow(rAdj_012014_FB))
-downsideDev_FB</code></pre>
-<pre><code>## [1] 0.01867006</code></pre>
+<pre class="r"><code># Calculating downside deviation using lower partial moment of order 2
+# Assuming the 10 year T-bill returns as minimum acceptable returns MAR
+mar &lt;- mean_rTNX
+
+# Deviation from MAR, this is a data frame, also remove NA values
+dev_rFB_mar &lt;- na.omit(rFB - mar)
+
+# Set positive deviations to be 0 as we only want downside value
+devNegative_rFB_mar &lt;- replace(dev_rFB_mar, dev_rFB_mar &gt; 0, 0)
+
+# Calculate the Lower Partial Moment
+downsideDev_FB &lt;- var(devNegative_rFB_mar)
+
+# Downside deviation
+sd_downsideDev_FB &lt;- sqrt(downsideDev_FB)
+
+# Sortino Ratio
+sortino_rFB &lt;- (mean_rFB - mean_rTNX) / sd_downsideDev_FB</code></pre>
 <p><span class="math display">\[\begin{equation}
   \begin{aligned}
-    SortinoRatio_{FB} &amp; = \frac{r_p - r_f}{\sigma_{downside}}  \\
-                      &amp; = \frac{0.005796738 - 0.004163561}{0.01867006}  \\
-                      &amp; = 0.08747572  \\
+    SortinoRatio_{JPM} &amp; = \frac{r_p - r_f}{\sigma_{downside}}  \\
+                       &amp; = \frac{0.0057967 - 0.0057967}{0.013801}  \\
+                       &amp; = 0.2574141  \\
     \text {where} \\
     r_p &amp; = \text {Mean of Adjusted Returns} \\
     r_f &amp; = \text {Risk free rate} \\
@@ -586,15 +562,15 @@ downsideDev_FB</code></pre>
 <tbody>
 <tr class="odd">
 <td>JPM</td>
-<td>−6.292041</td>
-<td>−0.4837592</td>
-<td>−0.5140741</td>
+<td>-6.2920387</td>
+<td>-0.334014</td>
+<td>-0.5079624</td>
 </tr>
 <tr class="even">
 <td>FB</td>
-<td>6.784559</td>
-<td>0.04152676</td>
-<td>0.08747572</td>
+<td>6.7845581</td>
+<td>0.0903312</td>
+<td>0.2574141</td>
 </tr>
 </tbody>
 </table>
@@ -603,6 +579,674 @@ In terms of coefficient of variation, both JPM and FB are highly volatile with J
 In terms of Sharpe Ratio, FB has better risk-adjusted returns performance compared to JPM.<br />
 In terms of Sortino Ratio, FB also generates better risk-adjusted performance with more weighting on the downside risk.</p>
 </div>
+</div>
+<div id="question-2" class="section level1">
+<h1><strong>Question 2</strong></h1>
+<pre class="r"><code># Set start date and end date of data
+start_date &lt;- &quot;2018-01-02&quot;
+end_date &lt;- &quot;2020-09-18&quot;
+
+# Get data for JPM, FB and the 10 year T-bill (TNX)
+getSymbols(&quot;JPM&quot;, src = &quot;yahoo&quot;, from = start_date, to = end_date) # JPM</code></pre>
+<pre><code>## [1] &quot;JPM&quot;</code></pre>
+<pre class="r"><code>getSymbols(&quot;FB&quot;, src = &quot;yahoo&quot;, from = start_date, to = end_date) # FB</code></pre>
+<pre><code>## [1] &quot;FB&quot;</code></pre>
+<pre class="r"><code>getSymbols(&quot;^TNX&quot;, src = &quot;yahoo&quot;, from = start_date, to = end_date) # TNX (10-year T-bill)</code></pre>
+<pre><code>## Warning: ^TNX contains missing values. Some functions will not work if objects
+## contain missing values in the middle of the series. Consider using na.omit(),
+## na.approx(), na.fill(), etc to remove or replace them.</code></pre>
+<pre><code>## [1] &quot;^TNX&quot;</code></pre>
+<pre class="r"><code># Get adjusted returns data for 01/2014
+rJPM &lt;- diff(log(to.monthly(JPM)$JPM.Adjusted))
+rFB &lt;- diff(log(to.monthly(FB)$FB.Adjusted))
+rTNX &lt;- (to.monthly(TNX)$TNX.Adjusted) / 1200 # Using monthly rate</code></pre>
+<pre><code>## Warning in to.period(x, &quot;months&quot;, indexAt = indexAt, name = name, ...): missing
+## values removed from data</code></pre>
+<pre class="r"><code># Calculate statistics
+mean_rJPM &lt;- mean(rJPM, na.rm = TRUE)
+mean_rFB &lt;- mean(rFB, na.rm = TRUE)
+mean_rTNX &lt;- mean(rTNX, na.rm = TRUE)
+
+sd_rJPM &lt;- sd(rJPM, na.rm = TRUE)
+sd_rFB &lt;- sd(rFB, na.rm = TRUE)</code></pre>
+<div id="a.-coefficient-of-variation-1" class="section level2">
+<h2>a. Coefficient of variation</h2>
+<p>For JPM:</p>
+<pre class="r"><code># Coefficient of variation of Adjusted Returns of JPM
+cv_rJPM &lt;- sd_rJPM / mean_rJPM</code></pre>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    CV_{JPM} &amp; = \frac{\sigma}{\mu}  \\
+             &amp; = \frac{0.0768994}{-0.00267}  \\
+             &amp; = -28.8009848  \\
+    \text {where} \\
+    \sigma &amp; = \text {Standard deviation of Adjusted Returns} \\
+    \mu &amp; = \text {Mean of Adjusted Returns} \\
+  \end{aligned}
+\end{equation}\]</span></p>
+<p>For FB:</p>
+<pre class="r"><code># Coefficient of variation of Adjusted Returns of FB
+cv_rFB &lt;- sd_rFB / mean_rFB</code></pre>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    CV_{FB} &amp; = \frac{\sigma}{\mu}  \\
+            &amp; = \frac{0.098384}{0.0096887}  \\
+             &amp; = 10.1545518  \\
+    \text {where} \\
+    \sigma &amp; = \text {Standard deviation of Adjusted Returns} \\
+    \mu &amp; = \text {Mean of Adjusted Returns } \\
+  \end{aligned}
+\end{equation}\]</span></p>
+</div>
+<div id="b.-sharpe-ratio-1" class="section level2">
+<h2>b. Sharpe Ratio</h2>
+<p>In this case, each portfolio carry 100% of JPM of FB so weighting is 100% of each stock for each portfolio.</p>
+<p>For JPM:</p>
+<pre class="r"><code># Sharpe Ratio of a 100% JPM portfolio
+sharpe_rJPM &lt;- (mean_rJPM - mean_rTNX) / sd_rJPM </code></pre>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    S_{JPM} &amp; = \frac{E(r_p) - r_f}{\sigma_p}  \\
+            &amp; = \frac{-0.00267 - 0.0016878}{0.0768994}  \\
+            &amp; = -0.0566695 \\
+    \text {where} \\
+    r_p &amp; = \text {Mean of Adjusted Returns} \\
+    r_f &amp; = \text {Risk free rate} \\
+    \sigma_p &amp; = \text {Standard deviation of adjusted returns}
+  \end{aligned}
+\end{equation}\]</span></p>
+<p>For FB:</p>
+<pre class="r"><code># Sharpe Ratio of a 100% JPM portfolio
+sharpe_rFB &lt;- (mean_rFB - mean_rTNX) / sd_rFB </code></pre>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    S_{FB} &amp; = \frac{E(r_p) - r_f}{\sigma_p}  \\
+           &amp; = \frac{0.0096887 - 0.0016878}{0.098384}  \\
+            &amp; = 0.0813225 \\
+    \text {where} \\
+    r_p &amp; = \text {Mean of Adjusted Returns} \\
+    r_f &amp; = \text {Risk free rate} \\
+    \sigma_p &amp; = \text {Standard deviation of adjusted returns}
+  \end{aligned}
+\end{equation}\]</span></p>
+</div>
+<div id="b.-sortino-ratio-1" class="section level2">
+<h2>b. Sortino Ratio</h2>
+<p>For the purpose of calculating the Sortino ratio, we’ll the mean of the Jan 2014 daily risk-free rate as the Minimum Acceptable Returns (MAR).</p>
+<p>For JPM:</p>
+<pre class="r"><code># Calculating downside deviation using lower partial moment of order 2
+# Assuming the 10 year T-bill returns as minimum acceptable returns MAR
+mar &lt;- mean_rTNX
+
+# Deviation from MAR, this is a data frame, remove NA values
+dev_rJPM_mar &lt;- na.omit(rJPM - mar)
+
+# Set positive deviations to be 0 as we only want downside value
+devNegative_rJPM_mar &lt;- replace(dev_rJPM_mar, dev_rJPM_mar &gt; 0, 0)
+
+# Calculate the Lower Partial Moment
+downsideDev_JPM &lt;- var(devNegative_rJPM_mar)
+
+# Downside deviation
+sd_downsideDev_JPM &lt;- sqrt(downsideDev_JPM)
+
+# Sortino Ratio
+sortino_rJPM &lt;- (mean_rJPM - mean_rTNX) / sd_downsideDev_JPM </code></pre>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    SortinoRatio_{JPM} &amp; = \frac{r_p - r_f}{\sigma_{downside}}  \\
+                       &amp; = \frac{-0.00267 - 0.0016878}{0.0548325}  \\
+                       &amp; = -0.0794758  \\
+    \text {where} \\
+    r_p &amp; = \text {Mean of Adjusted Returns} \\
+    r_f &amp; = \text {Risk free rate} \\
+    \sigma_{downside} &amp; = \text {Standard deviation of the downside}
+  \end{aligned}
+\end{equation}\]</span></p>
+<p>For FB:</p>
+<pre class="r"><code># Calculating downside deviation using lower partial moment of order 2
+# Assuming the 10 year T-bill returns as minimum acceptable returns MAR
+mar &lt;- mean_rTNX
+
+# Deviation from MAR, this is a data frame, also remove NA values
+dev_rFB_mar &lt;- na.omit(rFB - mar)
+
+# Set positive deviations to be 0 as we only want downside value
+devNegative_rFB_mar &lt;- replace(dev_rFB_mar, dev_rFB_mar &gt; 0, 0)
+
+# Calculate the Lower Partial Moment
+downsideDev_FB &lt;- var(devNegative_rFB_mar)
+
+# Downside deviation
+sd_downsideDev_FB &lt;- sqrt(downsideDev_FB)
+
+# Sortino Ratio
+sortino_rFB &lt;- (mean_rFB - mean_rTNX) / sd_downsideDev_FB</code></pre>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    SortinoRatio_{JPM} &amp; = \frac{r_p - r_f}{\sigma_{downside}}  \\
+                       &amp; = \frac{0.0096887 - 0.0096887}{0.0466979}  \\
+                       &amp; = 0.1713319  \\
+    \text {where} \\
+    r_p &amp; = \text {Mean of Adjusted Returns} \\
+    r_f &amp; = \text {Risk free rate} \\
+    \sigma_{downside} &amp; = \text {Standard deviation of the downside}
+  \end{aligned}
+\end{equation}\]</span></p>
+<p>In summary:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Portfolio</th>
+<th>Coefficient of Variation</th>
+<th>Sharpe Ratio</th>
+<th>Sortino Ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>JPM</td>
+<td>-28.8009848</td>
+<td>-0.0566695</td>
+<td>-0.0794758</td>
+</tr>
+<tr class="even">
+<td>FB</td>
+<td>10.1545518</td>
+<td>0.0813225</td>
+<td>0.1713319</td>
+</tr>
+</tbody>
+</table>
+<p>For the period of Jan 02, 2018 to Sep 18, 2020:<br />
+In terms of coefficient of variation, both JPM and FB are highly volatile with JPM showing a significant negative drift from the mean returns while FB shows a positive drift from mean returns. +1 for FB<br />
+In terms of Sharpe Ratio, FB has better risk-adjusted returns performance compared to JPM. +1 for FB In terms of Sortino Ratio, FB also generates better risk-adjusted performance with more weighting on the downside risk. +1 for FB</p>
+<p>Overall, based on the above statistics, FB is the better investment with better risk-adjusted returns</p>
+</div>
+</div>
+<div id="question-3" class="section level1">
+<h1><strong>Question 3</strong></h1>
+<p>Given statistics</p>
+<pre class="r"><code># Mean returns of portfolio
+mean_p &lt;- 5/100
+
+# Standard deviation of returns of portfolio
+sd_p &lt;-  2.2/100
+
+# VaR threshold
+VaR_threshold &lt;- 5</code></pre>
+<div id="a.-5-1-year-var" class="section level2">
+<h2>a. 5% 1 year VaR</h2>
+<p>Calculating statistics</p>
+<pre class="r"><code># Set scaling factor based on the period of evaluation
+# In this example: {1: &#39;1 year&#39;, 1/2: &#39;6 months&#39;, 1/12: &#39;1 month&#39;, 1/250: &#39;1 day&#39;}
+scalingFactor &lt;- 1
+
+# Scaling returns
+meanScaled_p &lt;- mean_p * scalingFactor
+
+# Scaling standard deviation
+sdScaled_p &lt;- sd_p * sqrt(scalingFactor)
+
+# Value at Risk
+z_stat &lt;- qnorm(VaR_threshold/100, 0, 1, lower.tail = TRUE)
+VaR_1year_p &lt;- meanScaled_p + sdScaled_p * z_stat</code></pre>
+<p>Value at Risk following the standard normal distribution where the <span class="math inline">\(z_{statistic}\)</span> is the 5th percentile of the standard normal distribution.</p>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    \mu_{scaled} &amp; = \mu * Scaling Factor  \\
+                 &amp; = 0.05 * 1 \\
+                 &amp; = 0.05 \\
+    \sigma_{scaled} &amp; = \sigma * \sqrt{Scaling Factor}  \\             
+                    &amp; = 0.022 * \sqrt{1} \\
+                    &amp; = 0.022  \\
+    \text {where} \\
+    \mu_{scaled} &amp; = \text {period-scaled expected excess returns} \\
+    \mu &amp; = \text {given mean returns} \\
+    \sigma_{scaled} &amp; = \text {period-scaled standard deviation of expected excess returns} \\
+    \sigma &amp; = \text {given standard deviation returns} \\
+    Scaling Factor &amp; = \text {scaled factor based on the period 1: &#39;1 year&#39;, 1/2: &#39;6 months&#39;, 1/12: &#39;1 month&#39;, 1/250: &#39;1 day&#39;} \\
+  \end{aligned}
+\end{equation}\]</span></p>
+<p>Looking up the <span class="math inline">\(z_{statistic}\)</span> for the 5th percentile of the standard normal distribution, we have <span class="math inline">\(z_{statistic} = -1.6448536\)</span>. Thus, the Value at Risk of the portfolio is:</p>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    VaR &amp; = \mu_{scaled} + \sigma_{scaled} * z_{statistic}  \\
+        &amp; = 0.05 + 0.022 * -1.6448536  \\
+        &amp; = 0.0138132
+  \end{aligned}
+\end{equation}\]</span></p>
+</div>
+<div id="b.-5-6-months-var" class="section level2">
+<h2>b. 5% 6 months VaR</h2>
+<p>Calculating statistics</p>
+<pre class="r"><code># Set scaling factor based on the period of evaluation
+# In this example: {1: &#39;1 year&#39;, 1/2: &#39;6 months&#39;, 1/12: &#39;1 month&#39;, 1/250: &#39;1 day&#39;}
+scalingFactor &lt;- 1/2
+
+# Scaling returns
+meanScaled_p &lt;- mean_p * scalingFactor
+
+# Scaling standard deviation
+sdScaled_p &lt;- sd_p * sqrt(scalingFactor)
+
+# Value at Risk
+z_stat &lt;- qnorm(VaR_threshold/100, 0, 1, lower.tail = TRUE)
+VaR_6months_p &lt;- meanScaled_p + sdScaled_p * z_stat</code></pre>
+<p>Value at Risk following the standard normal distribution where the <span class="math inline">\(z_{statistic}\)</span> is the 5th percentile of the standard normal distribution.</p>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    \mu_{scaled} &amp; = \mu * Scaling Factor  \\
+                 &amp; = 0.05 * 0.5 \\
+                 &amp; = 0.025 \\
+    \sigma_{scaled} &amp; = \sigma * \sqrt{Scaling Factor}  \\             
+                    &amp; = 0.022 * \sqrt{0.5} \\
+                    &amp; = 0.0155563  \\
+    \text {where} \\
+    \mu_{scaled} &amp; = \text {period-scaled expected excess returns} \\
+    \mu &amp; = \text {given mean returns} \\
+    \sigma_{scaled} &amp; = \text {period-scaled standard deviation of expected excess returns} \\
+    \sigma &amp; = \text {given standard deviation returns} \\
+    Scaling Factor &amp; = \text {scaled factor based on the period 1: &#39;1 year&#39;, 1/2: &#39;6 months&#39;, 1/12: &#39;1 month&#39;, 1/250: &#39;1 day&#39;} \\
+  \end{aligned}
+\end{equation}\]</span></p>
+<p>Looking up the <span class="math inline">\(z_{statistic}\)</span> for the 5th percentile of the standard normal distribution, we have <span class="math inline">\(z_{statistic} = -1.6448536\)</span>. Thus, the Value at Risk of the portfolio is:</p>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    VaR &amp; = \mu_{scaled} + \sigma_{scaled} * z_{statistic}  \\
+        &amp; = 0.025 + 0.0155563 * -1.6448536  \\
+        &amp; = -5.8791738\times 10^{-4}
+  \end{aligned}
+\end{equation}\]</span></p>
+</div>
+<div id="c.-5-1-month-var" class="section level2">
+<h2>c. 5% 1 month VaR</h2>
+<p>Calculating statistics</p>
+<pre class="r"><code># Set scaling factor based on the period of evaluation
+# In this example: {1: &#39;1 year&#39;, 1/2: &#39;6 months&#39;, 1/12: &#39;1 month&#39;, 1/250: &#39;1 day&#39;}
+scalingFactor &lt;- 1/12
+
+# Scaling returns
+meanScaled_p &lt;- mean_p * scalingFactor
+
+# Scaling standard deviation
+sdScaled_p &lt;- sd_p * sqrt(scalingFactor)
+
+# Value at Risk
+z_stat &lt;- qnorm(VaR_threshold/100, 0, 1, lower.tail = TRUE)
+VaR_1month_p &lt;- meanScaled_p + sdScaled_p * z_stat</code></pre>
+<p>Value at Risk following the standard normal distribution where the <span class="math inline">\(z_{statistic}\)</span> is the 5th percentile of the standard normal distribution.</p>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    \mu_{scaled} &amp; = \mu * Scaling Factor  \\
+                 &amp; = 0.05 * 0.0833333 \\
+                 &amp; = 0.0041667 \\
+    \sigma_{scaled} &amp; = \sigma * \sqrt{Scaling Factor}  \\             
+                    &amp; = 0.022 * \sqrt{0.0833333} \\
+                    &amp; = 0.0063509  \\
+    \text {where} \\
+    \mu_{scaled} &amp; = \text {period-scaled expected excess returns} \\
+    \mu &amp; = \text {given mean returns} \\
+    \sigma_{scaled} &amp; = \text {period-scaled standard deviation of expected excess returns} \\
+    \sigma &amp; = \text {given standard deviation returns} \\
+    Scaling Factor &amp; = \text {scaled factor based on the period 1: &#39;1 year&#39;, 1/2: &#39;6 months&#39;, 1/12: &#39;1 month&#39;, 1/250: &#39;1 day&#39;} \\
+  \end{aligned}
+\end{equation}\]</span></p>
+<p>Looking up the <span class="math inline">\(z_{statistic}\)</span> for the 5th percentile of the standard normal distribution, we have <span class="math inline">\(z_{statistic} = -1.6448536\)</span>. Thus, the Value at Risk of the portfolio is:</p>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    VaR &amp; = \mu_{scaled} + \sigma_{scaled} * z_{statistic}  \\
+        &amp; = 0.0041667 + 0.0063509 * -1.6448536  \\
+        &amp; = -0.0062796
+  \end{aligned}
+\end{equation}\]</span></p>
+</div>
+<div id="d.-5-1-day-var" class="section level2">
+<h2>d. 5% 1 day VaR</h2>
+<p>Calculating statistics</p>
+<pre class="r"><code># Set scaling factor based on the period of evaluation
+# In this example: {1: &#39;1 year&#39;, 1/2: &#39;6 months&#39;, 1/12: &#39;1 month&#39;, 1/250: &#39;1 day&#39;}
+scalingFactor &lt;- 1/250
+
+# Scaling returns
+meanScaled_p &lt;- mean_p * scalingFactor
+
+# Scaling standard deviation
+sdScaled_p &lt;- sd_p * sqrt(scalingFactor)
+
+# Value at Risk
+z_stat &lt;- qnorm(VaR_threshold/100, 0, 1, lower.tail = TRUE)
+VaR_1day_p &lt;- meanScaled_p + sdScaled_p * z_stat</code></pre>
+<p>Value at Risk following the standard normal distribution where the <span class="math inline">\(z_{statistic}\)</span> is the 5th percentile of the standard normal distribution.</p>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    \mu_{scaled} &amp; = \mu * Scaling Factor  \\
+                 &amp; = 0.05 * 0.004 \\
+                 &amp; = 2\times 10^{-4} \\
+    \sigma_{scaled} &amp; = \sigma * \sqrt{Scaling Factor}  \\             
+                    &amp; = 0.022 * \sqrt{0.004} \\
+                    &amp; = 0.0013914  \\
+    \text {where} \\
+    \mu_{scaled} &amp; = \text {period-scaled expected excess returns} \\
+    \mu &amp; = \text {given mean returns} \\
+    \sigma_{scaled} &amp; = \text {period-scaled standard deviation of expected excess returns} \\
+    \sigma &amp; = \text {given standard deviation returns} \\
+    Scaling Factor &amp; = \text {scaled factor based on the period 1: &#39;1 year&#39;, 1/2: &#39;6 months&#39;, 1/12: &#39;1 month&#39;, 1/250: &#39;1 day&#39;} \\
+  \end{aligned}
+\end{equation}\]</span></p>
+<p>Looking up the <span class="math inline">\(z_{statistic}\)</span> for the 5th percentile of the standard normal distribution, we have <span class="math inline">\(z_{statistic} = -1.6448536\)</span>. Thus, the Value at Risk of the portfolio is:</p>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    VaR &amp; = \mu_{scaled} + \sigma_{scaled} * z_{statistic}  \\
+        &amp; = 2\times 10^{-4} + 0.0013914 * -1.6448536  \\
+        &amp; = -0.0020887
+  \end{aligned}
+\end{equation}\]</span></p>
+<p>In summary:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Period</th>
+<th>1 year</th>
+<th>6 months</th>
+<th>1 month</th>
+<th>1 day</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>5% VaR</td>
+<td>0.0138132</td>
+<td>-5.879173810^{-4}</td>
+<td>-0.0062796</td>
+<td>-0.0020887</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="question-4" class="section level1">
+<h1><strong>Question 4</strong></h1>
+<pre class="r"><code># Set start date and end date of data
+start_date &lt;- &quot;2018-01-02&quot;
+end_date &lt;- &quot;2020-09-18&quot;
+
+# Get data for JPM, FB and the 10 year T-bill (TNX)
+getSymbols(&quot;JPM&quot;, src = &quot;yahoo&quot;, from = start_date, to = end_date) # JPM</code></pre>
+<pre><code>## [1] &quot;JPM&quot;</code></pre>
+<pre class="r"><code>getSymbols(&quot;FB&quot;, src = &quot;yahoo&quot;, from = start_date, to = end_date) # FB</code></pre>
+<pre><code>## [1] &quot;FB&quot;</code></pre>
+<pre class="r"><code>getSymbols(&quot;AAPL&quot;, src = &quot;yahoo&quot;, from = start_date, to = end_date) # AAPL</code></pre>
+<pre><code>## [1] &quot;AAPL&quot;</code></pre>
+<pre class="r"><code>getSymbols(&quot;^TNX&quot;, src = &quot;yahoo&quot;, from = start_date, to = end_date) # TNX (10-year T-bill)</code></pre>
+<pre><code>## Warning: ^TNX contains missing values. Some functions will not work if objects
+## contain missing values in the middle of the series. Consider using na.omit(),
+## na.approx(), na.fill(), etc to remove or replace them.</code></pre>
+<pre><code>## [1] &quot;^TNX&quot;</code></pre>
+<pre class="r"><code># Get adjusted returns data for 01/2014
+rJPM &lt;- na.omit(diff(log(to.monthly(JPM)$JPM.Adjusted)))
+rFB &lt;- na.omit(diff(log(to.monthly(FB)$FB.Adjusted)))
+rAAPL &lt;- na.omit(diff(log(to.monthly(AAPL)$AAPL.Adjusted)))
+rTNX &lt;- (to.monthly(TNX)$TNX.Adjusted) / 1200 # Using monthly rate</code></pre>
+<pre><code>## Warning in to.period(x, &quot;months&quot;, indexAt = indexAt, name = name, ...): missing
+## values removed from data</code></pre>
+<pre class="r"><code># Calculate statistics
+mean_rJPM &lt;- mean(rJPM, na.rm = TRUE)
+mean_rFB &lt;- mean(rFB, na.rm = TRUE)
+mean_rAAPL &lt;- mean(rAAPL, na.rm = TRUE)
+mean_rTNX &lt;- mean(rTNX, na.rm = TRUE)
+
+sd_rJPM &lt;- sd(rJPM, na.rm = TRUE)
+sd_rFB &lt;- sd(rFB, na.rm = TRUE)
+sd_rAAPL &lt;- sd(rAAPL, na.rm = TRUE)
+sd_rTNX &lt;- sd(rTNX, na.rm = TRUE)
+
+
+cov_rJPM_rJPM &lt;- cov(rJPM, rJPM)
+cov_rAAPL_rAAPL &lt;- cov(rAAPL, rAAPL)
+cov_rFB_rFB &lt;- cov(rFB, rFB)
+cov_rJPM_rFB &lt;- cov(rJPM, rFB)
+cov_rJPM_rAAPL &lt;- cov(rJPM, rAAPL)
+cov_rFB_rAAPL &lt;- cov(rFB, rAAPL)
+
+cor_rJPM_rJPM &lt;- cor(rJPM, rJPM)
+cor_rAAPL_rAAPL &lt;- cor(rAAPL, rAAPL)
+cor_rFB_rFB &lt;- cor(rFB, rFB)
+cor_rJPM_rFB &lt;- cor(rJPM, rFB)
+cor_rJPM_rAAPL &lt;- cor(rJPM, rAAPL)
+cor_rFB_rAAPL &lt;- cor(rFB, rAAPL)</code></pre>
+<p>Parameters for the Markowitz portfolio model are:<br />
+1. Expected Returns<br />
+2. Standard deviation from mean returns<br />
+3. Covariance of one asset returns to another.</p>
+<p>The Covariance and Correlation formula is: <span class="math display">\[\begin{equation}
+  \begin{aligned}
+    Cov_{X,Y}  &amp; =  \sum_{i=1}^{n} \frac{(X_i - \overline{X}) * (Y_i - \overline{Y})}{n-1} \\
+    Corr_{X,Y} &amp; =  \frac{Cov_{X,Y}}{\sigma_X * \sigma_Y}  \\
+    \text {where} \\
+    X_i &amp; = \text {the observation value of returns of X} \\
+    \overline{X} &amp; = \text {the expected mean returns of X} \\
+    Y_i &amp; = \text {the observation value of returns of Y} \\
+    \overline{Y} &amp; = \text {the expected mean returns of Y} \\
+    n &amp; = \text {number of observations}
+    
+  \end{aligned}
+\end{equation}\]</span></p>
+<p>Using R, we have the parameters for the Markowitz Portfolio Model:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Stock</th>
+<th>Mean</th>
+<th>Standard Deviation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>AAPL</td>
+<td>0.031437</td>
+<td>0.1022224</td>
+</tr>
+<tr class="even">
+<td>JPM</td>
+<td>-0.00267</td>
+<td>0.0768994</td>
+</tr>
+<tr class="odd">
+<td>FB</td>
+<td>0.0096887</td>
+<td>0.098384</td>
+</tr>
+</tbody>
+</table>
+<p>And the correlation matrix</p>
+<table>
+<thead>
+<tr class="header">
+<th>Correlation</th>
+<th>AAPL</th>
+<th>JPM</th>
+<th>FB</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>AAPL</td>
+<td>1</td>
+<td>0.5193834</td>
+<td>0.6743296</td>
+</tr>
+<tr class="even">
+<td>JPM</td>
+<td>0.5193834</td>
+<td>1</td>
+<td>0.5553709</td>
+</tr>
+<tr class="odd">
+<td>FB</td>
+<td>0.6743296</td>
+<td>0.5553709</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>And the covariance matrix</p>
+<table>
+<thead>
+<tr class="header">
+<th>Covariance</th>
+<th>AAPL</th>
+<th>JPM</th>
+<th>FB</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>AAPL</td>
+<td>0.0104494</td>
+<td>0.0040828</td>
+<td>0.0067818</td>
+</tr>
+<tr class="even">
+<td>JPM</td>
+<td>0.0040828</td>
+<td>0.0059135</td>
+<td>0.0042018</td>
+</tr>
+<tr class="odd">
+<td>FB</td>
+<td>0.0067818</td>
+<td>0.0042018</td>
+<td>0.0096794</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="question-5" class="section level1">
+<h1><strong>Question 5</strong></h1>
+<p>Given parameters</p>
+<pre class="r"><code># Mean Returns
+mean_rStock1 &lt;- 10/100
+mean_rStock2 &lt;- 12/100
+mean_rf &lt;- 5/100
+
+# Variance of returns
+var_rStock1 &lt;- 0.025
+var_rStock2 &lt;- 0.030
+
+# Standard deviation of returns
+sd_rStock1 &lt;- sqrt(var_rStock1)
+sd_rStock2 &lt;- sqrt(var_rStock2)
+
+# Covariance of Returns
+cov_rStock1_rStock2 &lt;- 0.015
+
+# Correlation of Returns
+cor_rStock2_rStock2 &lt;- cov_rStock1_rStock2 / (sd_rStock1 * sd_rStock2)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th>Asset</th>
+<th>Mean Returns</th>
+<th>Variance</th>
+<th>Pair</th>
+<th>_{1,2}</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Stock 1</td>
+<td>0.1</td>
+<td>0.025</td>
+<td>(1,2)</td>
+<td>0.015</td>
+</tr>
+<tr class="even">
+<td>Stock 2</td>
+<td>0.12</td>
+<td>0.03</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Risk Free</td>
+<td>0.05</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Since the investor’s objective is to minimize risk, we solve for the global minimum variance combination of the two assets. Let <span class="math inline">\(x_i\)</span> denotes the weight of the investment in asset i <span class="math inline">\((i = 1,2)\)</span>, and assume all money is invested in i, meaning <span class="math inline">\(\sum {x_i} = x_1 + x_2 = 1\)</span>.</p>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    \text {The returns of the portfolio is:} \\
+    R_{p,x} &amp; = x_1 * r_1 + x_2 * r_2 \\
+    \text {The expected returns on the portfolio is:} \\
+    \mu_{p,x} &amp; = E[R_{p,x}] \\
+              &amp; = x_1 * \mu_1 + x_2 * \mu_2  \\
+    \text {The variance of the portfolio returns is:} \\
+    \sigma_{p,x}^2 &amp; = var(R_{p,x})  \\
+                   &amp; = x_1 * \sigma_1^2 + x_2 * \sigma_2^2 + 2 * x_1 * x_2 * \sigma_{1,2}
+  \end{aligned}
+\end{equation}\]</span></p>
+<p>The global minimum variance portfolio <span class="math inline">\(m = (m_1,m_2)\)</span> is the solution of the constrained minimization problem:</p>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    min \sigma_{p,m}^2 &amp; = var(R_{p,m})  \\
+                       &amp; = m_1^2 * \sigma_1^2 + m_2^2 * \sigma_2^2 + 2 * m_1 * m_2 * \sigma_{1,2} \\
+    \text {s.t. } m_1 + m_2 &amp; = 1 \\
+    \text {rewrite: } \\
+    min \sigma_{p,m}^2 &amp; = min[m_1^2 * \sigma_1^2 + (1-m_1)^2 * \sigma_2^2 + 2 * m_1 * (1 - m_1) * \sigma_{1,2}] \\
+                       &amp; = min[m_1^2 * (\sigma_1^2 + \sigma_2^2 - 2 * \sigma_{1,2}) + m_1 * (2 * \sigma_{1,2} - 2 * \sigma_2^2) + \sigma_2^2]  \\
+    \text {plug in: }
+    min \sigma_{p,m}^2 &amp; = min[0.025 * m_1^2 - 0.03 * m_1 + 0.03]
+  \end{aligned}
+\end{equation}\]</span></p>
+<p>Find the critical point:</p>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    \frac{d\sigma_{p,m}^2}{dm} &amp; = 0 \\
+    \frac{d(0.025 * m_1^2 - 0.03 * m_1 + 0.03)}{dm} &amp; = 0 \\
+      .05 * m_1 - 0.03 &amp; = 0  \\
+    m_1 &amp; = 0.6 = 60\%  \\
+    \text {thus, }   \\
+    m_2 &amp; = 1 - 0.6 = 0.4 = 40\%
+  \end{aligned}
+\end{equation}\]</span></p>
+<p>Graphing the function:</p>
+<pre class="r"><code># The Variance function of the portfolio
+fVar &lt;- function(m1) var_rStock1 * m1^2 + var_rStock2 * (1 - m1)^2 + 2 * m1 * (1 - m1) * cov_rStock1_rStock2
+
+# Set the weighting
+m1 &lt;- .6
+m2 &lt;- .4
+
+# Plot of the variance function with respect to w1.
+w1 &lt;- seq(0, 1, .05)
+plot(fVar, w1, xlab = &quot;Weight of Stock 1 Relative to Portfolio&quot;, ylab = &quot;Portfolio Variance&quot;, main = &quot;Minimum Variance Portfolio&quot;); abline(v = m1, col = &quot;red&quot;)
+points(m1, fVar(m1), col=&#39;green&#39;)</code></pre>
+<p><img src="data:image/png;base64,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" width="672" /></p>
+<p>We see indeed the minimum is at <span class="math inline">\(m_1 = 0.6\)</span></p>
+<p>Thus, the optimum weights of each stocks in the portfolio to satisfy the objective of minimum risk is:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Asset</th>
+<th>Weight</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Stock 1</td>
+<td>60%</td>
+</tr>
+<tr class="even">
+<td>Stock 2</td>
+<td>40%</td>
+</tr>
+</tbody>
+</table>
 </div>
 
 

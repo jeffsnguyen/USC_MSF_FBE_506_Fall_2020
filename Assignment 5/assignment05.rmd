@@ -19,40 +19,41 @@ Student ID: 6524885309
 ```{r definition data-question1}
 library(quantmod)
 
-# Get data for JPM, FB and the 10 year T-bill for 01/2014 only
-jpm <- getSymbols("JPM", src = "yahoo", from = "2014-01-01", to = "2014-01-31") # JPM
-fb <- getSymbols("FB", src = "yahoo", , from = "2014-01-01", to = "2014-01-31") # FB
-tnx <- getSymbols("^TNX", src = "yahoo", , from = "2014-01-01", to = "2014-01-31") # TNX (10-year T-bill)
+# Set start date and end date of data
+start_date <- "2014-01-02"
+end_date <- "2014-01-31"
+
+# Get data for JPM, FB and the 10 year T-bill (TNX)
+getSymbols("JPM", src = "yahoo", from = start_date, to = end_date) # JPM
+getSymbols("FB", src = "yahoo", , from = start_date, to = end_date) # FB
+getSymbols("^TNX", src = "yahoo", from = start_date, to = end_date) # TNX (10-year T-bill)
 
 # Get adjusted returns data for 01/2014
-rAdj_012014_JPM <- diff(log(JPM$JPM.Adjusted))
-rAdj_012014_FB <- diff(log(FB$FB.Adjusted))
-rAdj_012014_TNX <- TNX$TNX.Adjusted^(1/252)-1  # Convert to daily rate
+rJPM <- diff(log(JPM$JPM.Adjusted))
+rFB <- diff(log(FB$FB.Adjusted))
+rTNX <- (to.monthly(TNX)$TNX.Adjusted) / 1200 # Using monthly rate
 
 # Calculate statistics
-mean_rAdj_012014_JPM <- mean(rAdj_012014_JPM, na.rm = TRUE)
-mean_rAdj_012014_FB <- mean(rAdj_012014_FB, na.rm = TRUE)
-mean_TNX <- mean(rAdj_012014_TNX, na.rm = TRUE)
+mean_rJPM <- mean(rJPM, na.rm = TRUE)
+mean_rFB <- mean(rFB, na.rm = TRUE)
+mean_rTNX <- mean(rTNX, na.rm = TRUE)
 
-stdev_rAdj_012014_JPM <- sd(rAdj_012014_JPM, na.rm = TRUE)
-stdev_rAdj_012014_FB <- sd(rAdj_012014_FB, na.rm = TRUE)
+sd_rJPM <- sd(rJPM, na.rm = TRUE)
+sd_rFB <- sd(rFB, na.rm = TRUE)
 
 ```
 
 ## a. Coefficient of variation
 For JPM:
 ```{r}
-# Standard deviation of Adjusted Returns of JPM
-stdev_rAdj_012014_JPM
-
-# Mean of Adjusted Returns of JPM
-mean_rAdj_012014_JPM
+# Coefficient of variation of Adjusted Returns of JPM
+cv_rJPM <- sd_rJPM / mean_rJPM
 ```
 \begin{equation}
   \begin{aligned}
     CV_{JPM} & = \frac{\sigma}{\mu}  \\
-             & = \frac{0.01281773}{-0.002037134}  \\
-             & = -6.292041  \\
+             & = \frac{`r sd_rJPM`}{`r mean_rJPM`}  \\
+             & = `r cv_rJPM`  \\
     \text {where} \\
     \sigma & = \text {Standard deviation of Adjusted Returns} \\
     \mu & = \text {Mean of Adjusted Returns} \\
@@ -61,17 +62,14 @@ mean_rAdj_012014_JPM
 
 For FB:
 ```{r}
-# Standard deviation of Adjusted Returns of FB
-stdev_rAdj_012014_FB
-
-# Mean of Adjusted Returns of FB
-mean_rAdj_012014_FB
+# Coefficient of variation of Adjusted Returns of FB
+cv_rFB <- sd_rFB / mean_rFB
 ```
 \begin{equation}
   \begin{aligned}
     CV_{FB} & = \frac{\sigma}{\mu}  \\
-            & = \frac{0.03932831}{0.005796738}  \\
-            & = 6.784559  \\
+            & = \frac{`r sd_rFB`}{`r mean_rFB`}  \\
+             & = `r cv_rFB`  \\
     \text {where} \\
     \sigma & = \text {Standard deviation of Adjusted Returns} \\
     \mu & = \text {Mean of Adjusted Returns } \\
@@ -81,24 +79,16 @@ mean_rAdj_012014_FB
 ## b. Sharpe Ratio
 In this case, each portfolio carry 100% of JPM of FB so weighting is 100% of each stock for each portfolio.
 
-Using 10 year US Treasury bill mean daily rate for Jan 2014, we have the daily risk free rate $r_f = 0.004163561$
-
 For JPM:
 ```{r}
-# Standard deviation of Adjusted Returns of JPM
-stdev_rAdj_012014_JPM
-
-# Mean of Adjusted Returns of JPM
-mean_rAdj_012014_JPM
-
-# Risk free rate 
-mean_TNX
+# Sharpe Ratio of a 100% JPM portfolio
+sharpe_rJPM <- (mean_rJPM - mean_rTNX) / sd_rJPM 
 ```
 \begin{equation}
   \begin{aligned}
     S_{JPM} & = \frac{E(r_p) - r_f}{\sigma_p}  \\
-            & = \frac{-0.002037134 - 0.004163561}{0.01281773}  \\
-            & = -0.4837592  \\
+            & = \frac{`r mean_rJPM` - `r mean_rTNX`}{`r sd_rJPM`}  \\
+            & = `r sharpe_rJPM` \\
     \text {where} \\
     r_p & = \text {Mean of Adjusted Returns} \\
     r_f & = \text {Risk free rate} \\
@@ -108,20 +98,14 @@ mean_TNX
 
 For FB:
 ```{r}
-# Standard deviation of Adjusted Returns of FB
-stdev_rAdj_012014_FB
-
-# Mean of Adjusted Returns of FB
-mean_rAdj_012014_FB
-
-# Risk free rate 
-mean_TNX
+# Sharpe Ratio of a 100% JPM portfolio
+sharpe_rFB <- (mean_rFB - mean_rTNX) / sd_rFB 
 ```
 \begin{equation}
   \begin{aligned}
     S_{FB} & = \frac{E(r_p) - r_f}{\sigma_p}  \\
-           & = \frac{0.005796738 - 0.004163561}{0.03932831}  \\
-           & = 0.04152676  \\
+           & = \frac{`r mean_rFB` - `r mean_rTNX`}{`r sd_rFB`}  \\
+            & = `r sharpe_rFB` \\
     \text {where} \\
     r_p & = \text {Mean of Adjusted Returns} \\
     r_f & = \text {Risk free rate} \\
@@ -130,38 +114,34 @@ mean_TNX
 \end{equation}
 
 ## b. Sortino Ratio
-For the purpose of calculating the Sortino ratio, we'll the mean of the Jan 2014 daily risk-free rate as the Minimum Acceptable Returns (MAR), which is $r_f = 0.004163561$
+For the purpose of calculating the Sortino ratio, we'll the mean of the Jan 2014 daily risk-free rate as the Minimum Acceptable Returns (MAR).
 
 For JPM:
 ```{r}
-# Standard deviation of Adjusted Returns of JPM
-stdev_rAdj_012014_JPM
+# Calculating downside deviation using lower partial moment of order 2
+# Assuming the 10 year T-bill returns as minimum acceptable returns MAR
+mar <- mean_rTNX
 
-# Mean of Adjusted Returns of JPM
-mean_rAdj_012014_JPM
+# Deviation from MAR, this is a data frame, remove NA values
+dev_rJPM_mar <- na.omit(rJPM - mar)
 
-# Risk-free rate
-mean_TNX
+# Set positive deviations to be 0 as we only want downside value
+devNegative_rJPM_mar <- replace(dev_rJPM_mar, dev_rJPM_mar > 0, 0)
 
-# Minimum Acceptable Returns
-mar <- mean_TNX
-mar
+# Calculate the Lower Partial Moment
+downsideDev_JPM <- var(devNegative_rJPM_mar)
 
-# Calculating downside deviation
-# Selecting the JPM returns that is less than the MAR
-# Subtract them from the MAR
-# Square each results
-# Add them together
-# Divide it by the number of returns value in the data frame
-# Take root
-downsideDev_JPM <- sqrt(sum(((mean_TNX - subset(rAdj_012014_JPM, rAdj_012014_JPM < mar))**2)[,"JPM.Adjusted"]) / nrow(rAdj_012014_JPM))
-downsideDev_JPM
+# Downside deviation
+sd_downsideDev_JPM <- sqrt(downsideDev_JPM)
+
+# Sortino Ratio
+sortino_rJPM <- (mean_rJPM - mean_rTNX) / sd_downsideDev_JPM 
 ```
 \begin{equation}
   \begin{aligned}
     SortinoRatio_{JPM} & = \frac{r_p - r_f}{\sigma_{downside}}  \\
-                       & = \frac{-0.002037134 - 0.004163561}{0.01206187}  \\
-                       & = -0.5140741  \\
+                       & = \frac{`r mean_rJPM` - `r mean_rTNX`}{`r sd_downsideDev_JPM`}  \\
+                       & = `r sortino_rJPM`  \\
     \text {where} \\
     r_p & = \text {Mean of Adjusted Returns} \\
     r_f & = \text {Risk free rate} \\
@@ -171,33 +151,30 @@ downsideDev_JPM
 
 For FB:
 ```{r}
-# Standard deviation of Adjusted Returns of JPM
-stdev_rAdj_012014_FB
+# Calculating downside deviation using lower partial moment of order 2
+# Assuming the 10 year T-bill returns as minimum acceptable returns MAR
+mar <- mean_rTNX
 
-# Mean of Adjusted Returns of JPM
-mean_rAdj_012014_FB
+# Deviation from MAR, this is a data frame, also remove NA values
+dev_rFB_mar <- na.omit(rFB - mar)
 
-# Risk-free rate
-mean_TNX
+# Set positive deviations to be 0 as we only want downside value
+devNegative_rFB_mar <- replace(dev_rFB_mar, dev_rFB_mar > 0, 0)
 
-# Minimum Acceptable Returns
-mar
+# Calculate the Lower Partial Moment
+downsideDev_FB <- var(devNegative_rFB_mar)
 
-# Calculating downside deviation
-# Selecting the JPM returns that is less than the MAR
-# Subtract them from the MAR
-# Square each results
-# Add them together
-# Divide it by the number of returns value in the data frame
-# Take root
-downsideDev_FB <- sqrt(sum(((mar - subset(rAdj_012014_FB, rAdj_012014_FB < mar))**2)[,"FB.Adjusted"]) / nrow(rAdj_012014_FB))
-downsideDev_FB
+# Downside deviation
+sd_downsideDev_FB <- sqrt(downsideDev_FB)
+
+# Sortino Ratio
+sortino_rFB <- (mean_rFB - mean_rTNX) / sd_downsideDev_FB
 ```
 \begin{equation}
   \begin{aligned}
-    SortinoRatio_{FB} & = \frac{r_p - r_f}{\sigma_{downside}}  \\
-                      & = \frac{0.005796738 - 0.004163561}{0.01867006}  \\
-                      & = 0.08747572  \\
+    SortinoRatio_{JPM} & = \frac{r_p - r_f}{\sigma_{downside}}  \\
+                       & = \frac{`r mean_rFB` - `r mean_rFB`}{`r sd_downsideDev_FB`}  \\
+                       & = `r sortino_rFB`  \\
     \text {where} \\
     r_p & = \text {Mean of Adjusted Returns} \\
     r_f & = \text {Risk free rate} \\
@@ -207,12 +184,601 @@ downsideDev_FB
   
 In summary:  
 
-Portfolio | Coefficient of Variation | Sharpe Ratio  | Sortino Ratio
----       | ---                      | ---           | ---    
-JPM       | −6.292041                | −0.4837592    | −0.5140741 
-FB        | 6.784559                 | 0.04152676    | 0.08747572 
+Portfolio | Coefficient of Variation | Sharpe Ratio     | Sortino Ratio
+---       | ---                      | ---              | ---    
+JPM       | `r cv_rJPM`              | `r sharpe_rJPM`  | `r sortino_rJPM`
+FB        | `r cv_rFB`               | `r sharpe_rFB`   | `r sortino_rFB`
 
 For the period of Jan 2014:  
 In terms of coefficient of variation, both JPM and FB are highly volatile with JPM showing a negative drift from the mean returns.   
 In terms of Sharpe Ratio, FB has better risk-adjusted returns performance compared to JPM.  
 In terms of Sortino Ratio, FB also generates better risk-adjusted performance with more weighting on the downside risk.  
+
+# **Question 2**
+```{r definition data-question2}
+
+# Set start date and end date of data
+start_date <- "2018-01-02"
+end_date <- "2020-09-18"
+
+# Get data for JPM, FB and the 10 year T-bill (TNX)
+getSymbols("JPM", src = "yahoo", from = start_date, to = end_date) # JPM
+getSymbols("FB", src = "yahoo", from = start_date, to = end_date) # FB
+getSymbols("^TNX", src = "yahoo", from = start_date, to = end_date) # TNX (10-year T-bill)
+
+# Get adjusted returns data for 01/2014
+rJPM <- diff(log(to.monthly(JPM)$JPM.Adjusted))
+rFB <- diff(log(to.monthly(FB)$FB.Adjusted))
+rTNX <- (to.monthly(TNX)$TNX.Adjusted) / 1200 # Using monthly rate
+
+# Calculate statistics
+mean_rJPM <- mean(rJPM, na.rm = TRUE)
+mean_rFB <- mean(rFB, na.rm = TRUE)
+mean_rTNX <- mean(rTNX, na.rm = TRUE)
+
+sd_rJPM <- sd(rJPM, na.rm = TRUE)
+sd_rFB <- sd(rFB, na.rm = TRUE)
+
+```
+
+## a. Coefficient of variation
+For JPM:
+```{r}
+# Coefficient of variation of Adjusted Returns of JPM
+cv_rJPM <- sd_rJPM / mean_rJPM
+```
+\begin{equation}
+  \begin{aligned}
+    CV_{JPM} & = \frac{\sigma}{\mu}  \\
+             & = \frac{`r sd_rJPM`}{`r mean_rJPM`}  \\
+             & = `r cv_rJPM`  \\
+    \text {where} \\
+    \sigma & = \text {Standard deviation of Adjusted Returns} \\
+    \mu & = \text {Mean of Adjusted Returns} \\
+  \end{aligned}
+\end{equation}
+
+For FB:
+```{r}
+# Coefficient of variation of Adjusted Returns of FB
+cv_rFB <- sd_rFB / mean_rFB
+```
+\begin{equation}
+  \begin{aligned}
+    CV_{FB} & = \frac{\sigma}{\mu}  \\
+            & = \frac{`r sd_rFB`}{`r mean_rFB`}  \\
+             & = `r cv_rFB`  \\
+    \text {where} \\
+    \sigma & = \text {Standard deviation of Adjusted Returns} \\
+    \mu & = \text {Mean of Adjusted Returns } \\
+  \end{aligned}
+\end{equation}
+
+## b. Sharpe Ratio
+In this case, each portfolio carry 100% of JPM of FB so weighting is 100% of each stock for each portfolio.
+
+For JPM:
+```{r}
+# Sharpe Ratio of a 100% JPM portfolio
+sharpe_rJPM <- (mean_rJPM - mean_rTNX) / sd_rJPM 
+```
+\begin{equation}
+  \begin{aligned}
+    S_{JPM} & = \frac{E(r_p) - r_f}{\sigma_p}  \\
+            & = \frac{`r mean_rJPM` - `r mean_rTNX`}{`r sd_rJPM`}  \\
+            & = `r sharpe_rJPM` \\
+    \text {where} \\
+    r_p & = \text {Mean of Adjusted Returns} \\
+    r_f & = \text {Risk free rate} \\
+    \sigma_p & = \text {Standard deviation of adjusted returns}
+  \end{aligned}
+\end{equation}
+
+For FB:
+```{r}
+# Sharpe Ratio of a 100% JPM portfolio
+sharpe_rFB <- (mean_rFB - mean_rTNX) / sd_rFB 
+```
+\begin{equation}
+  \begin{aligned}
+    S_{FB} & = \frac{E(r_p) - r_f}{\sigma_p}  \\
+           & = \frac{`r mean_rFB` - `r mean_rTNX`}{`r sd_rFB`}  \\
+            & = `r sharpe_rFB` \\
+    \text {where} \\
+    r_p & = \text {Mean of Adjusted Returns} \\
+    r_f & = \text {Risk free rate} \\
+    \sigma_p & = \text {Standard deviation of adjusted returns}
+  \end{aligned}
+\end{equation}
+
+## b. Sortino Ratio
+For the purpose of calculating the Sortino ratio, we'll the mean of the Jan 2014 daily risk-free rate as the Minimum Acceptable Returns (MAR).
+
+For JPM:
+```{r}
+# Calculating downside deviation using lower partial moment of order 2
+# Assuming the 10 year T-bill returns as minimum acceptable returns MAR
+mar <- mean_rTNX
+
+# Deviation from MAR, this is a data frame, remove NA values
+dev_rJPM_mar <- na.omit(rJPM - mar)
+
+# Set positive deviations to be 0 as we only want downside value
+devNegative_rJPM_mar <- replace(dev_rJPM_mar, dev_rJPM_mar > 0, 0)
+
+# Calculate the Lower Partial Moment
+downsideDev_JPM <- var(devNegative_rJPM_mar)
+
+# Downside deviation
+sd_downsideDev_JPM <- sqrt(downsideDev_JPM)
+
+# Sortino Ratio
+sortino_rJPM <- (mean_rJPM - mean_rTNX) / sd_downsideDev_JPM 
+```
+\begin{equation}
+  \begin{aligned}
+    SortinoRatio_{JPM} & = \frac{r_p - r_f}{\sigma_{downside}}  \\
+                       & = \frac{`r mean_rJPM` - `r mean_rTNX`}{`r sd_downsideDev_JPM`}  \\
+                       & = `r sortino_rJPM`  \\
+    \text {where} \\
+    r_p & = \text {Mean of Adjusted Returns} \\
+    r_f & = \text {Risk free rate} \\
+    \sigma_{downside} & = \text {Standard deviation of the downside}
+  \end{aligned}
+\end{equation}
+
+For FB:
+```{r}
+# Calculating downside deviation using lower partial moment of order 2
+# Assuming the 10 year T-bill returns as minimum acceptable returns MAR
+mar <- mean_rTNX
+
+# Deviation from MAR, this is a data frame, also remove NA values
+dev_rFB_mar <- na.omit(rFB - mar)
+
+# Set positive deviations to be 0 as we only want downside value
+devNegative_rFB_mar <- replace(dev_rFB_mar, dev_rFB_mar > 0, 0)
+
+# Calculate the Lower Partial Moment
+downsideDev_FB <- var(devNegative_rFB_mar)
+
+# Downside deviation
+sd_downsideDev_FB <- sqrt(downsideDev_FB)
+
+# Sortino Ratio
+sortino_rFB <- (mean_rFB - mean_rTNX) / sd_downsideDev_FB
+```
+\begin{equation}
+  \begin{aligned}
+    SortinoRatio_{JPM} & = \frac{r_p - r_f}{\sigma_{downside}}  \\
+                       & = \frac{`r mean_rFB` - `r mean_rFB`}{`r sd_downsideDev_FB`}  \\
+                       & = `r sortino_rFB`  \\
+    \text {where} \\
+    r_p & = \text {Mean of Adjusted Returns} \\
+    r_f & = \text {Risk free rate} \\
+    \sigma_{downside} & = \text {Standard deviation of the downside}
+  \end{aligned}
+\end{equation}
+  
+In summary:  
+
+Portfolio | Coefficient of Variation | Sharpe Ratio     | Sortino Ratio
+---       | ---                      | ---              | ---    
+JPM       | `r cv_rJPM`              | `r sharpe_rJPM`  | `r sortino_rJPM`
+FB        | `r cv_rFB`               | `r sharpe_rFB`   | `r sortino_rFB`
+
+For the period of Jan 02, 2018 to Sep 18, 2020:  
+In terms of coefficient of variation, both JPM and FB are highly volatile with JPM showing a significant negative drift from the mean returns while FB shows a positive drift from mean returns. +1 for FB   
+In terms of Sharpe Ratio, FB has better risk-adjusted returns performance compared to JPM. +1 for FB
+In terms of Sortino Ratio, FB also generates better risk-adjusted performance with more weighting on the downside risk. +1 for FB
+
+Overall, based on the above statistics, FB is the better investment with better risk-adjusted returns
+
+# **Question 3**
+
+Given statistics
+```{r definition-question3}
+# Mean returns of portfolio
+mean_p <- 5/100
+
+# Standard deviation of returns of portfolio
+sd_p <-  2.2/100
+
+# VaR threshold
+VaR_threshold <- 5
+```
+
+
+## a. 5% 1 year VaR
+Calculating statistics
+```{r 1year}
+# Set scaling factor based on the period of evaluation
+# In this example: {1: '1 year', 1/2: '6 months', 1/12: '1 month', 1/250: '1 day'}
+scalingFactor <- 1
+
+# Scaling returns
+meanScaled_p <- mean_p * scalingFactor
+
+# Scaling standard deviation
+sdScaled_p <- sd_p * sqrt(scalingFactor)
+
+# Value at Risk
+z_stat <- qnorm(VaR_threshold/100, 0, 1, lower.tail = TRUE)
+VaR_1year_p <- meanScaled_p + sdScaled_p * z_stat
+```
+
+Value at Risk following the standard normal distribution where the $z_{statistic}$ is the `r VaR_threshold`th percentile of the standard normal distribution.  
+
+\begin{equation}
+  \begin{aligned}
+    \mu_{scaled} & = \mu * Scaling Factor  \\
+                 & = `r mean_p` * `r scalingFactor` \\
+                 & = `r meanScaled_p` \\
+    \sigma_{scaled} & = \sigma * \sqrt{Scaling Factor}  \\             
+                    & = `r sd_p` * \sqrt{`r scalingFactor`} \\
+                    & = `r sdScaled_p`  \\
+    \text {where} \\
+    \mu_{scaled} & = \text {period-scaled expected excess returns} \\
+    \mu & = \text {given mean returns} \\
+    \sigma_{scaled} & = \text {period-scaled standard deviation of expected excess returns} \\
+    \sigma & = \text {given standard deviation returns} \\
+    Scaling Factor & = \text {scaled factor based on the period 1: '1 year', 1/2: '6 months', 1/12: '1 month', 1/250: '1 day'} \\
+  \end{aligned}
+\end{equation}
+
+Looking up the $z_{statistic}$ for the `r VaR_threshold`th percentile of the standard normal distribution, we have $z_{statistic} = `r z_stat`$.
+Thus, the Value at Risk of the portfolio is:  
+
+\begin{equation}
+  \begin{aligned}
+    VaR & = \mu_{scaled} + \sigma_{scaled} * z_{statistic}  \\
+        & = `r meanScaled_p` + `r sdScaled_p` * `r z_stat`  \\
+        & = `r VaR_1year_p`
+  \end{aligned}
+\end{equation}
+
+## b. 5% 6 months VaR
+Calculating statistics
+```{r}
+# Set scaling factor based on the period of evaluation
+# In this example: {1: '1 year', 1/2: '6 months', 1/12: '1 month', 1/250: '1 day'}
+scalingFactor <- 1/2
+
+# Scaling returns
+meanScaled_p <- mean_p * scalingFactor
+
+# Scaling standard deviation
+sdScaled_p <- sd_p * sqrt(scalingFactor)
+
+# Value at Risk
+z_stat <- qnorm(VaR_threshold/100, 0, 1, lower.tail = TRUE)
+VaR_6months_p <- meanScaled_p + sdScaled_p * z_stat
+```
+
+Value at Risk following the standard normal distribution where the $z_{statistic}$ is the `r VaR_threshold`th percentile of the standard normal distribution.  
+
+\begin{equation}
+  \begin{aligned}
+    \mu_{scaled} & = \mu * Scaling Factor  \\
+                 & = `r mean_p` * `r scalingFactor` \\
+                 & = `r meanScaled_p` \\
+    \sigma_{scaled} & = \sigma * \sqrt{Scaling Factor}  \\             
+                    & = `r sd_p` * \sqrt{`r scalingFactor`} \\
+                    & = `r sdScaled_p`  \\
+    \text {where} \\
+    \mu_{scaled} & = \text {period-scaled expected excess returns} \\
+    \mu & = \text {given mean returns} \\
+    \sigma_{scaled} & = \text {period-scaled standard deviation of expected excess returns} \\
+    \sigma & = \text {given standard deviation returns} \\
+    Scaling Factor & = \text {scaled factor based on the period 1: '1 year', 1/2: '6 months', 1/12: '1 month', 1/250: '1 day'} \\
+  \end{aligned}
+\end{equation}
+
+Looking up the $z_{statistic}$ for the `r VaR_threshold`th percentile of the standard normal distribution, we have $z_{statistic} = `r z_stat`$.
+Thus, the Value at Risk of the portfolio is:  
+
+\begin{equation}
+  \begin{aligned}
+    VaR & = \mu_{scaled} + \sigma_{scaled} * z_{statistic}  \\
+        & = `r meanScaled_p` + `r sdScaled_p` * `r z_stat`  \\
+        & = `r VaR_6months_p`
+  \end{aligned}
+\end{equation}
+
+## c. 5% 1 month VaR
+Calculating statistics
+```{r}
+# Set scaling factor based on the period of evaluation
+# In this example: {1: '1 year', 1/2: '6 months', 1/12: '1 month', 1/250: '1 day'}
+scalingFactor <- 1/12
+
+# Scaling returns
+meanScaled_p <- mean_p * scalingFactor
+
+# Scaling standard deviation
+sdScaled_p <- sd_p * sqrt(scalingFactor)
+
+# Value at Risk
+z_stat <- qnorm(VaR_threshold/100, 0, 1, lower.tail = TRUE)
+VaR_1month_p <- meanScaled_p + sdScaled_p * z_stat
+```
+
+Value at Risk following the standard normal distribution where the $z_{statistic}$ is the `r VaR_threshold`th percentile of the standard normal distribution.  
+
+\begin{equation}
+  \begin{aligned}
+    \mu_{scaled} & = \mu * Scaling Factor  \\
+                 & = `r mean_p` * `r scalingFactor` \\
+                 & = `r meanScaled_p` \\
+    \sigma_{scaled} & = \sigma * \sqrt{Scaling Factor}  \\             
+                    & = `r sd_p` * \sqrt{`r scalingFactor`} \\
+                    & = `r sdScaled_p`  \\
+    \text {where} \\
+    \mu_{scaled} & = \text {period-scaled expected excess returns} \\
+    \mu & = \text {given mean returns} \\
+    \sigma_{scaled} & = \text {period-scaled standard deviation of expected excess returns} \\
+    \sigma & = \text {given standard deviation returns} \\
+    Scaling Factor & = \text {scaled factor based on the period 1: '1 year', 1/2: '6 months', 1/12: '1 month', 1/250: '1 day'} \\
+  \end{aligned}
+\end{equation}
+
+Looking up the $z_{statistic}$ for the `r VaR_threshold`th percentile of the standard normal distribution, we have $z_{statistic} = `r z_stat`$.
+Thus, the Value at Risk of the portfolio is:  
+
+\begin{equation}
+  \begin{aligned}
+    VaR & = \mu_{scaled} + \sigma_{scaled} * z_{statistic}  \\
+        & = `r meanScaled_p` + `r sdScaled_p` * `r z_stat`  \\
+        & = `r VaR_1month_p`
+  \end{aligned}
+\end{equation}
+
+## d. 5% 1 day VaR
+Calculating statistics
+```{r}
+# Set scaling factor based on the period of evaluation
+# In this example: {1: '1 year', 1/2: '6 months', 1/12: '1 month', 1/250: '1 day'}
+scalingFactor <- 1/250
+
+# Scaling returns
+meanScaled_p <- mean_p * scalingFactor
+
+# Scaling standard deviation
+sdScaled_p <- sd_p * sqrt(scalingFactor)
+
+# Value at Risk
+z_stat <- qnorm(VaR_threshold/100, 0, 1, lower.tail = TRUE)
+VaR_1day_p <- meanScaled_p + sdScaled_p * z_stat
+```
+
+Value at Risk following the standard normal distribution where the $z_{statistic}$ is the `r VaR_threshold`th percentile of the standard normal distribution.  
+
+\begin{equation}
+  \begin{aligned}
+    \mu_{scaled} & = \mu * Scaling Factor  \\
+                 & = `r mean_p` * `r scalingFactor` \\
+                 & = `r meanScaled_p` \\
+    \sigma_{scaled} & = \sigma * \sqrt{Scaling Factor}  \\             
+                    & = `r sd_p` * \sqrt{`r scalingFactor`} \\
+                    & = `r sdScaled_p`  \\
+    \text {where} \\
+    \mu_{scaled} & = \text {period-scaled expected excess returns} \\
+    \mu & = \text {given mean returns} \\
+    \sigma_{scaled} & = \text {period-scaled standard deviation of expected excess returns} \\
+    \sigma & = \text {given standard deviation returns} \\
+    Scaling Factor & = \text {scaled factor based on the period 1: '1 year', 1/2: '6 months', 1/12: '1 month', 1/250: '1 day'} \\
+  \end{aligned}
+\end{equation}
+
+Looking up the $z_{statistic}$ for the `r VaR_threshold`th percentile of the standard normal distribution, we have $z_{statistic} = `r z_stat`$.
+Thus, the Value at Risk of the portfolio is:  
+
+\begin{equation}
+  \begin{aligned}
+    VaR & = \mu_{scaled} + \sigma_{scaled} * z_{statistic}  \\
+        & = `r meanScaled_p` + `r sdScaled_p` * `r z_stat`  \\
+        & = `r VaR_1day_p`
+  \end{aligned}
+\end{equation}
+
+In summary:  
+
+Period  | 1 year          | 6 months          | 1 month           | 1 day
+---     | ---             | ---               | ---               | ---       
+5% VaR  | `r VaR_1year_p` | `r VaR_6months_p` | `r VaR_1month_p`  | `r VaR_1day_p`
+
+# **Question 4**
+
+```{r definition data-question4}
+
+# Set start date and end date of data
+start_date <- "2018-01-02"
+end_date <- "2020-09-18"
+
+# Get data for JPM, FB and the 10 year T-bill (TNX)
+getSymbols("JPM", src = "yahoo", from = start_date, to = end_date) # JPM
+getSymbols("FB", src = "yahoo", from = start_date, to = end_date) # FB
+getSymbols("AAPL", src = "yahoo", from = start_date, to = end_date) # AAPL
+getSymbols("^TNX", src = "yahoo", from = start_date, to = end_date) # TNX (10-year T-bill)
+
+# Get adjusted returns data for 01/2014
+rJPM <- na.omit(diff(log(to.monthly(JPM)$JPM.Adjusted)))
+rFB <- na.omit(diff(log(to.monthly(FB)$FB.Adjusted)))
+rAAPL <- na.omit(diff(log(to.monthly(AAPL)$AAPL.Adjusted)))
+rTNX <- (to.monthly(TNX)$TNX.Adjusted) / 1200 # Using monthly rate
+
+# Calculate statistics
+mean_rJPM <- mean(rJPM, na.rm = TRUE)
+mean_rFB <- mean(rFB, na.rm = TRUE)
+mean_rAAPL <- mean(rAAPL, na.rm = TRUE)
+mean_rTNX <- mean(rTNX, na.rm = TRUE)
+
+sd_rJPM <- sd(rJPM, na.rm = TRUE)
+sd_rFB <- sd(rFB, na.rm = TRUE)
+sd_rAAPL <- sd(rAAPL, na.rm = TRUE)
+sd_rTNX <- sd(rTNX, na.rm = TRUE)
+
+
+cov_rJPM_rJPM <- cov(rJPM, rJPM)
+cov_rAAPL_rAAPL <- cov(rAAPL, rAAPL)
+cov_rFB_rFB <- cov(rFB, rFB)
+cov_rJPM_rFB <- cov(rJPM, rFB)
+cov_rJPM_rAAPL <- cov(rJPM, rAAPL)
+cov_rFB_rAAPL <- cov(rFB, rAAPL)
+
+cor_rJPM_rJPM <- cor(rJPM, rJPM)
+cor_rAAPL_rAAPL <- cor(rAAPL, rAAPL)
+cor_rFB_rFB <- cor(rFB, rFB)
+cor_rJPM_rFB <- cor(rJPM, rFB)
+cor_rJPM_rAAPL <- cor(rJPM, rAAPL)
+cor_rFB_rAAPL <- cor(rFB, rAAPL)
+
+```
+
+Parameters for the Markowitz portfolio model are:  
+1. Expected Returns  
+2. Standard deviation from mean returns  
+3. Covariance of one asset returns to another.  
+
+The Covariance and Correlation formula is:
+\begin{equation}
+  \begin{aligned}
+    Cov_{X,Y}  & =  \sum_{i=1}^{n} \frac{(X_i - \overline{X}) * (Y_i - \overline{Y})}{n-1} \\
+    Corr_{X,Y} & =  \frac{Cov_{X,Y}}{\sigma_X * \sigma_Y}  \\
+    \text {where} \\
+    X_i & = \text {the observation value of returns of X} \\
+    \overline{X} & = \text {the expected mean returns of X} \\
+    Y_i & = \text {the observation value of returns of Y} \\
+    \overline{Y} & = \text {the expected mean returns of Y} \\
+    n & = \text {number of observations}
+    
+  \end{aligned}
+\end{equation}
+
+Using R, we have the parameters for the Markowitz Portfolio Model:
+
+Stock  | Mean           | Standard Deviation
+---    | ---            | ---                      
+AAPL   | `r mean_rAAPL` | `r sd_rAAPL` 
+JPM    | `r mean_rJPM`  | `r sd_rJPM`
+FB     | `r mean_rFB  ` | `r sd_rFB`
+
+And the correlation matrix
+
+Correlation | AAPL                  | JPM                 | FB
+---         | ---                   | ---                 | ---                      
+AAPL        | `r cor_rAAPL_rAAPL`   | `r cor_rJPM_rAAPL`  | `r cor_rFB_rAAPL` 
+JPM         | `r cor_rJPM_rAAPL`    | `r cor_rJPM_rJPM`   | `r cor_rJPM_rFB` 
+FB          | `r cor_rFB_rAAPL`     | `r cor_rJPM_rFB`    | `r cor_rFB_rFB` 
+
+
+And the covariance matrix
+
+Covariance  | AAPL                  | JPM                 | FB
+---         | ---                   | ---                 | ---                      
+AAPL        | `r cov_rAAPL_rAAPL`   | `r cov_rJPM_rAAPL`  | `r cov_rFB_rAAPL` 
+JPM         | `r cov_rJPM_rAAPL`    | `r cov_rJPM_rJPM`   | `r cov_rJPM_rFB` 
+FB          | `r cov_rFB_rAAPL`     | `r cov_rJPM_rFB`    | `r cov_rFB_rFB` 
+
+# **Question 5**
+
+Given parameters  
+
+```{r definition-question5}
+# Mean Returns
+mean_rStock1 <- 10/100
+mean_rStock2 <- 12/100
+mean_rf <- 5/100
+
+# Variance of returns
+var_rStock1 <- 0.025
+var_rStock2 <- 0.030
+
+# Standard deviation of returns
+sd_rStock1 <- sqrt(var_rStock1)
+sd_rStock2 <- sqrt(var_rStock2)
+
+# Covariance of Returns
+cov_rStock1_rStock2 <- 0.015
+
+# Correlation of Returns
+cor_rStock2_rStock2 <- cov_rStock1_rStock2 / (sd_rStock1 * sd_rStock2)
+```
+
+
+Asset      | Mean Returns      | Variance           | Pair    | \sigma_{1,2}
+---        | ---               | ---                | ---     | ---                      
+Stock 1    | `r mean_rStock1`  | `r var_rStock1`    | (1,2)   | `r cov_rStock1_rStock2` 
+Stock 2    | `r mean_rStock2`  | `r var_rStock2`    |         | 
+Risk Free  | `r mean_rf`       |                    |         | 
+  
+  
+Since the investor's objective is to minimize risk, we solve for the global minimum variance combination of the two assets.
+Let $x_i$ denotes the weight of the investment in asset i $(i = 1,2)$, and assume all money is invested in i, meaning $\sum {x_i} = x_1 + x_2 = 1$.
+
+\begin{equation}
+  \begin{aligned}
+    \text {The returns of the portfolio is:} \\
+    R_{p,x} & = x_1 * r_1 + x_2 * r_2 \\
+    \text {The expected returns on the portfolio is:} \\
+    \mu_{p,x} & = E[R_{p,x}] \\
+              & = x_1 * \mu_1 + x_2 * \mu_2  \\
+    \text {The variance of the portfolio returns is:} \\
+    \sigma_{p,x}^2 & = var(R_{p,x})  \\
+                   & = x_1 * \sigma_1^2 + x_2 * \sigma_2^2 + 2 * x_1 * x_2 * \sigma_{1,2}
+  \end{aligned}
+\end{equation}
+  
+The global minimum variance portfolio $m = (m_1,m_2)$ is the solution of the constrained minimization problem:
+
+\begin{equation}
+  \begin{aligned}
+    min \sigma_{p,m}^2 & = var(R_{p,m})  \\
+                       & = m_1^2 * \sigma_1^2 + m_2^2 * \sigma_2^2 + 2 * m_1 * m_2 * \sigma_{1,2} \\
+    \text {s.t. } m_1 + m_2 & = 1 \\
+    \text {rewrite: } \\
+    min \sigma_{p,m}^2 & = min[m_1^2 * \sigma_1^2 + (1-m_1)^2 * \sigma_2^2 + 2 * m_1 * (1 - m_1) * \sigma_{1,2}] \\
+                       & = min[m_1^2 * (\sigma_1^2 + \sigma_2^2 - 2 * \sigma_{1,2}) + m_1 * (2 * \sigma_{1,2} - 2 * \sigma_2^2) + \sigma_2^2]  \\
+    \text {plug in: }
+    min \sigma_{p,m}^2 & = min[0.025 * m_1^2 - 0.03 * m_1 + 0.03]
+  \end{aligned}
+\end{equation}
+
+Find the critical point:
+
+\begin{equation}
+  \begin{aligned}
+    \frac{d\sigma_{p,m}^2}{dm} & = 0 \\
+    \frac{d(0.025 * m_1^2 - 0.03 * m_1 + 0.03)}{dm} & = 0 \\
+      .05 * m_1 - 0.03 & = 0  \\
+    m_1 & = 0.6 = 60\%  \\
+    \text {thus, }   \\
+    m_2 & = 1 - 0.6 = 0.4 = 40\%
+  \end{aligned}
+\end{equation}
+
+Graphing the function:  
+```{r}
+
+# The Variance function of the portfolio
+fVar <- function(m1) var_rStock1 * m1^2 + var_rStock2 * (1 - m1)^2 + 2 * m1 * (1 - m1) * cov_rStock1_rStock2
+
+# Set the weighting
+m1 <- .6
+m2 <- .4
+
+# Plot of the variance function with respect to w1.
+w1 <- seq(0, 1, .05)
+plot(fVar, w1, xlab = "Weight of Stock 1 Relative to Portfolio", ylab = "Portfolio Variance", main = "Minimum Variance Portfolio"); abline(v = m1, col = "red")
+points(m1, fVar(m1), col='green')
+```
+
+We see indeed the minimum is at $m_1 = 0.6$
+
+Thus, the optimum weights of each stocks in the portfolio to satisfy the objective of minimum risk is:  
+
+Asset      | Weight            
+---        | ---                                  
+Stock 1    | 60\% 
+Stock 2    | 40\%
+
