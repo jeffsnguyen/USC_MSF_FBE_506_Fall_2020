@@ -190,7 +190,7 @@ JPM       | `r cv_rJPM`              | `r sharpe_rJPM`  | `r sortino_rJPM`
 FB        | `r cv_rFB`               | `r sharpe_rFB`   | `r sortino_rFB`
 
 For the period of Jan 2014:  
-In terms of coefficient of variation, JPM shows more deviation from mean compared to FB, i.e. potentially havng higher returns volatility.  
+In terms of coefficient of variation, JPM shows more deviation from mean compared to FB, i.e. potentially having higher returns volatility.  
 In terms of Sharpe Ratio, FB has better risk-adjusted returns performance compared to JPM.  
 In terms of Sortino Ratio, FB also generates better risk-adjusted performance with more weighting on the downside risk.  
 
