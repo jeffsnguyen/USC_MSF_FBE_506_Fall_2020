@@ -21,7 +21,7 @@ library(quantmod)
 
 # Set start date and end date of data
 start_date <- "2014-01-02"
-end_date <- "2014-01-31"
+end_date <- "2020-09-18"
 
 # Get data for JPM, FB and the 10 year T-bill (TNX)
 getSymbols("JPM", src = "yahoo", from = start_date, to = end_date) # JPM
@@ -29,8 +29,8 @@ getSymbols("FB", src = "yahoo", , from = start_date, to = end_date) # FB
 getSymbols("^TNX", src = "yahoo", from = start_date, to = end_date) # TNX (10-year T-bill)
 
 # Get adjusted returns data for 01/2014
-rJPM <- diff(log(JPM$JPM.Adjusted))
-rFB <- diff(log(FB$FB.Adjusted))
+rJPM <- diff(log(to.monthly(JPM)$JPM.Adjusted))
+rFB <- diff(log(to.monthly(FB)$FB.Adjusted))
 rTNX <- (to.monthly(TNX)$TNX.Adjusted) / 1200 # Using monthly rate
 
 # Calculate statistics
@@ -190,7 +190,7 @@ JPM       | `r cv_rJPM`              | `r sharpe_rJPM`  | `r sortino_rJPM`
 FB        | `r cv_rFB`               | `r sharpe_rFB`   | `r sortino_rFB`
 
 For the period of Jan 2014:  
-In terms of coefficient of variation, both JPM and FB are highly volatile with JPM showing a negative drift from the mean returns.   
+In terms of coefficient of variation, JPM shows more deviation from mean compared to FB, i.e. potentially havng higher returns volatility.  
 In terms of Sharpe Ratio, FB has better risk-adjusted returns performance compared to JPM.  
 In terms of Sortino Ratio, FB also generates better risk-adjusted performance with more weighting on the downside risk.  
 
@@ -369,8 +369,8 @@ FB        | `r cv_rFB`               | `r sharpe_rFB`   | `r sortino_rFB`
 
 For the period of Jan 02, 2018 to Sep 18, 2020:  
 In terms of coefficient of variation, both JPM and FB are highly volatile with JPM showing a significant negative drift from the mean returns while FB shows a positive drift from mean returns. +1 for FB   
-In terms of Sharpe Ratio, FB has better risk-adjusted returns performance compared to JPM. +1 for FB
-In terms of Sortino Ratio, FB also generates better risk-adjusted performance with more weighting on the downside risk. +1 for FB
+In terms of Sharpe Ratio, FB has better risk-adjusted returns performance compared to JPM, which has negative Sharpe. +1 for FB
+In terms of Sortino Ratio, FB also generates better risk-adjusted performance with more weighting on the downside risk. JPM also has negative Sortino. +1 for FB
 
 Overall, based on the above statistics, FB is the better investment with better risk-adjusted returns
 

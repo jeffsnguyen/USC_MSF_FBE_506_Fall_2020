@@ -392,7 +392,7 @@ Student ID: 6524885309</p>
 <pre><code>## Version 0.4-0 included new data defaults. See ?getSymbols.</code></pre>
 <pre class="r"><code># Set start date and end date of data
 start_date &lt;- &quot;2014-01-02&quot;
-end_date &lt;- &quot;2014-01-31&quot;
+end_date &lt;- &quot;2020-09-18&quot;
 
 # Get data for JPM, FB and the 10 year T-bill (TNX)
 getSymbols(&quot;JPM&quot;, src = &quot;yahoo&quot;, from = start_date, to = end_date) # JPM</code></pre>
@@ -413,8 +413,8 @@ getSymbols(&quot;JPM&quot;, src = &quot;yahoo&quot;, from = start_date, to = end
 ## na.approx(), na.fill(), etc to remove or replace them.</code></pre>
 <pre><code>## [1] &quot;^TNX&quot;</code></pre>
 <pre class="r"><code># Get adjusted returns data for 01/2014
-rJPM &lt;- diff(log(JPM$JPM.Adjusted))
-rFB &lt;- diff(log(FB$FB.Adjusted))
+rJPM &lt;- diff(log(to.monthly(JPM)$JPM.Adjusted))
+rFB &lt;- diff(log(to.monthly(FB)$FB.Adjusted))
 rTNX &lt;- (to.monthly(TNX)$TNX.Adjusted) / 1200 # Using monthly rate</code></pre>
 <pre><code>## Warning in to.period(x, &quot;months&quot;, indexAt = indexAt, name = name, ...): missing
 ## values removed from data</code></pre>
@@ -433,8 +433,8 @@ cv_rJPM &lt;- sd_rJPM / mean_rJPM</code></pre>
 <p><span class="math display">\[\begin{equation}
   \begin{aligned}
     CV_{JPM} &amp; = \frac{\sigma}{\mu}  \\
-             &amp; = \frac{0.0128177}{-0.0020371}  \\
-             &amp; = -6.2920387  \\
+             &amp; = \frac{0.0649717}{0.0095089}  \\
+             &amp; = 6.8327559  \\
     \text {where} \\
     \sigma &amp; = \text {Standard deviation of Adjusted Returns} \\
     \mu &amp; = \text {Mean of Adjusted Returns} \\
@@ -446,8 +446,8 @@ cv_rFB &lt;- sd_rFB / mean_rFB</code></pre>
 <p><span class="math display">\[\begin{equation}
   \begin{aligned}
     CV_{FB} &amp; = \frac{\sigma}{\mu}  \\
-            &amp; = \frac{0.0393283}{0.0057967}  \\
-             &amp; = 6.7845581  \\
+            &amp; = \frac{0.0744548}{0.0175534}  \\
+             &amp; = 4.2416176  \\
     \text {where} \\
     \sigma &amp; = \text {Standard deviation of Adjusted Returns} \\
     \mu &amp; = \text {Mean of Adjusted Returns } \\
@@ -463,8 +463,8 @@ sharpe_rJPM &lt;- (mean_rJPM - mean_rTNX) / sd_rJPM </code></pre>
 <p><span class="math display">\[\begin{equation}
   \begin{aligned}
     S_{JPM} &amp; = \frac{E(r_p) - r_f}{\sigma_p}  \\
-            &amp; = \frac{-0.0020371 - 0.0022442}{0.0128177}  \\
-            &amp; = -0.334014 \\
+            &amp; = \frac{0.0095089 - 0.0017659}{0.0649717}  \\
+            &amp; = 0.1191742 \\
     \text {where} \\
     r_p &amp; = \text {Mean of Adjusted Returns} \\
     r_f &amp; = \text {Risk free rate} \\
@@ -477,8 +477,8 @@ sharpe_rFB &lt;- (mean_rFB - mean_rTNX) / sd_rFB </code></pre>
 <p><span class="math display">\[\begin{equation}
   \begin{aligned}
     S_{FB} &amp; = \frac{E(r_p) - r_f}{\sigma_p}  \\
-           &amp; = \frac{0.0057967 - 0.0022442}{0.0393283}  \\
-            &amp; = 0.0903312 \\
+           &amp; = \frac{0.0175534 - 0.0017659}{0.0744548}  \\
+            &amp; = 0.2120413 \\
     \text {where} \\
     r_p &amp; = \text {Mean of Adjusted Returns} \\
     r_f &amp; = \text {Risk free rate} \\
@@ -511,8 +511,8 @@ sortino_rJPM &lt;- (mean_rJPM - mean_rTNX) / sd_downsideDev_JPM </code></pre>
 <p><span class="math display">\[\begin{equation}
   \begin{aligned}
     SortinoRatio_{JPM} &amp; = \frac{r_p - r_f}{\sigma_{downside}}  \\
-                       &amp; = \frac{-0.0020371 - 0.0022442}{0.0084284}  \\
-                       &amp; = -0.5079624  \\
+                       &amp; = \frac{0.0095089 - 0.0017659}{0.0421042}  \\
+                       &amp; = 0.1838998  \\
     \text {where} \\
     r_p &amp; = \text {Mean of Adjusted Returns} \\
     r_f &amp; = \text {Risk free rate} \\
@@ -541,8 +541,8 @@ sortino_rFB &lt;- (mean_rFB - mean_rTNX) / sd_downsideDev_FB</code></pre>
 <p><span class="math display">\[\begin{equation}
   \begin{aligned}
     SortinoRatio_{JPM} &amp; = \frac{r_p - r_f}{\sigma_{downside}}  \\
-                       &amp; = \frac{0.0057967 - 0.0057967}{0.013801}  \\
-                       &amp; = 0.2574141  \\
+                       &amp; = \frac{0.0175534 - 0.0175534}{0.0378204}  \\
+                       &amp; = 0.4174326  \\
     \text {where} \\
     r_p &amp; = \text {Mean of Adjusted Returns} \\
     r_f &amp; = \text {Risk free rate} \\
@@ -562,20 +562,20 @@ sortino_rFB &lt;- (mean_rFB - mean_rTNX) / sd_downsideDev_FB</code></pre>
 <tbody>
 <tr class="odd">
 <td>JPM</td>
-<td>-6.2920387</td>
-<td>-0.334014</td>
-<td>-0.5079624</td>
+<td>6.8327559</td>
+<td>0.1191742</td>
+<td>0.1838998</td>
 </tr>
 <tr class="even">
 <td>FB</td>
-<td>6.7845581</td>
-<td>0.0903312</td>
-<td>0.2574141</td>
+<td>4.2416176</td>
+<td>0.2120413</td>
+<td>0.4174326</td>
 </tr>
 </tbody>
 </table>
 <p>For the period of Jan 2014:<br />
-In terms of coefficient of variation, both JPM and FB are highly volatile with JPM showing a negative drift from the mean returns.<br />
+In terms of coefficient of variation, JPM shows more deviation from mean compared to FB, i.e. potentially havng higher returns volatility.<br />
 In terms of Sharpe Ratio, FB has better risk-adjusted returns performance compared to JPM.<br />
 In terms of Sortino Ratio, FB also generates better risk-adjusted performance with more weighting on the downside risk.</p>
 </div>
@@ -760,7 +760,7 @@ sortino_rFB &lt;- (mean_rFB - mean_rTNX) / sd_downsideDev_FB</code></pre>
 </table>
 <p>For the period of Jan 02, 2018 to Sep 18, 2020:<br />
 In terms of coefficient of variation, both JPM and FB are highly volatile with JPM showing a significant negative drift from the mean returns while FB shows a positive drift from mean returns. +1 for FB<br />
-In terms of Sharpe Ratio, FB has better risk-adjusted returns performance compared to JPM. +1 for FB In terms of Sortino Ratio, FB also generates better risk-adjusted performance with more weighting on the downside risk. +1 for FB</p>
+In terms of Sharpe Ratio, FB has better risk-adjusted returns performance compared to JPM, which has negative Sharpe. +1 for FB In terms of Sortino Ratio, FB also generates better risk-adjusted performance with more weighting on the downside risk. JPM also has negative Sortino. +1 for FB</p>
 <p>Overall, based on the above statistics, FB is the better investment with better risk-adjusted returns</p>
 </div>
 </div>
