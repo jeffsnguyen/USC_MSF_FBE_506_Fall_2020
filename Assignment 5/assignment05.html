@@ -497,8 +497,8 @@ mar &lt;- mean_rTNX
 # Deviation from MAR, this is a data frame, remove NA values
 dev_rJPM_mar &lt;- na.omit(rJPM - mar)
 
-# Set positive deviations to be 0 as we only want downside value
-devNegative_rJPM_mar &lt;- replace(dev_rJPM_mar, dev_rJPM_mar &gt; 0, 0)
+# Get the subset of negative values
+devNegative_rJPM_mar &lt;- subset(dev_rJPM_mar, dev_rJPM_mar &lt; 0)
 
 # Calculate the Lower Partial Moment
 downsideDev_JPM &lt;- var(devNegative_rJPM_mar)
@@ -511,8 +511,8 @@ sortino_rJPM &lt;- (mean_rJPM - mean_rTNX) / sd_downsideDev_JPM </code></pre>
 <p><span class="math display">\[\begin{equation}
   \begin{aligned}
     SortinoRatio_{JPM} &amp; = \frac{r_p - r_f}{\sigma_{downside}}  \\
-                       &amp; = \frac{0.0095089 - 0.0017659}{0.0421042}  \\
-                       &amp; = 0.1838998  \\
+                       &amp; = \frac{0.0095089 - 0.0017659}{0.0530044}  \\
+                       &amp; = 0.1460813  \\
     \text {where} \\
     r_p &amp; = \text {Mean of Adjusted Returns} \\
     r_f &amp; = \text {Risk free rate} \\
@@ -527,8 +527,8 @@ mar &lt;- mean_rTNX
 # Deviation from MAR, this is a data frame, also remove NA values
 dev_rFB_mar &lt;- na.omit(rFB - mar)
 
-# Set positive deviations to be 0 as we only want downside value
-devNegative_rFB_mar &lt;- replace(dev_rFB_mar, dev_rFB_mar &gt; 0, 0)
+# Get the subset of negative values
+devNegative_rFB_mar &lt;- subset(dev_rFB_mar, dev_rFB_mar &lt; 0)
 
 # Calculate the Lower Partial Moment
 downsideDev_FB &lt;- var(devNegative_rFB_mar)
@@ -541,8 +541,8 @@ sortino_rFB &lt;- (mean_rFB - mean_rTNX) / sd_downsideDev_FB</code></pre>
 <p><span class="math display">\[\begin{equation}
   \begin{aligned}
     SortinoRatio_{JPM} &amp; = \frac{r_p - r_f}{\sigma_{downside}}  \\
-                       &amp; = \frac{0.0175534 - 0.0175534}{0.0378204}  \\
-                       &amp; = 0.4174326  \\
+                       &amp; = \frac{0.0175534 - 0.0175534}{0.0411557}  \\
+                       &amp; = 0.3836041  \\
     \text {where} \\
     r_p &amp; = \text {Mean of Adjusted Returns} \\
     r_f &amp; = \text {Risk free rate} \\
@@ -564,13 +564,13 @@ sortino_rFB &lt;- (mean_rFB - mean_rTNX) / sd_downsideDev_FB</code></pre>
 <td>JPM</td>
 <td>6.8327559</td>
 <td>0.1191742</td>
-<td>0.1838998</td>
+<td>0.1460813</td>
 </tr>
 <tr class="even">
 <td>FB</td>
 <td>4.2416176</td>
 <td>0.2120413</td>
-<td>0.4174326</td>
+<td>0.3836041</td>
 </tr>
 </tbody>
 </table>
@@ -682,7 +682,7 @@ mar &lt;- mean_rTNX
 dev_rJPM_mar &lt;- na.omit(rJPM - mar)
 
 # Set positive deviations to be 0 as we only want downside value
-devNegative_rJPM_mar &lt;- replace(dev_rJPM_mar, dev_rJPM_mar &gt; 0, 0)
+devNegative_rJPM_mar &lt;- subset(dev_rJPM_mar, dev_rJPM_mar &lt; 0)
 
 # Calculate the Lower Partial Moment
 downsideDev_JPM &lt;- var(devNegative_rJPM_mar)
@@ -695,8 +695,8 @@ sortino_rJPM &lt;- (mean_rJPM - mean_rTNX) / sd_downsideDev_JPM </code></pre>
 <p><span class="math display">\[\begin{equation}
   \begin{aligned}
     SortinoRatio_{JPM} &amp; = \frac{r_p - r_f}{\sigma_{downside}}  \\
-                       &amp; = \frac{-0.00267 - 0.0016878}{0.0548325}  \\
-                       &amp; = -0.0794758  \\
+                       &amp; = \frac{-0.00267 - 0.0016878}{0.0650627}  \\
+                       &amp; = -0.0669794  \\
     \text {where} \\
     r_p &amp; = \text {Mean of Adjusted Returns} \\
     r_f &amp; = \text {Risk free rate} \\
@@ -712,7 +712,7 @@ mar &lt;- mean_rTNX
 dev_rFB_mar &lt;- na.omit(rFB - mar)
 
 # Set positive deviations to be 0 as we only want downside value
-devNegative_rFB_mar &lt;- replace(dev_rFB_mar, dev_rFB_mar &gt; 0, 0)
+devNegative_rFB_mar &lt;- subset(dev_rFB_mar, dev_rFB_mar &lt; 0)
 
 # Calculate the Lower Partial Moment
 downsideDev_FB &lt;- var(devNegative_rFB_mar)
@@ -725,8 +725,8 @@ sortino_rFB &lt;- (mean_rFB - mean_rTNX) / sd_downsideDev_FB</code></pre>
 <p><span class="math display">\[\begin{equation}
   \begin{aligned}
     SortinoRatio_{JPM} &amp; = \frac{r_p - r_f}{\sigma_{downside}}  \\
-                       &amp; = \frac{0.0096887 - 0.0096887}{0.0466979}  \\
-                       &amp; = 0.1713319  \\
+                       &amp; = \frac{0.0096887 - 0.0096887}{0.0388015}  \\
+                       &amp; = 0.206199  \\
     \text {where} \\
     r_p &amp; = \text {Mean of Adjusted Returns} \\
     r_f &amp; = \text {Risk free rate} \\
@@ -748,13 +748,13 @@ sortino_rFB &lt;- (mean_rFB - mean_rTNX) / sd_downsideDev_FB</code></pre>
 <td>JPM</td>
 <td>-28.8009848</td>
 <td>-0.0566695</td>
-<td>-0.0794758</td>
+<td>-0.0669794</td>
 </tr>
 <tr class="even">
 <td>FB</td>
 <td>10.1545518</td>
 <td>0.0813225</td>
-<td>0.1713319</td>
+<td>0.206199</td>
 </tr>
 </tbody>
 </table>

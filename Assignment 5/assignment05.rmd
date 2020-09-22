@@ -2,7 +2,9 @@
 title: "assignment05"
 author: "Jeff Nguyen"
 date: "18/09/2020"
-output: html_document
+output:
+  html_document: default
+  word_document: default
 ---
 
 **University of Southern California**  
@@ -125,8 +127,8 @@ mar <- mean_rTNX
 # Deviation from MAR, this is a data frame, remove NA values
 dev_rJPM_mar <- na.omit(rJPM - mar)
 
-# Set positive deviations to be 0 as we only want downside value
-devNegative_rJPM_mar <- replace(dev_rJPM_mar, dev_rJPM_mar > 0, 0)
+# Get the subset of negative values
+devNegative_rJPM_mar <- subset(dev_rJPM_mar, dev_rJPM_mar < 0)
 
 # Calculate the Lower Partial Moment
 downsideDev_JPM <- var(devNegative_rJPM_mar)
@@ -158,8 +160,8 @@ mar <- mean_rTNX
 # Deviation from MAR, this is a data frame, also remove NA values
 dev_rFB_mar <- na.omit(rFB - mar)
 
-# Set positive deviations to be 0 as we only want downside value
-devNegative_rFB_mar <- replace(dev_rFB_mar, dev_rFB_mar > 0, 0)
+# Get the subset of negative values
+devNegative_rFB_mar <- subset(dev_rFB_mar, dev_rFB_mar < 0)
 
 # Calculate the Lower Partial Moment
 downsideDev_FB <- var(devNegative_rFB_mar)
@@ -304,7 +306,7 @@ mar <- mean_rTNX
 dev_rJPM_mar <- na.omit(rJPM - mar)
 
 # Set positive deviations to be 0 as we only want downside value
-devNegative_rJPM_mar <- replace(dev_rJPM_mar, dev_rJPM_mar > 0, 0)
+devNegative_rJPM_mar <- subset(dev_rJPM_mar, dev_rJPM_mar < 0)
 
 # Calculate the Lower Partial Moment
 downsideDev_JPM <- var(devNegative_rJPM_mar)
@@ -337,7 +339,7 @@ mar <- mean_rTNX
 dev_rFB_mar <- na.omit(rFB - mar)
 
 # Set positive deviations to be 0 as we only want downside value
-devNegative_rFB_mar <- replace(dev_rFB_mar, dev_rFB_mar > 0, 0)
+devNegative_rFB_mar <- subset(dev_rFB_mar, dev_rFB_mar < 0)
 
 # Calculate the Lower Partial Moment
 downsideDev_FB <- var(devNegative_rFB_mar)
