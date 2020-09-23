@@ -1,0 +1,39 @@
+---
+title: "Formula Sheet"
+author: "Jeff Nguyen"
+date: "22/09/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Trend:
+1. Time trend: clear trend  
+2. Seasonal: up and down spike
+3. Cyclical: business cycle (Recession: 2 quarters, Depression: 4 quarters)
+4. Autocorelation: when a variable rises/falls, it rises/falls for some times.
+5. Randomness; Random components of the variable after filtered out other variables.
+
+Others:
+- Structural break: sharp drop in variable and stay there for a long period of time.
+- Outlier: 1 point of data is 3 standard deviations from the mean.
+
+
+\begin{equation}
+  \begin{aligned}
+    PV & = \frac{R_1}{(1+r)^1} + \frac{R_2}{(1+r)^2} + ... + \frac{R_n}{(1+r)^n} \\
+    NPV & = Initial Investment - PV \\
+    IRR & = \text {Find root of NPV = 0, use polyroot}  \\
+    P_{Perpetuity} & = \frac{R}{r} \\
+    \text {continuous Compounding } S & = A*e^{rt}  \\
+    \text {Arithmetic Progression } S & = n(a+ \frac{d*(n-1)}{2})  \text { where the series is: } a, a+d, a+2d, .., a+ (n-1)d\\
+    \text {Geometric Progression } S & = \frac{a(1-r^n)}{1-r} \text { where the series is  } a, ar^1, ar^2, ..., ar^{n-1} \\
+    \text {Price Elasticity of Demand } & = \frac{\Delta Q}{\Delta P}  \\
+  \end{aligned}
+\end{equation}
+
+Comparing to sample mean: $z = \frac{x - \overline x}{SD}$
+Standard error is standard deviation of sample means $SE = SD_{xbar} = \frac{SD}{\sqrt{n}}$ with $z = \frac{\overline x - \mu}{SE}$
+
+Central limit theorem 
