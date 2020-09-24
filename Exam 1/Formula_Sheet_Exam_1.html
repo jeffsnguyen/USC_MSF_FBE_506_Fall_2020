@@ -369,23 +369,96 @@ summary {
 </div>
 
 
-<p>Trend: 1. Time trend: clear trend<br />
-2. Seasonal: up and down spike 3. Cyclical: business cycle (Recession: 2 quarters, Depression: 4 quarters) 4. Autocorelation: when a variable rises/falls, it rises/falls for some times. 5. Randomness; Random components of the variable after filtered out other variables.</p>
-<p>Others: - Structural break: sharp drop in variable and stay there for a long period of time. - Outlier: 1 point of data is 3 standard deviations from the mean.</p>
-<p><span class="math display">\[\begin{equation}
+<p>Trend:<br />
+1. Time trend: clear trend<br />
+2. Seasonal: up and down spike<br />
+3. Cyclical: business cycle (Recession: 2 quarters, Depression: 4 quarters)<br />
+4. Autocorelation: when a variable rises/falls, it rises/falls for some times.<br />
+5. Randomness; Random components of the variable after filtered out other variables.</p>
+<p>Others:<br />
+- Structural break: sharp drop in variable and stay there for a long period of time.<br />
+- Outlier: 1 point of data is 3 standard deviations from the mean.</p>
+<p><strong>Stastistics Value</strong> <span class="math display">\[\begin{equation}
   \begin{aligned}
     PV &amp; = \frac{R_1}{(1+r)^1} + \frac{R_2}{(1+r)^2} + ... + \frac{R_n}{(1+r)^n} \\
-    NPV &amp; = Initial Investment - PV \\
+    NPV &amp; = -I_0 + PV = -I_0 + \sum_{i=1}^{n} \frac{R*(1+g)^i}{(1+r)^i} \\
     IRR &amp; = \text {Find root of NPV = 0, use polyroot}  \\
     P_{Perpetuity} &amp; = \frac{R}{r} \\
-    \text {continuous Compounding } S &amp; = A*e^{rt}  \\
+    \text {Continuous Compounding } S &amp; = A*e^{rt}  \\
     \text {Arithmetic Progression } S &amp; = n(a+ \frac{d*(n-1)}{2})  \text { where the series is: } a, a+d, a+2d, .., a+ (n-1)d\\
     \text {Geometric Progression } S &amp; = \frac{a(1-r^n)}{1-r} \text { where the series is  } a, ar^1, ar^2, ..., ar^{n-1} \\
-    \text {Price Elasticity of Demand } &amp; = \frac{\Delta Q}{\Delta P}  \\
+    \text {Price Elasticity of Demand e } &amp; = \frac{\Delta Q}{\Delta P} \\
+    \text {where  e&lt;1: necessity (inelastic), e&gt;1: luxury, e=1: unit elastic}\\
+    \text {Profit maximizing Q is at MR = MC}\\
+    \text {Taylor Series Expansion (approximation)} f(x) &amp; = f(x_0) + \frac{f&#39;(x_0)(x-x_0)}{1} + \frac{f&#39;&#39;(x_0)(x-x_0)^2}{2} + ... + R_n \\
+    \text {Point Estimate of Sample/Population Mean } \overline x &amp; = \frac{\sum_{i=1}^n x_i}{n} \\
+    \text {Point Estimate of Sample/Population Variance} s^2 &amp; = \frac{\sum_{i=1}^n (x_i - \overline x)^2}{n-1} \\
+    \text {Point Estimate of Variance of Sameple Mean (Standard Error^2)} SE^2 &amp; = (s_{\overline x})^2 &amp; = \frac{s^2}{n} \\
+    \text {Comparing to sample mean: } z_{statistic} &amp; = \frac{x - \overline x}{s} \\
+    \text {Comapring to population mean (hypothesis) } z_{statistic} &amp; = \frac{\overline x - \mu}{s_{\overline x}} \\
+    \text {Measure of central tendency: Mean, median, mode} \\
+    \text {Mean Absolute Deviation } MAD &amp; = \frac{\lvert X_i - \overline X \rvert}{n} \\
+    
   \end{aligned}
 \end{equation}\]</span></p>
-<p>Comparing to sample mean: <span class="math inline">\(z = \frac{x - \overline x}{SD}\)</span> Standard error is standard deviation of sample means <span class="math inline">\(SE = SD_{xbar} = \frac{SD}{\sqrt{n}}\)</span> with <span class="math inline">\(z = \frac{\overline x - \mu}{SE}\)</span></p>
-<p>Central limit theorem</p>
+<p><strong>Ratios</strong> <span class="math display">\[\begin{equation}
+  \begin{aligned}
+    \text{Semi-Variance} SV(x) &amp; = (\sigma_{semi})^2 = \frac{\sum min((R_t - \overline R), 0)^2}{T} \\
+    \text{Lower Partial Moment} LPM2(x)_\tau &amp; = \frac{\sum min((R_t - R_{\tau}), 0)^2}{T} \\
+    \text{Coefficient of variation} CV &amp; = \frac{\sigma}{\mu} \\
+    \text{Sharpe Ratio} S_{JPM} &amp; = \frac{E(r_p) - r_f}{\sigma_p}  \\
+    \text{Sortino Ratio} SortinoRatio &amp; = \frac{r_p - r_f}{\sigma_{downside}}  \\
+    \text{Treynor Ratio} TreynorRatio &amp; = \frac{r_p - r_f}{\beta_p} \\
+    Cov_{X,Y}  &amp; =  \sum_{i=1}^{n} \frac{(X_i - \overline{X}) * (Y_i - \overline{Y})}{n-1} \\
+    Corr_{X,Y} &amp; =  \frac{Cov_{X,Y}}{\sigma_X * \sigma_Y}  \\
+  \end{aligned}
+\end{equation}\]</span></p>
+<p><strong>Value at Risk</strong><br />
+Step 1: Get Scaling Factor 1: ‘1 year’, 1/2: ‘6 months’, 1/12: ‘1 month’, 1/250: ‘1 day’<br />
+Step 2: Calculate scaled mean returns <span class="math inline">\(\mu_{scaled} = \mu*scalingFactor\)</span><br />
+Step 3: Calculate scaled standard deviation <span class="math inline">\(\sigma_{scaled} = \sigma*\sqrt{scalingFactor}\)</span><br />
+Step 4: Look up the <span class="math inline">\(z_{statistics} = 1 - VaR\)</span><br />
+Step 5: <span class="math inline">\(VaR = \mu_{scaled} + \sigma_{scaled} * z_{statistics}\)</span><br />
+Others: <span class="math display">\[\begin{equation}
+  \begin{aligned}
+    \text{Risk Adjusted Portfolio} RAP &amp; = \sum \beta_i*R_i \\
+    \text{Equity VaR} EVaR &amp; = RAP * VaR \\
+    \text{Global Minimum Variance Solution} w_1 &amp; = \frac{\sigma_{22} - \sigma_{12}}{\sigma_{11} + \sigma_{22} - 2\sigma_{12}} \\
+    \text{Return of portfolio} R_p &amp; = w_1.R_1 + w_2.R_2 \\
+    \text{Standard Deviation of Portfolio} \sigma_{p} &amp; = \sqrt{\sigma_1^2(w_1^2) + \sigma_2^2(w_2^2) + 2(w_1)(w_2)\sigma_{12}} \\
+    \text{Portfilio function} Y &amp; = R_f + \frac{R_p - R_f}{\sigma_p}*X
+  \end{aligned}
+\end{equation}\]</span></p>
+<p><strong>Hypothesis Testing</strong><br />
+<strong>Step 1</strong>: State the null hypothesis <span class="math inline">\(H_0: \mu = \mu_{hypothesized}\)</span> (two-sided) / <span class="math inline">\(H_0: \mu \geqslant \mu_{hypothesized}\)</span> or <span class="math inline">\(H_0: \mu \leqslant \mu_{hypothesized}\)</span> (one-sided) and the alternative hypothesis <span class="math inline">\(H_a\)</span> and the <span class="math inline">\(\alpha\)</span> value.<br />
+<strong>Step 2</strong>: Calculating test statistics:<br />
+<span class="math display">\[\begin{equation}
+  \begin{aligned}
+    \text{One-Sample Z-Test} z_{statistic} &amp; = \frac{\overline x - \mu_{hypothesized}}{\frac{s}{\sqrt{n}}} \\
+    \text{Not pooled Two-Sample Z-Test (unequal variance)} z_{statistics} &amp; = \frac{\overline x_1 - \overline x_2}{\sqrt{\frac{s_1^2}{n1} + \frac{s_2^2}{n2}}}  \\
+    \text{Pooled Two-Sample Z-Test (equal variance)} z_{statistics} &amp; = \frac{\overline x_1 - \overline x_2}{\sqrt{\frac{s_p^2}{n1} + \frac{s_p^2}{n2}}}  \\
+    \text{where} s_p^2 &amp; = \frac{(n_1-1)s_1^2 + (n_2-1)s_2^2}{n_1+n_2-2} \\
+    df &amp; = \frac{(\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2})^2}{(\frac{(\frac{s_1^2}{n_1})^2}{n_1 - 1})+(\frac{(\frac{s_2^2}{n_2})^2}{n_2 - 1})}
+  \end{aligned}
+\end{equation}\]</span> <strong>Step 3</strong>: If <span class="math inline">\(z_{statistic} &gt; z_{critical}\)</span>, reject the null. Otherwise, fail to reject the null on <span class="math inline">\(1-\alpha\)</span> confidence interval.</p>
+<p><strong>Expected Value</strong> <span class="math display">\[\begin{equation}
+  \begin{aligned}
+    E(X) &amp; = \sum_{X} X*P \\
+    E(aX + b) &amp; = a*E(X) + b \\
+    E(X + Y) &amp; = E(X) + E(Y) \\
+    \text{if X,Y indepdent} E(XY) &amp; = E(X)*E(Y) \\
+  \end{aligned}
+\end{equation}\]</span></p>
+<p><strong>Variance</strong> <span class="math display">\[\begin{equation}
+  \begin{aligned}
+    V(X) &amp; = E(X^2) - (E(X))^2 \\
+    cov(X,Y) &amp; = E(XY) - E(X)*E(Y) \\
+    V(aX + b) &amp; = a^2*V(X) \\
+    V(X + Y) &amp; = V(X) + V(Y) + 2cov(X,Y) \text{if X,Y independent, cov(X,Y) = 0} \\
+    corr(X,Y) &amp; = \frac{cov(X,Y)}{\sqrt{V(X)*V(Y)}}
+  \end{aligned}
+\end{equation}\]</span></p>
+<p><strong>Central limit theorem</strong> Key is assuming a Gaussian distribution: The central limit theorem states that if you have a population with mean μ and standard deviation σ and take sufficiently large random samples from the population with replacement , then the distribution of the sample means will be approximately normally distributed.</p>
 
 
 
