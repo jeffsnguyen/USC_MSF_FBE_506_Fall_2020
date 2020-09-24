@@ -8,7 +8,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-Trend:  
+**Trend**s:  
 1. Time trend: clear trend  
 2. Seasonal: up and down spike  
 3. Cyclical: business cycle (Recession: 2 quarters, Depression: 4 quarters)  
