@@ -63,12 +63,20 @@ sd_rGSPC <- sd(rGSPC, na.rm = TRUE)
 
 Selected 5 stock as below:
 
-Portfolio     | Mean Returns    | Standard Deviation  | Beta
+Instruments   | Mean Returns    | Standard Deviation  | Beta
 ---           | ---             | ---                 | ---    
 WKHS          | `r mean_rWKHS`  | `r sd_rWKHS`        | 1
 GWPH          | `r mean_rGWPH`  | `r sd_rGWPH`        | 1
 COOP          | `r mean_rCOOP`  | `r sd_rCOOP`        | 1
 CAT           | `r mean_rCAT`   | `r sd_rCAT`         | 1
 DE            | `r mean_rDE`    | `r sd_rDE`          | 1
+
+Indices parameters:
+
+Instruments      | Mean Returns    | Standard Deviation  | Beta
+---              | ---             | ---                 | ---    
+S&P 500          | `r mean_rGSPC`  | `r sd_rGSPC`        | 1
+10-Year T-bill   | `r mean_rTNX`   | 0                   | 1
+
 
 
