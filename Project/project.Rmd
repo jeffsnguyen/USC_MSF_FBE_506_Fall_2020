@@ -1,0 +1,74 @@
+---
+title: "assignment05"
+author: "Jeff Nguyen"
+date: "18/09/2020"
+output:
+  html_document: default
+  word_document: default
+---
+
+**University of Southern California**  
+**Marshall School of Business**  
+**FBE 506 Quantitative Method in Finance**
+
+Course Project Report  
+Student Name: Ngoc Son (Jeff) Nguyen  
+
+
+# **Part 1: Stock selection**
+
+```{r definition data-question1}
+library(quantmod)
+
+# Set start date and end date of data
+start_date <- "2014-01-02"
+end_date <- "2018-12-31"
+
+# Get data for JPM, FB and the 10 year T-bill (TNX)
+getSymbols("WKHS", src = "yahoo", from = start_date, to = end_date)
+getSymbols("GWPH", src = "yahoo", , from = start_date, to = end_date)
+getSymbols("COOP", src = "yahoo", , from = start_date, to = end_date)
+getSymbols("CAT", src = "yahoo", , from = start_date, to = end_date)
+getSymbols("DE", src = "yahoo", , from = start_date, to = end_date)
+getSymbols("^GSPC", src = "yahoo", , from = start_date, to = end_date) # S&P 500
+getSymbols("^TNX", src = "yahoo", from = start_date, to = end_date) # TNX (10-year T-bill)
+
+# Get adjusted returns dATA
+rWKHS <- diff(log(to.monthly(WKHS)$WKHS.Adjusted))
+rGWPH <- diff(log(to.monthly(GWPH)$GWPH.Adjusted))
+rCOOP <- diff(log(to.monthly(COOP)$COOP.Adjusted))
+rCAT <- diff(log(to.monthly(CAT)$CAT.Adjusted))
+rDE <- diff(log(to.monthly(DE)$DE.Adjusted))
+rGSPC <- diff(log(to.monthly(GSPC)$GSPC.Adjusted))
+rTNX <- (to.monthly(TNX)$TNX.Adjusted) / 1200 # Using monthly rate
+
+# Calculate statistics
+mean_rWKHS <- mean(rWKHS, na.rm = TRUE)
+mean_rGWPH <- mean(rGWPH, na.rm = TRUE)
+mean_rCOOP <- mean(rCOOP, na.rm = TRUE)
+mean_rCAT <- mean(rCAT, na.rm = TRUE)
+mean_rDE <- mean(rDE, na.rm = TRUE)
+mean_rGSPC <- mean(rGSPC, na.rm = TRUE)
+mean_rTNX <- mean(rTNX, na.rm = TRUE)
+
+sd_rWKHS <- sd(rWKHS, na.rm = TRUE)
+sd_rGWPH <- sd(rGWPH, na.rm = TRUE)
+sd_rCOOP <- sd(rCOOP, na.rm = TRUE)
+sd_rCAT <- sd(rCAT, na.rm = TRUE)
+sd_rDE <- sd(rDE, na.rm = TRUE)
+sd_rGSPC <- sd(rGSPC, na.rm = TRUE)
+
+
+```
+
+Selected 5 stock as below:
+
+Portfolio     | Mean Returns    | Standard Deviation  | Beta
+---           | ---             | ---                 | ---    
+WKHS          | `r mean_rWKHS`  | `r sd_rWKHS`        | 1
+GWPH          | `r mean_rGWPH`  | `r sd_rGWPH`        | 1
+COOP          | `r mean_rCOOP`  | `r sd_rCOOP`        | 1
+CAT           | `r mean_rCAT`   | `r sd_rCAT`         | 1
+DE            | `r mean_rDE`    | `r sd_rDE`          | 1
+
+
