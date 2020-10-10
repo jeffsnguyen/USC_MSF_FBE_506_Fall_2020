@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, envir=.GlobalEnv)
 ```
 
 **University of Southern California**  
@@ -363,9 +363,11 @@ points(N_max, Q(N_max), col='red')
 
 # **Question 4**  
 
+## a. Find the GMV solution, no short sale.
+
 Given parameters  
 
-```{r definition-question5}
+```{r}
 # Mean Returns
 mean_rStock1 <- .13
 mean_rStock2 <- .21
@@ -441,7 +443,6 @@ Find the critical point:
 
 Graphing the function:  
 ```{r}
-
 # The Variance function of the portfolio
 fVar <- function(m1) var_rStock1 * m1^2 + var_rStock2 * (1 - m1)^2 + 2 * m1 * (1 - m1) * cov_rStock1_rStock2
 
@@ -453,15 +454,33 @@ m2 <- .6264
 w1 <- seq(0, 1, .05)
 plot(fVar, w1, xlab = "Weight of Stock 1 Relative to Portfolio", ylab = "Portfolio Variance", main = "Minimum Variance Portfolio"); abline(v = m1, col = "red")
 points(m1, fVar(m1), col='green')
+
+# Plot of the efficient frontier
+w1 <- seq(-.5, 1.5, .005)
+fVar <- function(w1) var_rStock1 * w1^2 + var_rStock2 * (1 - w1)^2 + 2 * w1 * (1 - w1) * cov_rStock1_rStock2
+r <- function(w1) mean_rStock1*w1 + mean_rStock2*(1-w1)
+Risk <- sqrt(fVar(w1))
+Return <- r(w1)
+plot(Risk, Return, type='l', main='Global Minimum Variance (no short sale)', col = 'green')
+wp <- (var_rStock2 - cov_rStock1_rStock2) / (var_rStock1 + var_rStock2 - 2 * cov_rStock1_rStock2)  # Normalizing weight
+Rp <- r(wp)
+sigma <- sqrt(fVar(wp))
+Rf <- mean_rf
+Sharpe <- (Rp-Rf)/sigma
+X <- seq(0, 1, .01)
+Y <- Rf + Sharpe*X
+lines(X, Y)
+points(sigma, Rp, col='orange')
 ```
 
 We see indeed the minimum is at $m_1 = `r m1`$
 
 Thus, the optimum weights of each stocks in the portfolio to satisfy the objective of minimum risk is:  
 
-Asset      | Weight            
----        | ---                                  
-Stock 1    | `r m1*100`\% 
-Stock 2    | `r m2*100`\%
+Asset      | Weight            | Risk            | Return            
+---        | ---               | ---             | ---                                          
+Stock 1    | `r m1*100`\%      |                 |
+Stock 2    | `r m2*100`\%      |                 |
+Portfolio  | 100\%             | `r sigma`       | `r Rp`
 
-
+## **b. Construct the efficient frontier. Assume short sale.**
