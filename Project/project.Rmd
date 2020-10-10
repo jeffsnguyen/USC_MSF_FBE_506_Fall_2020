@@ -79,4 +79,4 @@ S&P 500          | `r mean_rGSPC`  | `r sd_rGSPC`        | 1
 10-Year T-bill   | `r mean_rTNX`   | 0                   | 1
 
 
-
+# **Part 2: Portfolio Construction and Efficient Frontier**
