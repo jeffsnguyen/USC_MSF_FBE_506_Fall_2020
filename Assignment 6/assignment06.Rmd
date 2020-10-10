@@ -1,0 +1,467 @@
+---
+title: "assignment06"
+author: "Jeff Nguyen"
+date: "09/10/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**University of Southern California**  
+**Marshall School of Business**  
+**FBE 506 Quantitative Method in Finance**
+
+Assignment 06  
+Student Name: Ngoc Son (Jeff) Nguyen  
+Student ID: 6524885309  
+
+
+# **Question 1**  
+
+\begin{equation}
+  \begin{aligned}
+    Q = 150*N - .025*N^2
+  \end{aligned}
+\end{equation}
+
+## a. Finding optimum N and Q. No constraint.  
+Objective is to maximize Q given N. Thus we find the max of Q. 
+Q(N) is a polynomial function, and thus, continuous everywhere.  
+
+**Graph of the function:**
+```{r}
+Q <- function(N) 150*N - .025*N^2
+curve(Q, 0, 6000)
+root <- polyroot(c(150, -.05))
+N_max <- Re(root)[abs(Im(root)) < 1e-6]
+Q_max <- Q(N_max)
+points(N_max, Q(N_max), col='red')
+```
+We know:  
+\begin{equation}
+  \begin{aligned}
+    Q'(N_0) & = 0 \\
+    \frac{dQ}{dN} & = 0 \\
+    150 - .05*N_{max} & = 0 \\
+    N_{max} & = `r N_max`
+  \end{aligned}
+\end{equation}
+
+**Per graph, we can confirm Q(N) optimum is at $N_{max} = `r N_max`$ and $Q_{max} = `r Q_max`$.**  
+
+## b,c,d. Finding optimum N and Q. Constraint $N \leqslant 250$.  
+
+The problem is to maximize the output $Q$ subject to the constraint that the business can not have more than 250 units of labor $N$.  
+To solve the constrained optimizing problem, we form the Lagrangian function.  
+
+**The Lagrangian function is formed by augmenting the constraint together with the Lagrange multiplier to the objective function.** 
+
+\begin{equation}
+  \begin{aligned}
+    L = 150*N - .025*N^2 + \lambda*(250 - N)
+  \end{aligned}
+\end{equation}
+
+If the constraint is satisfied, no matter what value has, the second term in the right side of the Lagrangian equation will vanish and we arrive at $L = 150*N - .025*N^2$, that is maximizing $L$ with respect to $N$ is the same as maximizing $Q$, and achieving the objective. Therefore, the trick in solving a constrained optimizing problem is to incorporate the constraint into the problem and ensure that the constraint is satisfied with equality. This is done by treating $\lambda$ as an additional variable and assuming $L$ is a function of $N$ and $\lambda$. That is:
+
+\begin{equation}
+  \begin{aligned}
+    L(N, \lambda) = 150*N - .025*N^2 + \lambda*(250 - N)
+  \end{aligned}
+\end{equation}
+
+Differentiating $L$ with respect to $N$:
+\begin{equation}
+  \begin{aligned}
+    L'(N_0) & = 0 \\
+    \frac{dL}{dN} & = 0 \\
+    150 - .05*N_0 - \lambda & = 0 \quad \text{(1)} \\
+  \end{aligned}
+\end{equation}
+
+Differentiating $L$ with respect to $\lambda$:
+\begin{equation}
+  \begin{aligned}
+    L'(\lambda) & = 0 \\
+    \frac{dL}{d\lambda} & = 0 \\
+    250 - N_0 & = 0 \\ 
+    N_0 & = 250 \quad \text{(2)}
+  \end{aligned}
+\end{equation}
+
+Substitute (2) to (1), we have $\lambda = 137.5 > 0$.   
+The Lagrangian multiplier $\lambda$ is positive, implying the constraint is binding.  
+```{r}
+N_0 <- 250
+Q_0 <- Q(N_0)
+plot(Q, 0, 3500, xlab = 'N', ylab = 'Q')
+abline(v = 250, col = 'red')
+points(N_0, Q(N_0), col = 'green')
+points(N_max, Q(N_max), col='red')
+```
+
+Therefore, the optimum solution to this problem is $N_0 = `r N_0`$ and $Q_0 = `r Q_0`$.  
+
+# **Question 2**  
+
+\begin{equation}
+  \begin{aligned}
+    Y = X^3 -11*X^2 + 14*X + 80
+  \end{aligned}
+\end{equation}
+
+```{r}
+f <- function(x) x^3 -11*x^2 + 14*x + 80
+f_1prime <- function(x) 3*x^2 - 22*x + 14
+root <- polyroot(c(14, -22, 3))
+x_1prime <- Re(root)[abs(Im(root)) < 1e-6]
+x_1prime
+```
+
+This is a polynomial function, thus, it is continuous everywhere.  
+We know:  
+
+\begin{equation}
+  \begin{aligned}
+    f'(x_0) & = 0 \\
+    \frac{dy}{dx} & = 0 \\
+    3*x^2 - 22*x + 14 & = 0 \\
+    x_0 & = `r x_1prime`
+  \end{aligned}
+\end{equation}
+
+
+```{r}
+x_1prime1 <- 0.7039352
+x_1prime2 <- 6.6293981
+```
+Testing min, max with $x_0 = `r x_1prime1`$
+\begin{equation} 
+  \begin{aligned}
+    f'(x_0 - 1) & = f'(`r x_1prime1 - 1`)                              \qquad  &   f'(x_0 + 1) & = f'(`r x_1prime1 + 1`) \\
+    f'(x_0 - 1) & = 3*(`r x_1prime1 - 1`)^2 - 22*(`r x_1prime1 - 1`) + 14      &   f'(x_0 + 1) & = 3*(`r x_1prime1 + 1`)^2 - 22*(`r x_1prime1 + 1`) + 14 \\
+    f'(x_0 - 1) & = `r f_1prime(x_1prime1 - 1)` > 0                            &   f'(x_0 + 1) & = `r f_1prime(x_1prime1 + 1)` < 0
+  \end{aligned}
+\end{equation}
+
+Finding $f(`r x_1prime1`)$:
+\begin{equation} 
+  \begin{aligned}
+    f(`r x_1prime1`) & = `r x_1prime1`^3 -11*`r x_1prime1`^2 + 14*`r x_1prime1` + 80 \\
+    f(`r x_1prime1`) & = `r f(x_1prime1)`
+  \end{aligned}
+\end{equation}
+
+**From the above, we know the function has a local maxima at $(`r x_1prime1`, `r f(x_1prime1)`)$**  
+
+Testing min, max with $x_0 = `r x_1prime2`$
+\begin{equation} 
+  \begin{aligned}
+    f'(x_0 - 1) & = f'(`r x_1prime2 - 1`)                              \qquad  &   f'(x_0 + 1) & = f'(`r x_1prime2 + 1`) \\
+    f'(x_0 - 1) & = 3*(`r x_1prime2 - 1`)^2 - 22*(`r x_1prime2 - 1`) + 14      &   f'(x_0 + 1) & = 3*(`r x_1prime2 + 1`)^2 - 22*(`r x_1prime2 + 1`) + 14 \\
+    f'(x_0 - 1) & = `r f_1prime(x_1prime2 - 1)` < 0                            &   f'(x_0 + 1) & = `r f_1prime(x_1prime2 + 1)` > 0
+  \end{aligned}
+\end{equation}
+
+Finding $f(`r x_1prime2`)$:
+\begin{equation} 
+  \begin{aligned}
+    f(`r x_1prime2`) & = `r x_1prime2`^3 -11*`r x_1prime2`^2 + 14*`r x_1prime2` + 80 \\
+    f(`r x_1prime2`) & = `r f(x_1prime2)`
+  \end{aligned}
+\end{equation}
+
+**From the above, we know the function has a local minima at $(`r x_1prime2`, `r f(x_1prime2)`)$**
+
+Finding inflection point:
+\begin{equation} 
+  \begin{aligned}
+    f''(x_0) & = 0 \\
+    \frac{d^2 y}{dx^2} & = 0 \\
+    6x - 22 & = 0 \\
+    x & = \frac{11}{3} \approx 3.666667
+  \end{aligned}
+\end{equation}
+
+```{r}
+x_2prime1 <- 11/3
+f_2prime <- function(x) 6*x - 22
+```
+
+Testing the potential inflection point at $x_0 = `r x_2prime1`$
+\begin{equation} 
+  \begin{aligned}
+    f''(x_0 - 1) & = f''(`r x_2prime1 - 1`)   \qquad      &   f''(x_0 + 1) & = f''(`r x_2prime1 + 1`) \\
+    f''(x_0 - 1) & = 6*`r x_2prime1 - 1` - 22             &   f''(x_0 + 1) & = 6*`r x_2prime1 + 1` - 22 \\
+    f''(x_0 - 1) & = `r f_2prime(x_2prime1 - 1)` < 0      &   f''(x_0 + 1) & = `r f_2prime(x_2prime1 + 1)` > 0
+  \end{aligned}
+\end{equation}
+
+Finding $f(`r x_2prime1`)$:
+\begin{equation} 
+  \begin{aligned}
+    f(`r x_2prime1`) & = `r x_2prime1`^3 -11*`r x_2prime1`^2 + 14*`r x_2prime1` + 80 \\
+    f(`r x_2prime1`) & = `r f(x_2prime1)`
+  \end{aligned}
+\end{equation}
+
+**From the test, we see that the function curvature changes from concave to convex at $(`r x_2prime1`,`r f(x_2prime1) `)$, 
+thus $(`r x_2prime1`,`r f(x_2prime1) `)$ is an inflection point.**
+
+```{r}
+x_1prime1 <- 0.7039352
+x_1prime2 <- 6.6293981
+x_2prime1 <- 11/3
+curve(f, -5, 10)
+points(x_1prime1, f(x_1prime1), col = 'red')
+points(x_1prime2, f(x_1prime2), col = 'green')
+points(x_2prime1, f(x_2prime1), col = 'blue')
+```
+
+# **Question 3**  
+
+\begin{equation}
+  \begin{aligned}
+    Q = 100*N + 10*N^2 - N^3
+  \end{aligned}
+\end{equation}
+
+
+**Graph of the function:**
+```{r}
+Q <- function(N) 100*N + 10*N^2 - N^3
+curve(Q, 0, 20)
+root <- polyroot(c(100, 20, -3)) 
+N_max <- Re(root)[abs(Im(root)) < 1e-6]
+N_max <- N_max[which(N_max>0)]
+Q_max <- Q(N_max)
+points(N_max, Q(N_max), col='red')
+```  
+
+Considering the solution with no constraint:
+
+We know:  
+\begin{equation}
+  \begin{aligned}
+    Q'(N_max) & = 0 \\
+    \frac{dQ}{dN} & = 0 \\
+    100 + 20 * N_{max} - 3*N^2 & = 0 \\
+    N_{max} & = `r N_max`
+  \end{aligned}
+\end{equation}
+
+**Per graph, we can confirm Q(N) optimum is at $N_{max} = `r N_max`$ and $Q_{max} = `r Q(N_max)`$.**  
+
+## a,b. Finding optimum N and Q. Constraint $N \leqslant 15$.  
+
+The problem is to maximize the output $Q$ subject to the constraint that the business can not have more than 15 units of labor $N$.  
+To solve the constrained optimizing problem, we form the Lagrangian function.  
+
+**The Lagrangian function is formed by augmenting the constraint together with the Lagrange multiplier to the objective function.** 
+
+\begin{equation}
+  \begin{aligned}
+    L = 100*N + 10*N^2 - N^3 + \lambda*(15 - N)
+  \end{aligned}
+\end{equation}
+
+If the constraint is satisfied, no matter what value has, the second term in the right side of the Lagrangian equation will vanish and we arrive at $L = 100*N + 10*N^2 - N^3$, that is maximizing $L$ with respect to $N$ is the same as maximizing $Q$, and achieving the objective. Therefore, the trick in solving a constrained optimizing problem is to incorporate the constraint into the problem and ensure that the constraint is satisfied with equality. This is done by treating $\lambda$ as an additional variable and assuming $L$ is a function of $N$ and $\lambda$. That is:
+
+\begin{equation}
+  \begin{aligned}
+    L(N, \lambda) = 100*N + 10*N^2 - N^3 + \lambda*(15 - N)
+  \end{aligned}
+\end{equation}
+
+Differentiating $L$ with respect to $N$:
+\begin{equation}
+  \begin{aligned}
+    L'(N_0) & = 0 \\
+    \frac{dL}{dN} & = 0 \\
+    100- \lambda + 20*N - 3*N^2 & = 0 \quad \text{(1)} \\
+  \end{aligned}
+\end{equation}
+
+Differentiating $L$ with respect to $\lambda$:
+\begin{equation}
+  \begin{aligned}
+    L'(\lambda) & = 0 \\
+    \frac{dL}{d\lambda} & = 0 \\
+    15 - N_0 & = 0 \\ 
+    N_0 & = 15 \quad \text{(2)}
+  \end{aligned}
+\end{equation}
+
+Substitute (2) to (1), we have $\lambda = -275 < 0$.   
+The Lagrangian multiplier $\lambda$ is negative, implying the constraint is non-binding.  
+**Therefore, the constraint does not affect the optimum solution, which is still $N_{max} = `r N_max`$ and $Q_{max} = `r Q(N_max)`$.**
+```{r}
+N_0 <- 15
+lambda <- 100 + 20*N_0 - 3*N_0^2 
+Q_0 <- Q(N_0)
+plot(Q, 0, 20, xlab = 'N', ylab = 'Q')
+abline(v = N_0, col = 'green')
+points(N_0, Q(N_0), col = 'green')
+points(N_max, Q(N_max), col='red')
+```  
+
+## c,d. Finding optimum N and Q. Constraint $N \leqslant 8$.  
+
+The problem is to maximize the output $Q$ subject to the constraint that the business can not have more than 8 units of labor $N$.  
+To solve the constrained optimizing problem, we form the Lagrangian function.  
+
+**The Lagrangian function is formed by augmenting the constraint together with the Lagrange multiplier to the objective function.** 
+
+\begin{equation}
+  \begin{aligned}
+    L = 100*N + 10*N^2 - N^3 + \lambda*(8 - N)
+  \end{aligned}
+\end{equation}
+
+If the constraint is satisfied, no matter what value has, the second term in the right side of the Lagrangian equation will vanish and we arrive at $L = 100*N + 10*N^2 - N^3$, that is maximizing $L$ with respect to $N$ is the same as maximizing $Q$, and achieving the objective. Therefore, the trick in solving a constrained optimizing problem is to incorporate the constraint into the problem and ensure that the constraint is satisfied with equality. This is done by treating $\lambda$ as an additional variable and assuming $L$ is a function of $N$ and $\lambda$. That is:
+
+\begin{equation}
+  \begin{aligned}
+    L(N, \lambda) = 100*N + 10*N^2 - N^3 + \lambda*(8 - N)
+  \end{aligned}
+\end{equation}
+
+Differentiating $L$ with respect to $N$:
+\begin{equation}
+  \begin{aligned}
+    L'(N_0) & = 0 \\
+    \frac{dL}{dN} & = 0 \\
+    100- \lambda + 20*N - 3*N^2 & = 0 \quad \text{(1)} \\
+  \end{aligned}
+\end{equation}
+
+Differentiating $L$ with respect to $\lambda$:
+\begin{equation}
+  \begin{aligned}
+    L'(\lambda) & = 0 \\
+    \frac{dL}{d\lambda} & = 0 \\
+    8 - N_0 & = 0 \\ 
+    N_0 & = 8 \quad \text{(2)}
+  \end{aligned}
+\end{equation}
+
+Substitute (2) to (1), we have $\lambda = 68 > 0$.   
+The Lagrangian multiplier $\lambda$ is positive, implying the constraint is binding.  
+```{r}
+N_0 <- 8
+lambda <- 100 + 20*N_0 - 3*N_0^2 
+Q_0 <- Q(N_0)
+plot(Q, 0, 20, xlab = 'N', ylab = 'Q')
+abline(v = N_0, col = 'green')
+points(N_0, Q(N_0), col = 'green')
+points(N_max, Q(N_max), col='red')
+```
+
+**Therefore, the constraint does affect the optimum solution, which is now $N_0 = `r N_0`$ and $Q_0 = `r Q(N_0)`$.**  
+
+# **Question 4**  
+
+Given parameters  
+
+```{r definition-question5}
+# Mean Returns
+mean_rStock1 <- .13
+mean_rStock2 <- .21
+mean_rf <- .08
+
+# Variance of returns
+var_rStock1 <- .075
+var_rStock2 <- .052
+
+# Standard deviation of returns
+sd_rStock1 <- sqrt(var_rStock1)
+sd_rStock2 <- sqrt(var_rStock2)
+
+# Covariance of Returns
+cov_rStock1_rStock2 <- .018
+
+# Correlation of Returns
+cor_rStock2_rStock2 <- cov_rStock1_rStock2 / (sd_rStock1 * sd_rStock2)
+```
+
+
+Asset      | Mean Returns      | Variance           | Pair    | $\sigma_{1,2}$
+---        | ---               | ---                | ---     | ---                      
+Stock 1    | `r mean_rStock1`  | `r var_rStock1`    | (1,2)   | `r cov_rStock1_rStock2` 
+Stock 2    | `r mean_rStock2`  | `r var_rStock2`    |         | 
+Risk Free  | `r mean_rf`       |                    |         | 
+  
+  
+Since the investor's objective is to minimize risk, we solve for the global minimum variance combination of the two assets.
+Let $x_i$ denotes the weight of the investment in asset i $(i = 1,2)$, and assume all money is invested in i, meaning $\sum {x_i} = x_1 + x_2 = 1$.
+
+\begin{equation}
+  \begin{aligned}
+    \text {The returns of the portfolio is:} \\
+    R_{p,x} & = x_1 * r_1 + x_2 * r_2 \\
+    \text {The expected returns on the portfolio is:} \\
+    \mu_{p,x} & = E[R_{p,x}] \\
+              & = x_1 * \mu_1 + x_2 * \mu_2  \\
+    \text {The variance of the portfolio returns is:} \\
+    \sigma_{p,x}^2 & = var(R_{p,x})  \\
+                   & = x_1 * \sigma_1^2 + x_2 * \sigma_2^2 + 2 * x_1 * x_2 * \sigma_{1,2}
+  \end{aligned}
+\end{equation}
+  
+The global minimum variance portfolio $m = (m_1,m_2)$ is the solution of the constrained minimization problem:
+
+\begin{equation}
+  \begin{aligned}
+    min \sigma_{p,m}^2 & = var(R_{p,m})  \\
+                       & = m_1^2 * \sigma_1^2 + m_2^2 * \sigma_2^2 + 2 * m_1 * m_2 * \sigma_{1,2} \\
+    \text {s.t. } m_1 + m_2 & = 1 \\
+    \text {rewrite: } \\
+    min \sigma_{p,m}^2 & = min[m_1^2 * \sigma_1^2 + (1-m_1)^2 * \sigma_2^2 + 2 * m_1 * (1 - m_1) * \sigma_{1,2}] \\
+                       & = min[m_1^2 * (\sigma_1^2 + \sigma_2^2 - 2 * \sigma_{1,2}) + m_1 * (2 * \sigma_{1,2} - 2 * \sigma_2^2) + \sigma_2^2]  \\
+    \text {plug in: }
+    min \sigma_{p,m}^2 & = min[(`r var_rStock1` + `r var_rStock2` - 2 * `r cov_rStock1_rStock2`) * m_1^2 + (2*`r cov_rStock1_rStock2` - 2*`r var_rStock2`) * m_1 + `r var_rStock2`] \\
+    min \sigma_{p,m}^2 & = min[(`r var_rStock1 + var_rStock2 - 2 * cov_rStock1_rStock2`) * m_1^2 + (`r 2*(cov_rStock1_rStock2 - var_rStock2)`) * m_1 + `r var_rStock2`] \\
+  \end{aligned}
+\end{equation}
+
+Find the critical point:
+
+\begin{equation}
+  \begin{aligned}
+    \frac{d\sigma_{p,m}^2}{dm} & = 0 \\
+    \frac{d(`r var_rStock1 + var_rStock2 - 2 * cov_rStock1_rStock2` * m_1^2 + (`r 2*(cov_rStock1_rStock2 - var_rStock2)`) * m_1 + `r var_rStock2`)}{dm} & = 0 \\
+      .182* m_1 - .068 & = 0  \\
+    m_1 & = .3736 = 37.36\%  \\
+    \text {thus, }   \\
+    m_2 & = 1 - 0.3736 = .6264 = 62.64\%
+  \end{aligned}
+\end{equation}
+
+Graphing the function:  
+```{r}
+
+# The Variance function of the portfolio
+fVar <- function(m1) var_rStock1 * m1^2 + var_rStock2 * (1 - m1)^2 + 2 * m1 * (1 - m1) * cov_rStock1_rStock2
+
+# Set the weighting
+m1 <- .3736
+m2 <- .6264
+
+# Plot of the variance function with respect to w1.
+w1 <- seq(0, 1, .05)
+plot(fVar, w1, xlab = "Weight of Stock 1 Relative to Portfolio", ylab = "Portfolio Variance", main = "Minimum Variance Portfolio"); abline(v = m1, col = "red")
+points(m1, fVar(m1), col='green')
+```
+
+We see indeed the minimum is at $m_1 = `r m1`$
+
+Thus, the optimum weights of each stocks in the portfolio to satisfy the objective of minimum risk is:  
+
+Asset      | Weight            
+---        | ---                                  
+Stock 1    | `r m1*100`\% 
+Stock 2    | `r m2*100`\%
+
+
