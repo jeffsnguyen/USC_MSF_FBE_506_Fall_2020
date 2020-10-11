@@ -441,6 +441,13 @@ Find the critical point:
   \end{aligned}
 \end{equation}
 
+**Recap:**  
+
+Asset      | Weight            
+---        | ---                                  
+Stock 1    | `37.36`\% 
+Stock 2    | `62.64`\%
+
 Graphing the function:  
 ```{r}
 # The Variance function of the portfolio
@@ -455,13 +462,13 @@ w1 <- seq(0, 1, .05)
 plot(fVar, w1, xlab = "Weight of Stock 1 Relative to Portfolio", ylab = "Portfolio Variance", main = "Minimum Variance Portfolio"); abline(v = m1, col = "red")
 points(m1, fVar(m1), col='green')
 
-# Plot of the efficient frontier
-w1 <- seq(-.5, 1.5, .005)
+# Plot of the efficient frontier, assume no short sale allowed
+w1WithoutShort <- seq(0, 1, .005)
 fVar <- function(w1) var_rStock1 * w1^2 + var_rStock2 * (1 - w1)^2 + 2 * w1 * (1 - w1) * cov_rStock1_rStock2
 r <- function(w1) mean_rStock1*w1 + mean_rStock2*(1-w1)
-Risk <- sqrt(fVar(w1))
-Return <- r(w1)
-plot(Risk, Return, type='l', main='Global Minimum Variance (no short sale)', col = 'green')
+riskWithoutShort <- sqrt(fVar(w1WithoutShort))
+returnWithoutShort <- r(w1WithoutShort)
+plot(riskWithoutShort, returnWithoutShort, type='l', main='Global Minimum Variance (without short sale)', xlab = 'Risk', ylab = 'Return', col = 'green')
 wp <- (var_rStock2 - cov_rStock1_rStock2) / (var_rStock1 + var_rStock2 - 2 * cov_rStock1_rStock2)  # Normalizing weight
 Rp <- r(wp)
 sigma <- sqrt(fVar(wp))
@@ -483,4 +490,352 @@ Stock 1    | `r m1*100`\%      |                 |
 Stock 2    | `r m2*100`\%      |                 |
 Portfolio  | 100\%             | `r sigma`       | `r Rp`
 
-## **b. Construct the efficient frontier. Assume short sale.**
+## **b. Construct the efficient frontier. Assume short sale.**  
+
+```{r}
+# Plot of the efficient frontier, assume short sale allowed
+w1WithShort <- seq(-2, 2, .1)
+riskWithShort <- sqrt(fVar(w1WithShort))
+returnWithShort <- r(w1WithShort)
+plot(riskWithShort, returnWithShort, type='l', main='Global Minimum Variance (with short sale)', xlab = 'Risk', ylab = 'Return', col = 'red')
+wp <- (var_rStock2 - cov_rStock1_rStock2) / (var_rStock1 + var_rStock2 - 2 * cov_rStock1_rStock2)  # Normalizing weight
+Rp <- r(wp)
+sigma <- sqrt(fVar(wp))
+Rf <- mean_rf
+Sharpe <- (Rp-Rf)/sigma
+X <- seq(0, 1, .01)
+Y <- Rf + Sharpe*X
+lines(X, Y)
+points(sigma, Rp, col='orange')
+```
+
+## c. **Graph the efficient frontier of portfolio with and without short sale together.**
+
+```{r}
+# Changed input to display less points
+w1WithoutShort <- seq(0, 1, .1)
+riskWithoutShort <- sqrt(fVar(w1WithoutShort))
+returnWithoutShort <- r(w1WithoutShort)
+w1WithShort <- seq(-2, 2, .1)
+riskWithShort <- sqrt(fVar(w1WithShort))
+returnWithShort <- r(w1WithShort)
+
+
+plot(riskWithShort, returnWithShort, main='Global Minimum Variance', xlab = 'Risk', ylab = 'Return', col = 'red', pch = 17)
+points(riskWithoutShort, returnWithoutShort, col = 'green', pch = 17)
+```
+
+## d. **Find the GMV solution with additional constraint that $R_p > r_f$**  
+
+Not dissimilar to 4a, the investor's objective is to minimize risk with a constrained on expected returns $R_p > r_f$, we solve for the global minimum variance combination of the two assets.  
+
+Let $w_i$ denotes the weight of the investment in asset i $(i = 1,2)$, and assume all money is invested in i, meaning $\sum {w_i} = w_1 + w_2 = 1$.
+
+Formulating the Markowitz portfolio problem:  
+
+\begin{equation}
+  \begin{aligned}
+     \text {The investor's objective is:} \\
+     max \mu_p & = w' * \mu \quad \text{s.t.} \\
+     \sigma_p^2 & = w' * (\sum) * w \quad \text{and} \quad w'*I = 1  \\
+     \text {where:} \\
+     w & = \quad \text{matrix of asset weights in the portfolio} \\
+       & = 
+        \begin{pmatrix}
+          w_1 \\
+          w_2 \\
+        \end{pmatrix} \\
+     w' & = \quad \text{transpose matrix of asset weights in the portfolio} \\
+       & = 
+        \begin{pmatrix}
+          w_1 & w_2 \\
+        \end{pmatrix} \\
+     \mu & = \quad \text{matrix of mean returns of asset in the portfolio} \\
+         & = 
+          \begin{pmatrix}
+            \mu_1 \\
+            \mu_2 \\
+          \end{pmatrix} \\
+     \sum & = \quad \text{Variance-covariance matrix of asset returns in the the portfolio} \\
+          & = 
+            \begin{pmatrix}
+            \sigma_1     & \sigma_{1,2} \\
+            \sigma_{1,2}  & \sigma_2  \\
+          \end{pmatrix} \\
+      w'*I & = \sum_{i=1}^{n} w_n \quad \text{or the sum weights of the asset in the portfolio, I is notation for identity matrix} \\
+  \end{aligned}
+\end{equation}
+
+Let $\mu_{p,0}$ denotes a target expected return level. Formulate the problem:  
+
+\begin{equation}
+  \begin{aligned}
+     min \sigma_{p,w}^2 & = w' * (\sum) * w  \quad \text{s.t.} \\
+     \mu_p & = w' * \mu = \mu_{p,0}, \quad \text{and} \quad w'*I = 1 \\
+  \end{aligned}
+\end{equation}
+
+To solve this, form the Lagrangian function:
+
+\begin{equation}
+  \begin{aligned}
+    L(w, \lambda_1, \lambda_2) & = w'*\sum*w + \lambda_1*(w'*\mu - \mu_{p,0}) + \lambda_2*({w'*I - 1}) \\
+  \end{aligned}
+\end{equation}
+  
+Because there are two constraints ($w'*\mu = \mu_{p,0}$ and $w'1 = 1$) there are two Langrange multipliers $\lambda_1$ and $\lambda_2$. The first order condition for a minimum are the linear equations:  
+
+\begin{equation}
+  \begin{aligned}
+    \frac{\partial L(w, \lambda_1, \lambda_2)}{\partial w} & = \frac{\partial (\sum * w^2)}{\partial w} + \frac{\partial (\lambda_1*(w'*\mu - \mu_{p,0}))}{\partial w} + \frac{\lambda_2*({w'*I - 1})}{\partial w} = 0  \\
+    \frac{\partial L(w, \lambda_1, \lambda_2)}{\partial \lambda_1} & = 0 \\
+    \frac{\partial L(w, \lambda_1, \lambda_2)}{\partial \lambda_2} & = 0 \\
+  \end{aligned}
+\end{equation}
+
+Simplify, we have:  
+
+\begin{equation}
+  \begin{aligned}
+    \frac{\partial L(w, \lambda_1, \lambda_2)}{\partial w} & = 2*\sum*w + \lambda_1*\mu + \lambda_2*I = 0  \\
+    \frac{\partial L(w, \lambda_1, \lambda_2)}{\partial \lambda_1} & =  w'*\mu - \mu_{p,0} = 0  \\
+    \frac{\partial L(w, \lambda_1, \lambda_2)}{\partial \lambda_2} & =  w'*I - 1 = 0  \\
+  \end{aligned}
+\end{equation}
+
+Rewrite in matrix form:  
+
+\begin{equation}
+  \begin{aligned}
+    \begin{pmatrix}
+            2*\sum    & \mu   & I  \\
+            \mu'      & 0     & 0  \\
+            I'        & 0     & 0  \\
+    \end{pmatrix}
+    *
+    \begin{pmatrix}
+            w   \\
+            \lambda_1     \\
+            \lambda_2       \\
+    \end{pmatrix}
+    & =
+    \begin{pmatrix}
+            0   \\
+            \mu_{p,0}     \\
+            I       \\
+    \end{pmatrix}
+  \end{aligned}
+\end{equation}
+
+or  
+
+\begin{equation}
+  \begin{aligned}
+    A * z_w & = b_0 \\
+    \text{where}\\
+    A & = 
+    \begin{pmatrix}
+            2*\sum    & \mu   & I  \\
+            \mu'      & 0     & 0  \\
+            I'        & 0     & 0  \\
+    \end{pmatrix} \\
+    z_w & = 
+    \begin{pmatrix}
+            w   \\
+            \lambda_1     \\
+            \lambda_2       \\
+    \end{pmatrix} \\
+    b_0 & =
+    \begin{pmatrix}
+            0   \\
+            \mu_{p,0}     \\
+            I       \\
+    \end{pmatrix}
+  \end{aligned}
+\end{equation}
+
+The solution for $z_w$ is:  
+
+\begin{equation}
+  \begin{aligned}
+    z_w & = A^{-1} * b_0
+  \end{aligned}
+\end{equation}
+
+In this case, we have:  
+
+\begin{equation}
+  \begin{aligned}
+    \text{Hurdle rate:} \quad \mu_{p,0} & = r_f = `r mean_rf` \\
+    \text{Returns column vector:} \quad R & = 
+      \begin{pmatrix}
+            `r mean_rStock1`   \\
+            `r mean_rStock2`   \\
+      \end{pmatrix} \\
+    \text{Variance-Covariance Matrix:} \quad \sum & = 
+      \begin{pmatrix}
+            `r var_rStock1`           &   `r cov_rStock1_rStock2` \\
+            `r cov_rStock1_rStock2`   &   `r var_rStock2` \\
+      \end{pmatrix} \\
+  \end{aligned}
+\end{equation}
+
+```{r}
+sigmaMatrix <- matrix(rbind(c(var_rStock1, cov_rStock1_rStock2),c(cov_rStock1_rStock2, var_rStock1)), 2)  # Establish variance, covariance matrix
+returnsVector <- rbind(mean_rStock1, mean_rStock2)  # Establish returns vector
+```
+
+Find the inverse of the variance-covariance matrix by conducting reduce row echelon form:  
+
+\begin{equation}
+  \begin{aligned}
+    \text{Inverted Variance-Covariance Matrix:} \quad (\sum)^{-1} & = \\
+      \left(\begin{array}{cc|cc} 
+        `r var_rStock1`           &   `r cov_rStock1_rStock2` & 1 & 0  \\
+        `r cov_rStock1_rStock2`   &   `r var_rStock2`         & 0 & 1
+      \end{array}\right)
+      \begin{matrix} ~ \\ \xrightarrow{R_2 + (-\frac{.018}{.075})*R_1}  \end{matrix}
+      \left(\begin{array}{cc|cc} 
+        .075  & .018 & 1 & 0  \\
+        0 & .07068  & -.24 & 1
+      \end{array}\right)
+      \begin{matrix} ~ \\ \xrightarrow{(\frac{1}{.075}))*R_1} \\ \xrightarrow{(\frac{1}{.07068})*R_2}  \end{matrix} \\
+      \left(\begin{array}{cc|cc} 
+        1  & .24 & 13.33333 & 0  \\
+        0 & 1  & -3.395586 & 14.148274
+      \end{array}\right)
+      \begin{matrix} ~ \\ \xrightarrow{R_1 + (-.24)*R_2}  \end{matrix}
+      \left(\begin{array}{cc|cc} 
+        1  & 0 & 14.148274 & -3.395586  \\
+        0 & 1  & -3.395586 & 14.148274
+      \end{array}\right)
+  \end{aligned}
+\end{equation}
+
+```{r}
+inverse_sigmaMatrix <- solve(sigmaMatrix)
+riskPremiumMatrix <- returnsVector - mean_rf
+```
+We have the z vector:  
+
+\begin{equation}
+  \begin{aligned}
+    z & = (\sum)^{-1} * (R - Rf) \\
+      & = 
+      \begin{pmatrix}
+            14.148274 & -3.395589   \\
+            -3.395586 & 14.148274   
+      \end{pmatrix}
+    *
+      \begin{pmatrix}
+            .13 - .08    \\
+            .21 - .08 
+      \end{pmatrix}
+      & = 
+      \begin{pmatrix}
+            `r (14.148274 * .05 + -3.395589 * .13)`    \\
+            `r (-3.395586 * .05 + 14.148274 * .13)`
+      \end{pmatrix}
+  \end{aligned}
+\end{equation}
+
+```{r}
+z <- inverse_sigmaMatrix %*% riskPremiumMatrix
+```
+The lambda value is thus:  
+
+\begin{equation}
+  \begin{aligned}
+    \lambda & = `r sum(z)`\\
+  \end{aligned}
+\end{equation}
+
+```{r}
+lambda <- sum(z)
+w1 <- z[1] / lambda
+w2 <- z[2] / lambda
+```
+Therefore, the weight of these stocks are:
+
+\begin{equation}
+  \begin{aligned}
+    w_1 & = \frac{z_i}{\sum_{i=1}^{n} z_i} \\
+        & = \frac{`r z[1]`}{`r lambda`} \\
+        & = `r w1` \\
+    \text{and} \\
+    w_2 & = \frac{z_i}{\sum_{i=1}^{n} z_i} \\
+        & = \frac{`r z[2]`}{`r lambda`} \\
+        & = `r w2` \\
+  \end{aligned}
+\end{equation}
+
+**Recap:**  
+
+Asset      | Weight            
+---        | ---                                  
+Stock 1    | `r w1*100`\% 
+Stock 2    | `r w2*100`\%
+
+## e. **Graph the efficient frontier, CAL, and find the tangency point for portfolio in d.**  
+
+```{r}
+w1 <- 0.1374269
+Rp <- r(w1)
+sigma <- sqrt(fVar(w1))
+CAL_slope <-(Rp - mean_rf) / sigma
+CAL <- function(x) {mean_rf + CAL_slope * x}
+```
+
+The portfolio returns is:  
+
+\begin{equation}
+  \begin{aligned}
+    R_p & = w_1 * R_1 + w_2 * R_2 \\
+        & = `r Rp` \\
+  \end{aligned}
+\end{equation}
+
+The portfolio returns variance is:  
+
+\begin{equation}
+  \begin{aligned}
+    \sigma_p & = w_1 * \sigma_1 + w_2 * \sigma_2 + 2 * w_1 * w_2 * \sigma_{1,2} \\
+             & = `r sigma` \\
+  \end{aligned}
+\end{equation}
+
+The slope of the Capital Allocation Line is:  
+
+\begin{equation}
+  \begin{aligned}
+    Slope_{CAL} & = \frac{R_p - r_f}{\sqrt{\sigma_p}} \\
+              & = `r CAL_slope` \\
+  \end{aligned}
+\end{equation}
+
+**Thus the Capital Allocation Line equation is $CAL = r_f + Slope_{CAL} * x = `r mean_rf` + `r CAL_slope` * x$.**  
+
+**The tangency point is where the optimum weight is, i.e. $(\sigma_p, Rp)$ or $(`r sigma`, `r Rp`)$**
+
+
+Graphing 
+```{r}
+# Plot of the efficient frontier, assume no short sale allowed
+plot(riskWithShort, returnWithShort, main='Global Minimum Variance', xlab = 'Risk', ylab = 'Return', col = 'red', pch = 17)
+points(riskWithoutShort, returnWithoutShort, col = 'green', pch = 17)
+plot.function(CAL, add= TRUE, col = 'blue', lwd = 4)
+points(sigma, Rp, col='orange', lwd = 4)
+```
+
+## f. **What will be the expected return to portfolio if the investor is willing to take 25% risk?**  
+
+At 25% risk, the expected return is:  
+
+\begin{equation}
+  \begin{aligned}
+    E(R_p) & = r_f + Slope_{CAL} * x \\
+           & = `r mean_rf` + `r CAL_slope` * .25 \\
+           & = `r mean_rf + CAL_slope * .25` \\
+           & = `r (mean_rf + CAL_slope * .25) * 100` \%
+  \end{aligned}
+\end{equation}
