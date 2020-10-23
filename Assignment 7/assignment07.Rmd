@@ -1,0 +1,852 @@
+---
+title: "assignment07"
+author: "Jeff Nguyen"
+date: "17/10/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, envir=.GlobalEnv)
+```
+
+**University of Southern California**  
+**Marshall School of Business**  
+**FBE 506 Quantitative Method in Finance**
+
+Assignment 07  
+Student Name: Ngoc Son (Jeff) Nguyen  
+Student ID: 6524885309  
+
+
+# **Question 1**  
+
+```{r}
+a11 <- 15
+a12 <- 1
+a21 <- 1
+a22 <- 2
+
+x1 <- .2
+x2 <- .5
+
+detA <- a11*a22 - a12*a21
+```
+\begin{equation}
+  \begin{aligned}
+    A & = \begin{pmatrix} `r a11`  & `r a12`  \\ `r a21`  & `r a22`  \\ \end{pmatrix} \\
+    X & = \begin{pmatrix} `r x1`   \\  `r x2`     \\        \end{pmatrix}
+  \end{aligned}
+\end{equation}
+
+
+## a. Find determinant of A  
+
+\begin{equation}
+  \begin{aligned} 
+    detA & = \begin{vmatrix} `r a11`  & `r a12`  \\ `r a21`  & `r a22`  \\ \end{vmatrix} \\
+         & = `r a11` * `r a22` - `r a12` * `r a21`  \\
+         & = `r detA`\\
+  \end{aligned}
+\end{equation}
+
+## b. Find the inverse of A  
+
+\begin{equation}
+  \begin{aligned}
+    A^{-1} & = \frac{1}{detA} * \begin{pmatrix} `r a22`  & `r -a12`  \\ `r -a21`  & `r a11`  \\ \end{pmatrix} \\
+           & = \frac{1}{`r detA`} * \begin{pmatrix} `r a22`  & `r -a12`  \\ `r -a21`  & `r a11`  \\ \end{pmatrix} \\
+           & = \begin{pmatrix} \frac{`r a22`}{`r detA`}  & \frac{`r -a12`}{`r detA`}  \\ \frac{`r -a21`}{`r detA`}  & \frac{`r a11`}{`r detA`}  \\ \end{pmatrix} \\
+  \end{aligned}
+\end{equation}
+
+## c. Find the trace of A  
+
+\begin{equation}
+  \begin{aligned}
+    tr(A) & = `r a11` + `r a22`  \\
+          & = `r a11 + a22`\\
+  \end{aligned}
+\end{equation}
+
+## d. Find the quadractic form X'AX  
+
+\begin{equation}
+  \begin{aligned}
+    x'Ax & = a_{11} * x_1^2 + (a_{12} + a_{21}) *x_1*x_2 + a_{22} * x_2^2  \\
+         & = `r a11 * x1^2 + (a12 + a21) *x1*x2 + a22 * x2^2` \\
+  \end{aligned}
+\end{equation}
+
+## e. Find $x_1:x_2$ that min(X'AX)  
+
+Let $k = \frac{x_1}{x_2}$. We have $x_1 = k * x_2$. Substitute in $x'Ax$:  
+
+\begin{equation}
+  \begin{aligned}
+    x'Ax & = a_{11} * x_1^2 + (a_{12} + a_{21}) *x_1*x_2 + a_{22} * x_2^2  \\
+         & = a_{11} * k^2 * x_2^2 + (a_{12} + a_{21}) *k*x_2^2 + a_{22} * x_2^2  \\
+         & = `r a11` * k^2 * x_2^2 + `r a12 + a21` *k*x_2^2 + `r a22` * x_2^2 \\
+         & = (`r a11`*k^2 + `r a12 + a21`*k + `r a22`) * x_2^2  \\
+  \end{aligned}
+\end{equation}
+
+Find the critical point of x'Ax: $z = f(x_1, x_2) = 15*x_1^2+ 2*x_1*x_2 + 2*x_2^2$
+The first order condition is: 
+
+\begin{equation}
+  \begin{aligned}
+    \frac{\partial f}{\partial x_1} &= 0 \\
+    30 * x_1 + 2*x_2 &= 0 \\
+  \end{aligned}
+\end{equation}
+
+\begin{equation}
+  \begin{aligned}
+    \frac{\partial f}{\partial x_2} &= 0 \\
+    4 * x_2 + 2*x_1 &= 0 \\
+  \end{aligned}
+\end{equation}
+
+Solving the two above equation together yields $x_1 = 0$, $x_2 = 0$ and $z = 0$. Thus the point $(0,0,0)$ is the extrema.
+
+To test for the second order condition, form the Hessian:
+
+\begin{equation}
+  \begin{aligned}
+    H & = \begin{pmatrix} f_{xx}  & f_{xy}  \\ f_{yx}  & f_{yy}  \\ \end{pmatrix} \\
+    H & = \begin{pmatrix} f_{x_1x_1}  & f_{x_1x_2}  \\ f_{x_2x_1}  & f_{x_2x_2}  \\ \end{pmatrix} \\  
+    H & = \begin{pmatrix} 30  & 2  \\ 2  & 4  \\ \end{pmatrix} \\
+  \end{aligned}
+\end{equation}
+
+We can see:
+
+\begin{equation}
+  \begin{aligned}
+    \begin{vmatrix} 30  \\ \end{vmatrix} \\ > 0 \\
+    \begin{vmatrix} 30 & 2 \\ 2 & 4  \\ \end{vmatrix} \\ = 30*4 - 2*2 > 0
+  \end{aligned}
+\end{equation}
+
+Thus H is positive definite and have a minimum at (0,0,0).
+
+## f. Find $x_1:x_2$ that min(X'AX) s.t. $x_1 + x_2 = 1$  
+
+Similar to e. but adding the constraint $g(x1, x2) = x_1 + x_2 = 1$
+
+The Lagrange becomes:
+
+\begin{equation}
+  \begin{aligned}
+    L(x_1,x_2,\lambda) & = 15*x_1^2 + 2*x_1*x_2 + 2*x_2^2 + \lambda*(1 - x_1 - x_2)
+  \end{aligned}
+\end{equation}
+
+Find the critical point of $L(x_1,x_2,\lambda)$
+The first order condition is: 
+
+\begin{equation}
+  \begin{aligned}
+    \frac{\partial L}{\partial x_1} &= 0 \\
+    30*x_1 + 2*x_2 - \lambda &= 0 \\
+  \end{aligned}
+\end{equation}
+
+\begin{equation}
+  \begin{aligned}
+    \frac{\partial L}{\partial x_2} &= 0 \\
+    2*x_1 + 4*x_2 - \lambda &= 0 \\
+  \end{aligned}
+\end{equation}
+
+Also 
+
+\begin{equation}
+  \begin{aligned}
+    x_1 + x_2 &= 0 \\
+  \end{aligned}
+\end{equation}
+
+Solving these yields: $x_1 = \frac{1}{20}$, $x_2 = \frac{19}{20}$ and $\lambda = \frac{271}{70}$
+
+The bordered Hessian matrix is:
+
+\begin{equation}
+  \begin{aligned}
+    H & = \begin{pmatrix} 
+            f_{\lambda \lambda}  & f_{\lambda x_1}  & f_{\lambda x_2 } \\
+            f_{x_1 \lambda}  & f_{x_1 x_1}  & f_{x_1 x_2 } \\
+            f_{x_2 \lambda}  & f_{x_2 x_1}  & f_{x_2 x_2 }
+          \end{pmatrix} \\
+    H & = \begin{pmatrix} 
+            0  & -1  & -1 \\
+            -1  & 30  & 2 \\
+            -1  & 2  & 4 \\
+          \end{pmatrix} \\
+  \end{aligned}
+\end{equation}
+
+Thus the min x'Ax happens at \begin{pmatrix} \frac{1}{20}  \\ \frac{19}{20} \end{pmatrix}
+
+## g. Find the eigenvalues of A.  
+
+We have the 2x2 system $x' = A*x$ where 
+\begin{equation}
+  \begin{aligned}
+    A & = \begin{pmatrix} 15  & 1  \\ 1  & 2  \\ \end{pmatrix} \\
+  \end{aligned}
+\end{equation}
+
+Solve the characteristic equation of this system for the eigenvalues:
+
+\begin{equation}
+  \begin{aligned}
+    \lambda^2 - tr(A) * \lambda + detA &= 0 \\
+    \lambda^2 - 17*\lambda + 29 & = 0 \\
+    \lambda &= \frac{17 \pm \sqrt{173}}{2} \\
+  \end{aligned}
+\end{equation}
+
+## h. Find the eigenvectors of A.  
+
+For $\lambda_1 = \frac{17 + \sqrt{173}}{2}$:  
+We need to solve:  
+
+\begin{equation}
+  \begin{aligned}
+    (A - \lambda_1*I)v & = 0  \\
+    \begin{pmatrix} 15 - \frac{17 + \sqrt{173}}{2}  & 1  \\ 1  & 2 - \frac{17 + \sqrt{173}}{2}  \\ \end{pmatrix} * \begin{pmatrix} a_1 \\ a_2                \end{pmatrix} & = \begin{pmatrix} 0 \\ 0 \end{pmatrix} \\
+    \begin{pmatrix} \frac{13 - \sqrt{173}}{2}  & 1  \\ 1  & \frac{-13 - \sqrt{173}}{2}  \\ \end{pmatrix} * \begin{pmatrix} a_1 \\ a_2                        \end{pmatrix} & = \begin{pmatrix} 0 \\ 0 \end{pmatrix}  \\
+  \end{aligned}
+\end{equation}
+
+By inspection, the notrivial solutions to this system and hence the eigenvectors for the eigenvalue $\lambda_1 = \frac{17 + \sqrt{173}}{2}$ are all nonzero scalar multiples of:  
+
+\begin{equation}
+  \begin{aligned}
+    v_1 & = \begin{pmatrix} \frac{13 + \sqrt{173}}{2}  \\ 1  \\ \end{pmatrix} 
+  \end{aligned}
+\end{equation}
+
+For $\lambda_2 = \frac{17 - \sqrt{173}}{2}$:  
+We need to solve:  
+
+\begin{equation}
+  \begin{aligned}
+    (A - \lambda_1*I)v & = 0  \\
+    \begin{pmatrix} 15 - \frac{17 - \sqrt{173}}{2}  & 1  \\ 1  & 2 - \frac{17 - \sqrt{173}}{2}  \\ \end{pmatrix} * \begin{pmatrix} a_1 \\ a_2                \end{pmatrix} & = \begin{pmatrix} 0 \\ 0 \end{pmatrix} \\
+    \begin{pmatrix} \frac{13 + \sqrt{173}}{2}  & 1  \\ 1  & \frac{-13 + \sqrt{173}}{2}  \\ \end{pmatrix} * \begin{pmatrix} a_1 \\ a_2                        \end{pmatrix} & = \begin{pmatrix} 0 \\ 0 \end{pmatrix}  \\
+  \end{aligned}
+\end{equation}
+
+By inspection, the notrivial solutions to this system and hence the eigenvectors for the eigenvalue $\lambda_1 = \frac{17 + \sqrt{173}}{2}$ are all nonzero scalar multiples of:  
+
+\begin{equation}
+  \begin{aligned}
+    v_1 & = \begin{pmatrix} \frac{13 - \sqrt{173}}{2}  \\ 1  \\ \end{pmatrix} 
+  \end{aligned}
+\end{equation}
+
+# **Question 2**  
+
+\begin{equation}
+  \begin{aligned}
+    A & = \begin{pmatrix} 3 & 0 & 1 \end{pmatrix} \\
+    B & = \begin{pmatrix} -1 & 4 & 5 \end{pmatrix} \\
+    C & = \begin{pmatrix} 1 & 3 & -1 \\ 2 & 3 & 1 \\ -1 & 1 & 0 \end{pmatrix} \\
+  \end{aligned}
+\end{equation}
+
+## a. Find $A'$, $C'$  
+
+\begin{equation}
+  \begin{aligned}
+    A' & = \begin{pmatrix} 3 \\ 0 \\ 1 \end{pmatrix} \\
+    C & = \begin{pmatrix} 1 & 2 & -1 \\ 3 & 3 & 1 \\ -1 & 1 & 0 \end{pmatrix} \\
+  \end{aligned}
+\end{equation}
+
+## b. Find $C^{-1}$  
+
+The matrix of cofactors from C is: 
+\begin{equation}
+  \begin{aligned}
+    \begin{pmatrix} -1 & -1 & 5 \\ -1 & -1 & -4 \\ 6 & -3 & -3 \end{pmatrix} \\
+  \end{aligned}
+\end{equation}
+
+Thus, the adjoint of C is:
+
+\begin{equation}
+  \begin{aligned}
+    adj(C) & = \begin{pmatrix} -1 & -1 & 6 \\ -1 & -1 & -3 \\ 5 & -4 & -3 \end{pmatrix} \\
+  \end{aligned}
+\end{equation}
+
+Assume C is invertible then:  
+
+\begin{equation}
+  \begin{aligned}
+    C^{-1} &= \frac{1}{detC} * adj(C)
+           & = \frac{1}{1*(0-1) -3*(0+1) + (-1)*(2+3)} * \begin{pmatrix} -1 & -1 & 6 \\ -1 & -1 & -3 \\ 5 & -4 & -3 \end{pmatrix} \\
+           & = \frac{-1}{9} * \begin{pmatrix} -1 & -1 & 6 \\ -1 & -1 & -3 \\ 5 & -4 & -3 \end{pmatrix} \\
+           & = \begin{pmatrix} \frac{1}{9} & \frac{1}{9} & \frac{-2}{3} \\
+                               \frac{1}{9} & \frac{1}{9} & \frac{1}{3} \\
+                               \frac{-5}{9} & \frac{4}{9} & \frac{1}{3} \\
+                \end{pmatrix} \\
+  \end{aligned}
+\end{equation}
+
+## c. Find AB', A'B, CA', BCA'  
+
+\begin{equation}
+  \begin{aligned}
+    AB' & = \begin{pmatrix} 3 & 0 & 1 \end{pmatrix} * \begin{pmatrix} -1 \\ 4 \\ 5 \end{pmatrix} \\
+        & = \begin{pmatrix} 3*(-1) + 0*(4) + 1 * 5 \end{pmatrix} \\
+        & = \begin{pmatrix} 2 \end{pmatrix} \\
+  \end{aligned}
+\end{equation}
+
+\begin{equation}
+  \begin{aligned}
+    A'B & = \begin{pmatrix} 3 \\ 0 \\ 1 \end{pmatrix} * \begin{pmatrix} -1 & 4 & 5 \end{pmatrix} \\
+        & = \begin{pmatrix} 3*-1 & 3*4 & 3*5 \\ 0*-1 & 0*4 & 0*5 \\ 1*-1 & 1*4 & 1*5 \end{pmatrix} \\
+        & = \begin{pmatrix} -3 & 12 & 15 \\ 0 & 0 & 0 \\ -1 & 4 & 5 \end{pmatrix} \\
+  \end{aligned}
+\end{equation}
+
+\begin{equation}
+  \begin{aligned}
+    CA' & = \begin{pmatrix} 1 & 3 & -1 \\ 2 & 3 & 1 \\ -1 & 1 & 0 \end{pmatrix} * \begin{pmatrix} 3 \\ 0 \\ 1 \end{pmatrix} \\
+        & = \begin{pmatrix} 1*3 + 3*0 + -1*1 \\ 2*3 + 3*0 + 1*1 \\ -1*3 + 1*0 + 0*1 \end{pmatrix} \\
+        & = \begin{pmatrix} 2 \\ 7 \\ -3 \end{pmatrix} \\
+  \end{aligned}
+\end{equation}
+
+\begin{equation}
+  \begin{aligned}
+    BCA' & = \begin{pmatrix} -1 & 4 & 5 \end{pmatrix} * \begin{pmatrix} 2 \\ 7 \\ 3 \end{pmatrix} \\
+         & = \begin{pmatrix} -1*2 + 4*7 + 5*3 \end{pmatrix} \\
+         & = \begin{pmatrix} 41 \end{pmatrix} \\
+  \end{aligned}
+\end{equation}  
+
+## d. Find tr(C) 
+
+\begin{equation}
+  \begin{aligned}
+    tr(C) & = 1 + 3 + 0 \\
+          & = 4
+  \end{aligned}
+\end{equation}  
+
+## e.Find a vector orthogonal to A  
+
+V is orthogonal to A if V.A = 0. Thus, find value for V that satisfy:
+
+\begin{equation}
+  \begin{aligned}
+    i*3 + j*0 + k*1 & = 0
+  \end{aligned}
+\end{equation}  
+
+From observation, we can see there is a V(1,1,-3) satisfy the condition.
+
+## f. Find the eigenvalues of A.  
+
+The characteristic polynomial of C is:  
+
+\begin{equation}
+  \begin{aligned}
+    det(\lambda I - A) & = \begin{vmatrix} \lambda-1 & -3 & 1 \\ -2 & \lambda-3 & -1 \\ 1 & -1 & \lambda  \end{vmatrix} \\
+                       & = \lambda^3 - 4*\lambda^2 - 5*\lambda + 9
+  \end{aligned}
+\end{equation}
+
+The eigenvalues therefore must satisfy the cubic equation:
+
+\begin{equation}
+  \begin{aligned}
+    \lambda^3 - 4*\lambda^2 - 5*\lambda + 9 & = 0
+    \lambda = 1.099115, -1.757702, 4.658587
+  \end{aligned}
+\end{equation}
+
+Verify:  
+```{r}
+C <- matrix(c(1,3,-1,2,3,1,-1,1,0),3,3, byrow=TRUE)
+ev <- eigen(C)
+ev$values
+```
+## g. Find the eigenvectors of C.  
+
+Using R, we see the corresponding eigenvectors:  
+\begin{equation}
+  \begin{aligned}
+    \begin{pmatrix} 0.62852346 \\ 0.77713615 \\ 0.03190081 \end{pmatrix} \\
+    \begin{pmatrix} 0.6713753 \\ -0.4117461 \\ -0.4117461 \end{pmatrix}  \\
+    \begin{pmatrix} -0.6035847 \\ 0.2341098 \\ 0.7621536 \end{pmatrix}  \\
+  \end{aligned}
+\end{equation}
+
+```{r}
+ev$vectors
+```
+
+# **Question 3**  
+
+## a. Find the GMV solution, no short sale.
+
+Given parameters  
+
+```{r}
+# Mean Returns
+mean_rStock1 <- .023
+mean_rStock2 <- .021
+mean_rf <- .008
+
+# Variance of returns
+var_rStock1 <- .0072
+var_rStock2 <- .0049
+
+# Standard deviation of returns
+sd_rStock1 <- sqrt(var_rStock1)
+sd_rStock2 <- sqrt(var_rStock2)
+
+# Covariance of Returns
+cov_rStock1_rStock2 <- .0023
+
+# Correlation of Returns
+cor_rStock2_rStock2 <- cov_rStock1_rStock2 / (sd_rStock1 * sd_rStock2)
+```
+
+
+Asset      | Mean Returns      | Variance           | Pair    | $\sigma_{1,2}$
+---        | ---               | ---                | ---     | ---                      
+Stock 1    | `r mean_rStock1`  | `r var_rStock1`    | (1,2)   | `r cov_rStock1_rStock2` 
+Stock 2    | `r mean_rStock2`  | `r var_rStock2`    |         | 
+Risk Free  | `r mean_rf`       |                    |         | 
+  
+  
+Since the investor's objective is to minimize risk, we solve for the global minimum variance combination of the two assets.
+Let $x_i$ denotes the weight of the investment in asset i $(i = 1,2)$, and assume all money is invested in i, meaning $\sum {x_i} = x_1 + x_2 = 1$.
+
+\begin{equation}
+  \begin{aligned}
+    \text {The returns of the portfolio is:} \\
+    R_{p,x} & = x_1 * r_1 + x_2 * r_2 \\
+    \text {The expected returns on the portfolio is:} \\
+    \mu_{p,x} & = E[R_{p,x}] \\
+              & = x_1 * \mu_1 + x_2 * \mu_2  \\
+    \text {The variance of the portfolio returns is:} \\
+    \sigma_{p,x}^2 & = var(R_{p,x})  \\
+                   & = x_1 * \sigma_1^2 + x_2 * \sigma_2^2 + 2 * x_1 * x_2 * \sigma_{1,2}
+  \end{aligned}
+\end{equation}
+  
+The global minimum variance portfolio $m = (m_1,m_2)$ is the solution of the constrained minimization problem:
+
+\begin{equation}
+  \begin{aligned}
+    min \sigma_{p,m}^2 & = var(R_{p,m})  \\
+                       & = m_1^2 * \sigma_1^2 + m_2^2 * \sigma_2^2 + 2 * m_1 * m_2 * \sigma_{1,2} \\
+    \text {s.t. } m_1 + m_2 & = 1 \\
+    \text {rewrite: } \\
+    min \sigma_{p,m}^2 & = min[m_1^2 * \sigma_1^2 + (1-m_1)^2 * \sigma_2^2 + 2 * m_1 * (1 - m_1) * \sigma_{1,2}] \\
+                       & = min[m_1^2 * (\sigma_1^2 + \sigma_2^2 - 2 * \sigma_{1,2}) + m_1 * (2 * \sigma_{1,2} - 2 * \sigma_2^2) + \sigma_2^2]  \\
+    \text {plug in: }
+    min \sigma_{p,m}^2 & = min[(`r var_rStock1` + `r var_rStock2` - 2 * `r cov_rStock1_rStock2`) * m_1^2 + (2*`r cov_rStock1_rStock2` - 2*`r var_rStock2`) * m_1 + `r var_rStock2`] \\
+    min \sigma_{p,m}^2 & = min[(`r var_rStock1 + var_rStock2 - 2 * cov_rStock1_rStock2`) * m_1^2 + (`r 2*(cov_rStock1_rStock2 - var_rStock2)`) * m_1 + `r var_rStock2`] \\
+  \end{aligned}
+\end{equation}
+
+Find the critical point:
+
+\begin{equation}
+  \begin{aligned}
+    \frac{d\sigma_{p,m}^2}{dm} & = 0 \\
+    \frac{d(`r var_rStock1 + var_rStock2 - 2 * cov_rStock1_rStock2` * m_1^2 + (`r 2*(cov_rStock1_rStock2 - var_rStock2)`) * m_1 + `r var_rStock2`)}{dm} & = 0 \\
+      .015* m_1 - .0052 & = 0  \\
+    m_1 & = .3467 = 34.67\%  \\
+    \text {thus, }   \\
+    m_2 & = 1 - 0.3467 = .6533 = 65.33\%
+  \end{aligned}
+\end{equation}
+
+**Recap:**  
+
+Asset      | Weight            
+---        | ---                                  
+Stock 1    | `34.67`\% 
+Stock 2    | `65.33`\%
+
+Graphing the function:  
+```{r}
+# The Variance function of the portfolio
+fVar <- function(m1) var_rStock1 * m1^2 + var_rStock2 * (1 - m1)^2 + 2 * m1 * (1 - m1) * cov_rStock1_rStock2
+
+# Set the weighting
+m1 <- .3467
+m2 <- .6533
+
+# Plot of the variance function with respect to w1.
+w1 <- seq(0, 1, .05)
+plot(fVar, w1, xlab = "Weight of Stock 1 Relative to Portfolio", ylab = "Portfolio Variance", main = "Minimum Variance Portfolio"); abline(v = m1, col = "red")
+points(m1, fVar(m1), col='green')
+
+# Plot of the efficient frontier, assume no short sale allowed
+w1WithoutShort <- seq(0, 1, .005)
+fVar <- function(w1) var_rStock1 * w1^2 + var_rStock2 * (1 - w1)^2 + 2 * w1 * (1 - w1) * cov_rStock1_rStock2
+r <- function(w1) mean_rStock1*w1 + mean_rStock2*(1-w1)
+riskWithoutShort <- sqrt(fVar(w1WithoutShort))
+returnWithoutShort <- r(w1WithoutShort)
+plot(riskWithoutShort, returnWithoutShort, type='l', main='Global Minimum Variance (without short sale)', xlab = 'Risk', ylab = 'Return', col = 'green')
+wp <- (var_rStock2 - cov_rStock1_rStock2) / (var_rStock1 + var_rStock2 - 2 * cov_rStock1_rStock2)  # Normalizing weight
+Rp <- r(wp)
+sigma <- sqrt(fVar(wp))
+Rf <- mean_rf
+Sharpe <- (Rp-Rf)/sigma
+X <- seq(0, 1, .01)
+Y <- Rf + Sharpe*X
+lines(X, Y)
+points(sigma, Rp, col='orange')
+```
+
+We see indeed the minimum is at $m_1 = `r m1`$
+
+Thus, the optimum weights of each stocks in the portfolio to satisfy the objective of minimum risk is:  
+
+Asset      | Weight            | Risk            | Return            
+---        | ---               | ---             | ---                                          
+Stock 1    | `r m1*100`\%      |                 |
+Stock 2    | `r m2*100`\%      |                 |
+Portfolio  | 100\%             | `r sigma`       | `r Rp`
+
+## **b. Construct the efficient frontier. Assume short sale.**  
+
+```{r}
+# Plot of the efficient frontier, assume short sale allowed
+w1WithShort <- seq(-2, 2, .1)
+riskWithShort <- sqrt(fVar(w1WithShort))
+returnWithShort <- r(w1WithShort)
+plot(riskWithShort, returnWithShort, type='l', main='Global Minimum Variance (with short sale)', xlab = 'Risk', ylab = 'Return', col = 'red')
+wp <- (var_rStock2 - cov_rStock1_rStock2) / (var_rStock1 + var_rStock2 - 2 * cov_rStock1_rStock2)  # Normalizing weight
+Rp <- r(wp)
+sigma <- sqrt(fVar(wp))
+Rf <- mean_rf
+Sharpe <- (Rp-Rf)/sigma
+X <- seq(0, 1, .01)
+Y <- Rf + Sharpe*X
+lines(X, Y)
+points(sigma, Rp, col='orange')
+```
+
+## c. **Graph the efficient frontier of portfolio with and without short sale together.**
+
+```{r}
+# Changed input to display less points
+w1WithoutShort <- seq(0, 1, .1)
+riskWithoutShort <- sqrt(fVar(w1WithoutShort))
+returnWithoutShort <- r(w1WithoutShort)
+w1WithShort <- seq(-2, 2, .1)
+riskWithShort <- sqrt(fVar(w1WithShort))
+returnWithShort <- r(w1WithShort)
+
+
+plot(riskWithShort, returnWithShort, main='Global Minimum Variance', xlab = 'Risk', ylab = 'Return', col = 'red', pch = 17)
+points(riskWithoutShort, returnWithoutShort, col = 'green', pch = 17)
+```
+
+
+## d. **Graph the CAL and find the point of tangency.**  
+
+```{r}
+w1 <- .3467
+Rp <- r(w1)
+sigma <- sqrt(fVar(w1))
+CAL_slope <-(Rp - mean_rf) / sigma
+CAL <- function(x) {mean_rf + CAL_slope * x}
+```
+
+The portfolio returns is:  
+
+\begin{equation}
+  \begin{aligned}
+    R_p & = w_1 * R_1 + w_2 * R_2 \\
+        & = `r Rp` \\
+  \end{aligned}
+\end{equation}
+
+The portfolio returns variance is:  
+
+\begin{equation}
+  \begin{aligned}
+    \sigma_p & = w_1 * \sigma_1 + w_2 * \sigma_2 + 2 * w_1 * w_2 * \sigma_{1,2} \\
+             & = `r sigma` \\
+  \end{aligned}
+\end{equation}
+
+The slope of the Capital Allocation Line is:  
+
+\begin{equation}
+  \begin{aligned}
+    Slope_{CAL} & = \frac{R_p - r_f}{\sqrt{\sigma_p}} \\
+              & = `r CAL_slope` \\
+  \end{aligned}
+\end{equation}
+
+**Thus the Capital Allocation Line equation is $CAL = r_f + Slope_{CAL} * x = `r mean_rf` + `r CAL_slope` * x$.**  
+
+**The tangency point is where the optimum weight is, i.e. $(\sigma_p, Rp)$ or $(`r sigma`, `r Rp`)$**
+
+
+Graphing 
+```{r}
+# Plot of the efficient frontier, assume no short sale allowed
+plot(riskWithShort, returnWithShort, main='Global Minimum Variance', xlab = 'Risk', ylab = 'Return', col = 'red', pch = 17)
+points(riskWithoutShort, returnWithoutShort, col = 'green', pch = 17)
+plot.function(CAL, add= TRUE, col = 'blue', lwd = 4)
+points(sigma, Rp, col='orange', lwd = 4)
+```
+
+# **Question 4**  
+
+## a. Find the GMV solution.  
+
+```{r}
+library(matlib)
+
+vcov <- matrix(c(.04, .02, .001, .02, .03, .01, .001, .01, .025), 3, 3, byrow=TRUE)
+vcovInverse <- inv(vcov)
+vcovInverse
+```
+
+Formulating the Markowitz portfolio problem:  
+
+\begin{equation}
+  \begin{aligned}
+     \text {The investor's objective is:} \\
+     max \mu_p & = w' * \mu \quad \text{s.t.} \\
+     \sigma_p^2 & = w' * (\sum) * w \quad \text{and} \quad w'*I = 1  \\
+     \text {where:} \\
+     w & = \quad \text{matrix of asset weights in the portfolio} \\
+       & = 
+        \begin{pmatrix}
+          w_1 \\
+          w_2 \\
+        \end{pmatrix} \\
+     w' & = \quad \text{transpose matrix of asset weights in the portfolio} \\
+       & = 
+        \begin{pmatrix}
+          w_1 & w_2 \\
+        \end{pmatrix} \\
+     \mu & = \quad \text{matrix of mean returns of asset in the portfolio} \\
+         & = 
+          \begin{pmatrix}
+            \mu_1 \\
+            \mu_2 \\
+          \end{pmatrix} \\
+     \sum & = \quad \text{Variance-covariance matrix of asset returns in the the portfolio} \\
+          & = 
+            \begin{pmatrix}
+            \sigma_1     & \sigma_{1,2} \\
+            \sigma_{1,2}  & \sigma_2  \\
+          \end{pmatrix} \\
+      w'*I & = \sum_{i=1}^{n} w_n \quad \text{or the sum weights of the asset in the portfolio, I is notation for identity matrix} \\
+  \end{aligned}
+\end{equation}
+
+Let $\mu_{p,0}$ denotes a target expected return level. Formulate the problem:  
+
+\begin{equation}
+  \begin{aligned}
+     min \sigma_{p,w}^2 & = w' * (\sum) * w  \quad \text{s.t.} \\
+     \mu_p & = w' * \mu = \mu_{p,0}, \quad \text{and} \quad w'*I = 1 \\
+  \end{aligned}
+\end{equation}
+
+To solve this, form the Lagrangian function:
+
+\begin{equation}
+  \begin{aligned}
+    L(w, \lambda_1, \lambda_2) & = w'*\sum*w + \lambda_1*(w'*\mu - \mu_{p,0}) + \lambda_2*({w'*I - 1}) \\
+  \end{aligned}
+\end{equation}
+  
+Because there are two constraints ($w'*\mu = \mu_{p,0}$ and $w'1 = 1$) there are two Langrange multipliers $\lambda_1$ and $\lambda_2$. The first order condition for a minimum are the linear equations:  
+
+\begin{equation}
+  \begin{aligned}
+    \frac{\partial L(w, \lambda_1, \lambda_2)}{\partial w} & = \frac{\partial (\sum * w^2)}{\partial w} + \frac{\partial (\lambda_1*(w'*\mu - \mu_{p,0}))}{\partial w} + \frac{\lambda_2*({w'*I - 1})}{\partial w} = 0  \\
+    \frac{\partial L(w, \lambda_1, \lambda_2)}{\partial \lambda_1} & = 0 \\
+    \frac{\partial L(w, \lambda_1, \lambda_2)}{\partial \lambda_2} & = 0 \\
+  \end{aligned}
+\end{equation}
+
+Simplify, we have:  
+
+\begin{equation}
+  \begin{aligned}
+    \frac{\partial L(w, \lambda_1, \lambda_2)}{\partial w} & = 2*\sum*w + \lambda_1*\mu + \lambda_2*I = 0  \\
+    \frac{\partial L(w, \lambda_1, \lambda_2)}{\partial \lambda_1} & =  w'*\mu - \mu_{p,0} = 0  \\
+    \frac{\partial L(w, \lambda_1, \lambda_2)}{\partial \lambda_2} & =  w'*I - 1 = 0  \\
+  \end{aligned}
+\end{equation}
+
+Rewrite in matrix form:  
+
+\begin{equation}
+  \begin{aligned}
+    \begin{pmatrix}
+            2*\sum    & \mu   & I  \\
+            \mu'      & 0     & 0  \\
+            I'        & 0     & 0  \\
+    \end{pmatrix}
+    *
+    \begin{pmatrix}
+            w   \\
+            \lambda_1     \\
+            \lambda_2       \\
+    \end{pmatrix}
+    & =
+    \begin{pmatrix}
+            0   \\
+            \mu_{p,0}     \\
+            I       \\
+    \end{pmatrix}
+  \end{aligned}
+\end{equation}
+
+or  
+
+\begin{equation}
+  \begin{aligned}
+    A * z_w & = b_0 \\
+    \text{where}\\
+    A & = 
+    \begin{pmatrix}
+            2*\sum    & \mu   & I  \\
+            \mu'      & 0     & 0  \\
+            I'        & 0     & 0  \\
+    \end{pmatrix} \\
+    z_w & = 
+    \begin{pmatrix}
+            w   \\
+            \lambda_1     \\
+            \lambda_2       \\
+    \end{pmatrix} \\
+    b_0 & =
+    \begin{pmatrix}
+            0   \\
+            \mu_{p,0}     \\
+            I       \\
+    \end{pmatrix}
+  \end{aligned}
+\end{equation}
+
+The solution for $z_w$ is:  
+
+\begin{equation}
+  \begin{aligned}
+    z_w & = A^{-1} * b_0
+  \end{aligned}
+\end{equation}
+
+
+```{r}
+topMatrix <- cbind(2*vcovInverse, rep(1, 3))
+bottomVector <- c(rep(1, 3), 0)
+AmMatrix <- rbind(topMatrix, bottomVector)
+bVector <- c(rep(0, 3), 1)
+zmMatrix <- solve(AmMatrix)%*%bVector
+mVector <- zmMatrix[1:3,1]
+mVector
+```
+
+Thus, the optimum weights of each stocks in the portfolio to satisfy the objective of minimum risk is:  
+
+Asset      | Weight                   | 
+---        | ---                      | 
+Stock A    | `r 0.3885350*100`\%      | 
+Stock B    | `r 0.3821656*100`\%      |   
+Stock C    | `r 0.2292994*100`\%      |   
+
+## b. Find the GMV solution with constraint.  
+
+```{r}
+vcovInverse
+mean_rStockA <- .0375
+mean_rStockB <- .0420
+mean_rStockC <- .0300
+mean_rf <- .0225
+returnsVector <- rbind(mean_rStockA, mean_rStockB, mean_rStockC)  # Establish returns vector
+riskPremiumMatrix <- returnsVector - mean_rf
+```
+We have the z vector:  
+
+\begin{equation}
+  \begin{aligned}
+    z & = (\sum)^{-1} * (R - Rf) \\
+      & = 
+      \begin{pmatrix}
+        39.70678 & -29.93280 &  10.38485 \\
+        -29.93280 & 61.02627 & -23.21319  \\
+        10.38485 & -23.21319  & 48.86988  \\
+      \end{pmatrix}
+    *
+      \begin{pmatrix}
+            0.0150    \\
+            0.0195  \\
+            0.0075  \\
+      \end{pmatrix}
+      & = 
+      \begin{pmatrix}
+        0.08979841 \\
+        0.56692120 \\
+        0.06963958 \\
+      \end{pmatrix}
+  \end{aligned}
+\end{equation}
+
+```{r}
+z <- vcovInverse %*% riskPremiumMatrix
+```
+The lambda value is thus:  
+
+\begin{equation}
+  \begin{aligned}
+    \lambda & = `r sum(z)`\\
+  \end{aligned}
+\end{equation}
+
+```{r}
+lambda <- sum(z)
+w1 <- z[1] / lambda
+w2 <- z[2] / lambda
+w3 <- z[3] / lambda
+```
+Therefore, the weight of these stocks are:
+
+\begin{equation}
+  \begin{aligned}
+    w_1 & = \frac{z_i}{\sum_{i=1}^{n} z_i} \\
+        & = \frac{`r z[1]`}{`r lambda`} \\
+        & = `r w1` \\
+    \text{and} \\
+    w_2 & = \frac{z_i}{\sum_{i=1}^{n} z_i} \\
+        & = \frac{`r z[2]`}{`r lambda`} \\
+        & = `r w2` \\
+    \text{and} \\
+    w_3 & = \frac{z_i}{\sum_{i=1}^{n} z_i} \\
+        & = \frac{`r z[3]`}{`r lambda`} \\
+        & = `r w3` \\
+  \end{aligned}
+\end{equation}
+
+**Recap:**  
+
+Asset      | Weight            
+---        | ---                                  
+Stock A    | `r w1*100`\% 
+Stock B    | `r w2*100`\%
+Stock C    | `r w3*100`\%
