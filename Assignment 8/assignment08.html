@@ -470,7 +470,7 @@ varOptimum &lt;- t(wOptimum) %*% vcovMatrix %*% wOptimum  # Optimum variance
 sdOptimum &lt;- varOptimum^.5
 stats_portfolioOptimum &lt;- matrix(c(rOptimum, varOptimum, sdOptimum), nrow=3)  # Create a view of the statistics
 dimnames(stats_portfolioOptimum) &lt;- list(c(&quot;Returns&quot;, &quot;Variance&quot;, &quot;Stdev&quot;), &quot;Optimum Portfolio&quot;)</code></pre>
-<p>The variance covariance matrix is:</p>
+<p>The variance-covariance matrix is:</p>
 <pre class="r"><code>vcovMatrix</code></pre>
 <pre><code>##              JPM         WMT        AAPL
 ## JPM  0.005954986 0.001029912 0.003957948
@@ -488,6 +488,111 @@ dimnames(stats_portfolioOptimum) &lt;- list(c(&quot;Returns&quot;, &quot;Varianc
 ## Returns         0.04633251
 ## Variance        0.01237212
 ## Stdev           0.11123004</code></pre>
+</div>
+<div id="question-3" class="section level1">
+<h1><strong>Question 3</strong></h1>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    X &amp; = \begin{pmatrix} 2 &amp; 6 &amp; 1 \end{pmatrix} \\
+    Z &amp; = \begin{pmatrix} 5 &amp; 3 &amp; 2 \\ 3 &amp; 6 &amp; 1 \\ 2 &amp; 1 &amp; 9 \end{pmatrix} \\
+  \end{aligned}
+\end{equation}\]</span></p>
+<div id="a.-show-that-z-is-a-symmetric-matrix" class="section level2">
+<h2>a. Show that Z is a symmetric matrix</h2>
+<p>Z is symmetrical iff. <span class="math inline">\(Z = Z&#39;\)</span></p>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    Z&#39; &amp; = \begin{pmatrix} 5 &amp; 3 &amp; 2 \\ 3 &amp; 6 &amp; 1 \\ 2 &amp; 1 &amp; 9 \end{pmatrix} \\
+  \end{aligned}
+\end{equation}\]</span></p>
+<p><strong>We can see <span class="math inline">\(Z = Z&#39;\)</span>. Thus Z is symmetrical.</strong></p>
+</div>
+<div id="b.-find-inverse-of-matrix-z." class="section level2">
+<h2>b. Find inverse of matrix Z.</h2>
+<pre class="r"><code>library(matlib)
+
+zMatrix &lt;- matrix(c(5, 3, 2, 3, 6, 1, 2, 1, 9), 3, 3, byrow=TRUE)
+z_invMatrix &lt;- inv(zMatrix)
+dimnames(z_invMatrix) &lt;- list(c(&#39;&#39;,&#39;&#39;,&#39;&#39;), c(&#39;&#39;,&#39;&#39;,&#39;&#39;))
+z_invMatrix</code></pre>
+<pre><code>##                                     
+##   0.30813953 -0.14534884 -0.05232558
+##  -0.14534884  0.23837209  0.00581395
+##  -0.05232558  0.00581395  0.12209302</code></pre>
+<pre class="r"><code>det(zMatrix)</code></pre>
+<pre><code>## [1] 172</code></pre>
+<pre class="r"><code>det(z_invMatrix)</code></pre>
+<pre><code>## [1] 0.005813953</code></pre>
+<p>Thus: <span class="math display">\[\begin{equation}
+  \begin{aligned}
+    Z^{-1} &amp; = \begin{pmatrix} 0.30813953 &amp; -0.14534884 &amp; -0.05232558 \\ 
+                              -0.14534884 &amp; 0.23837209 &amp; 0.00581395 \\ 
+                              -0.05232558 &amp; 0.00581395  &amp; 0.12209302 \end{pmatrix} \\
+  \end{aligned}
+\end{equation}\]</span></p>
+</div>
+<div id="c.-find-determinants-of-z-and-z-inverse.-show-that-they-are-equal-to-each-other." class="section level2">
+<h2>c. Find determinants of Z and Z inverse. Show that they are equal to each other.</h2>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    det(Z) &amp; = 5\begin{vmatrix} 6 &amp; 1 \\ 1 &amp; 9 \end{vmatrix} - 
+               3\begin{vmatrix} 3 &amp; 1 \\ 2 &amp; 9 \end{vmatrix} + 
+               2\begin{vmatrix} 3 &amp; 6 \\ 2 &amp; 1 \end{vmatrix} \\
+           &amp; = 5(6*9 - 1*1) - 3(3*9 - 2*1) + 2(3*1-6*2) \\
+           &amp; = 172 \\
+    \text{additionally,} \\
+    det(Z^{-1}) &amp; = 0.30813953\begin{vmatrix} 0.23837209 &amp; 0.00581395 \\ 0.00581395 &amp; 0.12209302 \end{vmatrix} + 
+                    0.14534884\begin{vmatrix} -0.14534884 &amp; 0.00581395 \\  -0.05232558 &amp; 0.12209302 \end{vmatrix} - 
+                    0.05232558\begin{vmatrix} -0.14534884 &amp; 0.23837209 \\ -0.05232558 &amp; 0.00581395 \end{vmatrix} \\
+           &amp; = 0.30813953*(0.23837209*0.12209302 - 0.00581395*0.00581395) + 
+               0.14534884*(-0.14534884*0.12209302 - -0.05232558*0.00581395) - 
+               0.05232558*(-0.14534884*0.00581395--0.05232558*0.23837209) \\
+           &amp; = 0.005814
+  \end{aligned}
+\end{equation}\]</span></p>
+<p>They are not equal. Not sure what you mean?</p>
+</div>
+<div id="d.-find-xzx." class="section level2">
+<h2>d. Find X’ZX.</h2>
+<p>Non comformable multiplication. You are asking to do this multiplication (3x1)<em>(3x3)</em>(1*3) which is mathematically impossible.</p>
+</div>
+<div id="e.-find-z-1x." class="section level2">
+<h2>e. Find <span class="math inline">\(Z^{-1}X&#39;\)</span>.</h2>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    Z^{-1}X &amp; = \begin{pmatrix} 0.30813953 &amp; -0.14534884 &amp; -0.05232558 \\ 
+                               -0.14534884 &amp; 0.23837209 &amp; 0.00581395 \\ 
+                               -0.05232558 &amp; 0.00581395  &amp; 0.12209302 \end{pmatrix} * \begin{pmatrix} 2 \\ 6 \\ 1 \end{pmatrix} \\
+            &amp; = \begin{pmatrix} 2*0.30813953 + 6*-0.14534884 + 1*-0.05232558 \\
+                                2*-0.14534884 + 6*0.23837209 + 1*0.00581395 \\ 
+                                2*-0.05232558 + 6*0.00581395 + 1*0.12209302 \end{pmatrix} \\
+            &amp; = \begin{pmatrix} -0.3081396 \\
+                                1.1453488 \\ 
+                                0.0523256 \end{pmatrix} \\               
+  \end{aligned}
+\end{equation}\]</span></p>
+</div>
+<div id="f.-find-eigenvalues-and-eigenvectors-of-z-using-r-or-excel." class="section level2">
+<h2>f. Find eigenvalues and eigenvectors of Z using R or Excel.</h2>
+<p>Eigenvalues using R:</p>
+<pre class="r"><code>ev &lt;- eigen(zMatrix)
+ev$values</code></pre>
+<pre><code>## [1] 10.890683  6.779877  2.329440</code></pre>
+<p>Eigenvectos:</p>
+<pre class="r"><code>ev$vectors</code></pre>
+<pre><code>##            [,1]       [,2]       [,3]
+## [1,] -0.4840709 -0.3863934  0.7850958
+## [2,] -0.4503380 -0.6592664 -0.6021325
+## [3,] -0.7502473  0.6450333 -0.1451241</code></pre>
+<p>Using R, we see the corresponding eigenvectors:<br />
+<span class="math display">\[\begin{equation}
+  \begin{aligned}
+    \begin{pmatrix} -0.4840709 \\ -0.4503380 \\ -0.7502473 \end{pmatrix} \\
+    \begin{pmatrix} -0.3863934 \\ -0.6592664 \\ 0.6450333 \end{pmatrix}  \\
+    \begin{pmatrix} 0.7850958 \\ -0.6021325 \\ -0.1451241 \end{pmatrix}  \\
+  \end{aligned}
+\end{equation}\]</span></p>
+</div>
 </div>
 
 

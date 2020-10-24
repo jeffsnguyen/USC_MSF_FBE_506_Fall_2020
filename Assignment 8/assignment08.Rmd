@@ -136,6 +136,86 @@ Z is symmetrical iff. $Z = Z'$
   \end{aligned}
 \end{equation}
 
-We can see $Z = Z'$. Thus Z is symmetrical.  
+**We can see $Z = Z'$. Thus Z is symmetrical.**  
 
-## b. Show that Z is a symmetric matrix  
+## b. Find inverse of matrix Z.  
+```{r}
+library(matlib)
+
+zMatrix <- matrix(c(5, 3, 2, 3, 6, 1, 2, 1, 9), 3, 3, byrow=TRUE)
+z_invMatrix <- inv(zMatrix)
+dimnames(z_invMatrix) <- list(c('','',''), c('','',''))
+z_invMatrix
+
+det(zMatrix)
+det(z_invMatrix)
+```
+Thus:
+\begin{equation}
+  \begin{aligned}
+    Z^{-1} & = \begin{pmatrix} 0.30813953 & -0.14534884 & -0.05232558 \\ 
+                              -0.14534884 & 0.23837209 & 0.00581395 \\ 
+                              -0.05232558 & 0.00581395  & 0.12209302 \end{pmatrix} \\
+  \end{aligned}
+\end{equation}
+
+## c. Find determinants of Z and Z inverse. Show that they are equal to each other.  
+
+\begin{equation}
+  \begin{aligned}
+    det(Z) & = 5\begin{vmatrix} 6 & 1 \\ 1 & 9 \end{vmatrix} - 
+               3\begin{vmatrix} 3 & 1 \\ 2 & 9 \end{vmatrix} + 
+               2\begin{vmatrix} 3 & 6 \\ 2 & 1 \end{vmatrix} \\
+           & = 5(6*9 - 1*1) - 3(3*9 - 2*1) + 2(3*1-6*2) \\
+           & = `r 5*(6*9 - 1*1) - 3*(3*9 - 2*1) + 2*(3*1-6*2)` \\
+    \text{additionally,} \\
+    det(Z^{-1}) & = 0.30813953\begin{vmatrix} 0.23837209 & 0.00581395 \\ 0.00581395 & 0.12209302 \end{vmatrix} + 
+                    0.14534884\begin{vmatrix} -0.14534884 & 0.00581395 \\  -0.05232558 & 0.12209302 \end{vmatrix} - 
+                    0.05232558\begin{vmatrix} -0.14534884 & 0.23837209 \\ -0.05232558 & 0.00581395 \end{vmatrix} \\
+           & = 0.30813953*(0.23837209*0.12209302 - 0.00581395*0.00581395) + 
+               0.14534884*(-0.14534884*0.12209302 - -0.05232558*0.00581395) - 
+               0.05232558*(-0.14534884*0.00581395--0.05232558*0.23837209) \\
+           & = `r 0.30813953*(0.23837209*0.12209302 - 0.00581395*0.00581395) + 0.14534884*(-0.14534884*0.12209302 - -0.05232558*0.00581395) -                        0.05232558*(-0.14534884*0.00581395--0.05232558*0.23837209)`
+  \end{aligned}
+\end{equation}
+
+They are not equal. Not sure what you mean?
+
+## d. Find X’ZX.  
+Non comformable multiplication. You are asking to do this multiplication (3x1)*(3x3)*(1*3) which is mathematically impossible.  
+
+## e. Find $Z^{-1}X'$.  
+\begin{equation}
+  \begin{aligned}
+    Z^{-1}X & = \begin{pmatrix} 0.30813953 & -0.14534884 & -0.05232558 \\ 
+                               -0.14534884 & 0.23837209 & 0.00581395 \\ 
+                               -0.05232558 & 0.00581395  & 0.12209302 \end{pmatrix} * \begin{pmatrix} 2 \\ 6 \\ 1 \end{pmatrix} \\
+            & = \begin{pmatrix} 2*0.30813953 + 6*-0.14534884 + 1*-0.05232558 \\
+                                2*-0.14534884 + 6*0.23837209 + 1*0.00581395 \\ 
+                                2*-0.05232558 + 6*0.00581395 + 1*0.12209302 \end{pmatrix} \\
+            & = \begin{pmatrix} `r 2*0.30813953 + 6*-0.14534884 + 1*-0.05232558` \\
+                                `r 2*-0.14534884 + 6*0.23837209 + 1*0.00581395` \\ 
+                                `r 2*-0.05232558 + 6*0.00581395 + 1*0.12209302` \end{pmatrix} \\               
+  \end{aligned}
+\end{equation}
+
+## f. Find eigenvalues and eigenvectors of Z using R or Excel.
+Eigenvalues using R:  
+```{r}
+ev <- eigen(zMatrix)
+ev$values
+```
+
+Eigenvectos:
+```{r}
+ev$vectors
+```
+
+Using R, we see the corresponding eigenvectors:  
+\begin{equation}
+  \begin{aligned}
+    \begin{pmatrix} -0.4840709 \\ -0.4503380 \\ -0.7502473 \end{pmatrix} \\
+    \begin{pmatrix} -0.3863934 \\ -0.6592664 \\ 0.6450333 \end{pmatrix}  \\
+    \begin{pmatrix} 0.7850958 \\ -0.6021325 \\ -0.1451241 \end{pmatrix}  \\
+  \end{aligned}
+\end{equation}
