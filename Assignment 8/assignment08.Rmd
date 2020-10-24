@@ -1,0 +1,141 @@
+---
+title: "assignment08"
+author: "Jeff Nguyen"
+date: "23/10/2020"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, envir=.GlobalEnv)
+```
+
+**University of Southern California**  
+**Marshall School of Business**  
+**FBE 506 Quantitative Method in Finance**
+
+Assignment 07  
+Student Name: Ngoc Son (Jeff) Nguyen  
+Student ID: 6524885309  
+
+
+# **Question 1**  
+
+The minimum variance solution is:  
+
+\begin{equation}
+  \begin{aligned}
+    f(w) &= w^2 * \sigma_1^2 + (1 - w)^2 * \sigma_2^2 + 2 * w * (1-w) * \sigma_12  \\
+    \text{where}  \\
+    w &= \text{weight of stock 1}  \\
+    \sigma_1 &= \text{standard deviation of stock 1's returns}  \\
+    \sigma_2 &= \text{standard deviation of stock 2's returns}  \\
+    \sigma_{12} &= \text{covariance of stock 1 and 2's returns}  \\
+  \end{aligned}
+\end{equation}
+
+We know the correlation coefficient $r$ between $r_1$ and $r_2$ to be: $r = \frac{\sigma_{12}}{\sigma_1*\sigma2}$.
+
+Rewrite the variance of the portfolio as:  
+
+\begin{equation}
+  \begin{aligned}
+    f(w) &= w^2*\sigma_1^2 + (1 - w)^2*\sigma_2^2 + 2 * w * (1-w) * r * \sigma_1 * \sigma_2  \\
+  \end{aligned}
+\end{equation}
+
+**Since minimum variance is the objective, $r=-1$ yields the lowest $f(w)$, ceteris paribus. Thus the answer is b.**  
+
+# **Question 2**  
+
+```{r}
+library(quantmod)
+
+# Set start date and end date of data
+start_date <- "2018-01-02"
+end_date <- "2020-10-23"
+
+# Get data for JPM, FB and the 10 year T-bill (TNX)
+getSymbols("JPM", src = "yahoo", from = start_date, to = end_date)
+getSymbols("WMT", src = "yahoo", from = start_date, to = end_date)
+getSymbols("AAPL", src = "yahoo", from = start_date, to = end_date)
+
+# Get adjusted returns data for 01/2014
+rJPM <- diff(log(to.monthly(JPM)$JPM.Adjusted))
+rWMT <- diff(log(to.monthly(WMT)$WMT.Adjusted))
+rAAPL <- diff(log(to.monthly(AAPL)$AAPL.Adjusted))
+
+# Calculate statistics
+mean_rJPM <- mean(rJPM, na.rm = TRUE)
+mean_rWMT <- mean(rWMT, na.rm = TRUE)
+mean_rAAPL <- mean(rAAPL, na.rm = TRUE)
+
+sd_rJPM <- sd(rJPM, na.rm = TRUE)
+sd_rWMT <- sd(rWMT, na.rm = TRUE)
+sd_rAAPL <- sd(rAAPL, na.rm = TRUE)
+
+# Generate monthly returns DataFrame, excluding NA
+# Note that in this case, excess returns is equal returns
+returnsDF <- data.frame(rJPM, rWMT, rAAPL)[-1,]
+excess_returnsDF <- returnsDF
+vcovMatrix <- matrix(c(cov(returnsDF)), nrow=3, ncol=3, byrow=TRUE)  # Create the variance-covariance matrix of returns of 3 stocks
+
+# Name the columns of vcovMatrix
+assetNames <- c("JPM", "WMT", "AAPL")
+dimnames(vcovMatrix) <- list(assetNames, assetNames)
+
+# Average returns, excess returns matrix
+avg_returnsDF <- matrix(colMeans(returnsDF, na.rm=TRUE))
+avg_excess_returnsDF <- matrix(colMeans(excess_returnsDF, na.rm=TRUE))
+
+# Optimum portfolio
+zOptimum <- solve(vcovMatrix, avg_excess_returnsDF)  # z-values
+wOptimum <- zOptimum / sum(zOptimum)  # Weights
+dimnames(wOptimum) <- list(assetNames, "Weights")
+
+# Optimum Portfolio statistics
+rOptimum <- t(wOptimum) %*% avg_returnsDF   # Optimum returns
+varOptimum <- t(wOptimum) %*% vcovMatrix %*% wOptimum  # Optimum variance
+sdOptimum <- varOptimum^.5
+stats_portfolioOptimum <- matrix(c(rOptimum, varOptimum, sdOptimum), nrow=3)  # Create a view of the statistics
+dimnames(stats_portfolioOptimum) <- list(c("Returns", "Variance", "Stdev"), "Optimum Portfolio")
+
+```
+
+The variance-covariance matrix is:  
+```{r}
+vcovMatrix
+```
+
+The optimum weights are:
+```{r}
+wOptimum
+```
+
+The returns and risk of the optimum portfolio are:
+```{r}
+stats_portfolioOptimum
+```
+
+# **Question 3**  
+
+\begin{equation}
+  \begin{aligned}
+    X & = \begin{pmatrix} 2 & 6 & 1 \end{pmatrix} \\
+    Z & = \begin{pmatrix} 5 & 3 & 2 \\ 3 & 6 & 1 \\ 2 & 1 & 9 \end{pmatrix} \\
+  \end{aligned}
+\end{equation}
+
+## a. Show that Z is a symmetric matrix  
+
+Z is symmetrical iff. $Z = Z'$ 
+
+\begin{equation}
+  \begin{aligned}
+    Z' & = \begin{pmatrix} 5 & 3 & 2 \\ 3 & 6 & 1 \\ 2 & 1 & 9 \end{pmatrix} \\
+  \end{aligned}
+\end{equation}
+
+We can see $Z = Z'$. Thus Z is symmetrical.  
+
+## b. Show that Z is a symmetric matrix  
