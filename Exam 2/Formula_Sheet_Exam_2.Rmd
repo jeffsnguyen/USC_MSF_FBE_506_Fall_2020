@@ -1,0 +1,63 @@
+---
+title: "Formula Sheet"
+author: "Jeff Nguyen"
+date: "24/10/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Economic**
+\begin{equation}
+  \begin{aligned}
+    \text {Price Elasticity of Demand e } & = \frac{\Delta Q}{\Delta P} \\
+    \text {where  e<1: necessity (inelastic), e>1: luxury, e=1: unit elastic}\\
+    \text {Profit maximizing Q is at MR = MC}\\
+    \text {Profit maximizing Q for perfectly competitive market is is at P = MC}\\
+  \end{aligned}
+\end{equation}
+
+**Ratios**
+\begin{equation}
+  \begin{aligned}
+    \text{Semi-Variance} SV(x) & = (\sigma_{semi})^2 = \frac{\sum min((R_t - \overline R), 0)^2}{T} \\
+    \text{Lower Partial Moment} LPM2(x)_\tau & = \frac{\sum min((R_t - R_{\tau}), 0)^2}{T} \\
+    \text{Coefficient of variation} CV & = \frac{\sigma}{\mu} \\
+    \text{Sharpe Ratio} S_{JPM} & = \frac{E(r_p) - r_f}{\sigma_p}  \\
+    \text{Sortino Ratio} SortinoRatio & = \frac{r_p - r_f}{\sigma_{downside}}  \\
+    \text{Treynor Ratio} TreynorRatio & = \frac{r_p - r_f}{\beta_p} \\
+    Cov_{X,Y}  & =  \sum_{i=1}^{n} \frac{(X_i - \overline{X}) * (Y_i - \overline{Y})}{n-1} \\
+    Corr_{X,Y} & =  \frac{Cov_{X,Y}}{\sigma_X * \sigma_Y}  \\
+  \end{aligned}
+\end{equation}
+
+**Value at Risk**  
+Step 1: Get Scaling Factor 1: '1 year', 1/2: '6 months', 1/12: '1 month', 1/250: '1 day'  
+Step 2: Calculate scaled mean returns $\mu_{scaled} = \mu*scalingFactor$  
+Step 3: Calculate scaled standard deviation $\sigma_{scaled} = \sigma*\sqrt{scalingFactor}$  
+Step 4: Look up the $z_{statistics} = 1 - VaR$  
+Step 5: $VaR = \mu_{scaled} + \sigma_{scaled} * z_{statistics}$  
+Others:
+\begin{equation}
+  \begin{aligned}
+    \text{Risk Adjusted Portfolio} \quad RAP & = \sum \beta_i*R_i \\
+    \text{Equity VaR} \quad EVaR & = RAP * VaR \\
+    \text{Global Minimum Variance Solution} \quad w_1 & = \frac{\sigma_{22} - \sigma_{12}}{\sigma_{11} + \sigma_{22} - 2\sigma_{12}} \\
+    \text{Return of portfolio} \quad R_p & = w_1.R_1 + w_2.R_2 \\
+    \text{Standard Deviation of Portfolio} \quad \sigma_{p} & = \sqrt{\sigma_1^2(w_1^2) + \sigma_2^2(w_2^2) + 2(w_1)(w_2)\sigma_{12}} \\
+    \text{Portfolio function} \quad Y & = R_f + \frac{R_p - R_f}{\sigma_p}*X \\
+    \text{Covariance} \quad \sigma_{12} &= \rho_{12} * \sigma_1 * \sigma_2 \quad \text{where} \rho_{12} \text{ is the correlation} \\
+  \end{aligned}
+\end{equation}
+
+**Critical point of a multivariable function**  
+Unconstrained Hessian:
+Step 1: Find the roots of $\frac{\partial f}{\partial x} = 0$ and $\frac{\partial f}{\partial y} = 0$, yield the extremum.
+Step 2: To test for second order condition, form the Hessian: $H = \begin{pmatrix} f_{xx} & f_{xy} \\ f_{yx} & f_{yy} \end{pmatrix}$  
+A matrix is postive defininte if it's symmetrical and the determinants of the principal submatrices are positive.  
+A matrix is negative defininte if it's symmetrical and the determinants of the principal submatrices alternate between negative and positive, starting with a negative value for the first principal submatrices.  
+H is negative definite -> maximum at the extremum.  
+H is positive definite -> minimum at the extremum.  
+If it is neither -> saddle point at the extremum.  
