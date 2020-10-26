@@ -759,17 +759,17 @@ cor_rStock2_rStock2 &lt;- cov_rStock1_rStock2 / (sd_rStock1 * sd_rStock2)</code>
 </tr>
 </tbody>
 </table>
-<p>Since the investor’s objective is to minimize risk, we solve for the global minimum variance combination of the two assets. Let <span class="math inline">\(x_i\)</span> denotes the weight of the investment in asset i <span class="math inline">\((i = 1,2)\)</span>, and assume all money is invested in i, meaning <span class="math inline">\(\sum {x_i} = x_1 + x_2 = 1\)</span>.</p>
+<p>Since the investor’s objective is to minimize risk, we solve for the global minimum variance combination of the two assets. Let <span class="math inline">\(x_i\)</span> denotes the weight of the investment in asset i <span class="math inline">\((i = 1,2,3)\)</span>, and assume all money is invested in i, meaning <span class="math inline">\(\sum {x_i} = x_1 + x_2 = 1\)</span>.</p>
 <p><span class="math display">\[\begin{equation}
   \begin{aligned}
     \text {The returns of the portfolio is:} \\
-    R_{p,x} &amp; = x_1 * r_1 + x_2 * r_2 \\
+    R_{p,x} &amp; = x_1 * r_1 + x_2 * r_2  \\
     \text {The expected returns on the portfolio is:} \\
     \mu_{p,x} &amp; = E[R_{p,x}] \\
               &amp; = x_1 * \mu_1 + x_2 * \mu_2  \\
     \text {The variance of the portfolio returns is:} \\
     \sigma_{p,x}^2 &amp; = var(R_{p,x})  \\
-                   &amp; = x_1 * \sigma_1^2 + x_2 * \sigma_2^2 + 2 * x_1 * x_2 * \sigma_{1,2}
+                   &amp; = x_1^2 * \sigma_1^2 + x_2^2 * \sigma_2^2 + 2 * x_1 * x_2 * \sigma_{1,2}
   \end{aligned}
 \end{equation}\]</span></p>
 <p>The global minimum variance portfolio <span class="math inline">\(m = (m_1,m_2)\)</span> is the solution of the constrained minimization problem:</p>
@@ -991,8 +991,8 @@ vcovInverse</code></pre>
      \sum &amp; = \quad \text{Variance-covariance matrix of asset returns in the the portfolio} \\
           &amp; = 
             \begin{pmatrix}
-            \sigma_1     &amp; \sigma_{1,2} \\
-            \sigma_{1,2}  &amp; \sigma_2  \\
+            \sigma_1^2     &amp; \sigma_{1,2} \\
+            \sigma_{1,2}  &amp; \sigma_2^2  \\
           \end{pmatrix} \\
       w&#39;*I &amp; = \sum_{i=1}^{n} w_n \quad \text{or the sum weights of the asset in the portfolio, I is notation for identity matrix} \\
   \end{aligned}
