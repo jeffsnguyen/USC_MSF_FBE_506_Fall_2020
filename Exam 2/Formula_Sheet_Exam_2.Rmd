@@ -61,3 +61,33 @@ A matrix is negative defininte if it's symmetrical and the determinants of the p
 H is negative definite -> maximum at the extremum.  
 H is positive definite -> minimum at the extremum.  
 If it is neither -> saddle point at the extremum.  
+
+**Concavity and Convexity of multivariable function**  
+Example: $f(x,y) = 2x^2 + y^2$  
+Form the Hessian matrix $H = \begin{pmatrix} f_{xx} & f_{xy} \\ f_{yx} & f_{yy} \end{pmatrix}$  
+H is negative definite -> maximum at the extremum. -> Convex over the entire Euclidean E2 space.  
+H is positive definite -> minimum at the extremum. -> Concave over the enture Euclidean E2 space.    
+
+**Lagrangian Function - Economic**  
+Problem: Maximize $Q = 90N - 2N^2$ s.t.$N \leqslant 20$  
+Step 1: Form the Lagrangian function: $L = 90N - 2N^2 +\lambda(20-N)$  
+Step 2: Find roots of $\frac{\partial L}{\partial N} = 0$ and $\frac{\partial L}{\partial \lambda} = 0$
+Step 3: $\lambda > 0$ means binding constraint, $\lambda < 0$ non binding constraint and does not factor in solution.  
+
+**Lagrangian Function - Finance**  
+Markowitz portfolio
+Formulate the problem: $min \sigma^2_p = w_1^2\sigma_{11} + w_2^2\sigma_{22} + 2w_1w_2\sigma_{12}$ s.t. $w_1R1 + w_2R_2 \geqslant R_f$  
+Step 1: Solve the Lagrangian $L = w_1^2\sigma_{11} + w_2^2\sigma_{22} + 2w_1w_2\sigma_{12} + \lambda(R_f-w_1R_1 - w_2R_2)$  
+Step 2: Differentiate L wrt. $w_1$, $w_2$ and $\lambda$ or use the formula:  
+\begin{equation}
+  \begin{aligned}
+    w_1 &= \frac{\sigma_{11}(R_1 - R_f) - \sigma_{12}(R_2-R_f)}{\sigma_{11}\sigma_{22} - \sigma^2_{12}}  \\
+    w_2 &= \frac{\sigma_{11}(R_2 - R_f) - \sigma_{12}(R_1-R_f)}{\sigma_{11}\sigma_{22} - \sigma^2_{12}}  \\
+  \end{aligned}  
+\end{equation}  
+Step 3: Normalize $w_1$, $w_2$ to find $w_p = \frac{w_1}{w_1+w_2}$  
+Step 4: Returns of the tangency portfolio $R_p = R_1w_p + R_2(1 - w_p)$  
+Step 5: Risk of the tangency portfolio  $\sigma_p = \sqrt{\sigma_{11}w_p^2 + \sigma_{22}(1 - w_p)^2 + 2w_p(1-w_p)\sigma_{12}}$  
+Step 6: $Sharpe Ratio = \frac{(R_p - R_f)}{\sigma_p}$  
+Step 7: The efficient frontier equation: $Y = R_f + Sharpe*X$  
+Step 8: Capital Allocation Line connects the risk-free asset to the tangency point $R = R_f + \lambda\sigma$ with $\sigma=Sharpe$ and $\lambda = \frac{R_p - R_f}{\sigma_p}$  

@@ -406,11 +406,38 @@ Others: <span class="math display">\[\begin{equation}
     \text{Covariance} \quad \sigma_{12} &amp;= \rho_{12} * \sigma_1 * \sigma_2 \quad \text{where} \rho_{12} \text{ is the correlation} \\
   \end{aligned}
 \end{equation}\]</span></p>
-<p><strong>Critical point of a multivariable function</strong> Unconstrained Hessian: Step 1: Find the roots of <span class="math inline">\(\frac{\partial f}{\partial x} = 0\)</span> and <span class="math inline">\(\frac{\partial f}{\partial y} = 0\)</span>, yield the extremum. Step 2: To test for second order condition, form the Hessian: <span class="math inline">\(H = \begin{pmatrix} f_{xx} &amp; f_{xy} \\ f_{yx} &amp; f_{yy} \end{pmatrix}\)</span><br />
+<p><strong>Critical point of a multivariable function</strong><br />
+Unconstrained Hessian: Step 1: Find the roots of <span class="math inline">\(\frac{\partial f}{\partial x} = 0\)</span> and <span class="math inline">\(\frac{\partial f}{\partial y} = 0\)</span>, yield the extremum. Step 2: To test for second order condition, form the Hessian: <span class="math inline">\(H = \begin{pmatrix} f_{xx} &amp; f_{xy} \\ f_{yx} &amp; f_{yy} \end{pmatrix}\)</span><br />
 A matrix is postive defininte if it’s symmetrical and the determinants of the principal submatrices are positive.<br />
 A matrix is negative defininte if it’s symmetrical and the determinants of the principal submatrices alternate between negative and positive, starting with a negative value for the first principal submatrices.<br />
 H is negative definite -&gt; maximum at the extremum.<br />
-H is positive definite -&gt; minimum at the extremum.</p>
+H is positive definite -&gt; minimum at the extremum.<br />
+If it is neither -&gt; saddle point at the extremum.</p>
+<p><strong>Concavity and Convexity of multivariable function</strong><br />
+Example: <span class="math inline">\(f(x,y) = 2x^2 + y^2\)</span><br />
+Form the Hessian matrix <span class="math inline">\(H = \begin{pmatrix} f_{xx} &amp; f_{xy} \\ f_{yx} &amp; f_{yy} \end{pmatrix}\)</span><br />
+H is negative definite -&gt; maximum at the extremum. -&gt; Convex over the entire Euclidean E2 space.<br />
+H is positive definite -&gt; minimum at the extremum. -&gt; Concave over the enture Euclidean E2 space.</p>
+<p><strong>Lagrangian Function - Economic</strong><br />
+Problem: Maximize <span class="math inline">\(Q = 90N - 2N^2\)</span> s.t.<span class="math inline">\(N \leqslant 20\)</span><br />
+Step 1: Form the Lagrangian function: <span class="math inline">\(L = 90N - 2N^2 +\lambda(20-N)\)</span><br />
+Step 2: Find roots of <span class="math inline">\(\frac{\partial L}{\partial N} = 0\)</span> and <span class="math inline">\(\frac{\partial L}{\partial \lambda} = 0\)</span> Step 3: <span class="math inline">\(\lambda &gt; 0\)</span> means binding constraint, <span class="math inline">\(\lambda &lt; 0\)</span> non binding constraint and does not factor in solution.</p>
+<p><strong>Lagrangian Function - Finance</strong><br />
+Markowitz portfolio Formulate the problem: <span class="math inline">\(min \sigma^2_p = w_1^2\sigma_{11} + w_2^2\sigma_{22} + 2w_1w_2\sigma_{12}\)</span> s.t. <span class="math inline">\(w_1R1 + w_2R_2 \geqslant R_f\)</span><br />
+Step 1: Solve the Lagrangian <span class="math inline">\(L = w_1^2\sigma_{11} + w_2^2\sigma_{22} + 2w_1w_2\sigma_{12} + \lambda(R_f-w_1R_1 - w_2R_2)\)</span><br />
+Step 2: Differentiate L wrt. <span class="math inline">\(w_1\)</span>, <span class="math inline">\(w_2\)</span> and <span class="math inline">\(\lambda\)</span> or use the formula:<br />
+<span class="math display">\[\begin{equation}
+  \begin{aligned}
+    w_1 &amp;= \frac{\sigma_{11}(R_1 - R_f) - \sigma_{12}(R_2-R_f)}{\sigma_{11}\sigma_{22} - \sigma^2_{12}}  \\
+    w_2 &amp;= \frac{\sigma_{11}(R_2 - R_f) - \sigma_{12}(R_1-R_f)}{\sigma_{11}\sigma_{22} - \sigma^2_{12}}  \\
+  \end{aligned}  
+\end{equation}\]</span><br />
+Step 3: Normalize <span class="math inline">\(w_1\)</span>, <span class="math inline">\(w_2\)</span> to find <span class="math inline">\(w_p = \frac{w_1}{w_1+w_2}\)</span><br />
+Step 4: Returns of the tangency portfolio <span class="math inline">\(R_p = R_1w_p + R_2(1 - w_p)\)</span><br />
+Step 5: Risk of the tangency portfolio <span class="math inline">\(\sigma_p = \sqrt{\sigma_{11}w_p^2 + \sigma_{22}(1 - w_p)^2 + 2w_p(1-w_p)\sigma_{12}}\)</span><br />
+Step 6: <span class="math inline">\(Sharpe Ratio = \frac{(R_p - R_f)}{\sigma_p}\)</span><br />
+Step 7: The efficient frontier equation: <span class="math inline">\(Y = R_f + Sharpe*X\)</span><br />
+Step 8: Capital Allocation Line connects the risk-free asset to the tangency point <span class="math inline">\(R = R_f + \lambda\sigma\)</span> with <span class="math inline">\(\sigma=Sharpe\)</span> and <span class="math inline">\(\lambda = \frac{R_p - R_f}{\sigma_p}\)</span></p>
 
 
 
