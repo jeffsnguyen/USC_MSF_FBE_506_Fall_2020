@@ -99,7 +99,6 @@ varOptimum <- t(wOptimum) %*% vcovMatrix %*% wOptimum  # Optimum variance
 sdOptimum <- varOptimum^.5
 stats_portfolioOptimum <- matrix(c(rOptimum, varOptimum, sdOptimum), nrow=3)  # Create a view of the statistics
 dimnames(stats_portfolioOptimum) <- list(c("Returns", "Variance", "Stdev"), "Optimum Portfolio")
-
 ```
 
 The variance-covariance matrix is:  
@@ -217,5 +216,272 @@ Using R, we see the corresponding eigenvectors:
     \begin{pmatrix} -0.4840709 \\ -0.4503380 \\ -0.7502473 \end{pmatrix} \\
     \begin{pmatrix} -0.3863934 \\ -0.6592664 \\ 0.6450333 \end{pmatrix}  \\
     \begin{pmatrix} 0.7850958 \\ -0.6021325 \\ -0.1451241 \end{pmatrix}  \\
+  \end{aligned}
+\end{equation}
+
+# **Question 4**  
+
+Given parameters  
+
+```{r}
+# Mean Returns
+mean_rAsset1 <- .10
+mean_rAsset2 <- .12
+mean_rAsset3 <- .07
+mean_rf <- .05
+
+# Variance of returns
+var_rAsset1 <- .025
+var_rAsset2 <- .030
+var_rAsset3 <- .004
+
+# Standard deviation of returns
+sd_rAsset1 <- sqrt(var_rAsset1)
+sd_rAsset2 <- sqrt(var_rAsset2)
+sd_rAsset3 <- sqrt(var_rAsset3)
+
+# Covariance of Returns
+cov_rAsset1_rAsset2 <- .015
+cov_rAsset1_rAsset3 <- -.002
+cov_rAsset2_rAsset3 <- .005
+```
+
+
+Asset      | Mean Returns      | Variance           | Pair    | Covariance
+---        | ---               | ---                | ---     | ---                      
+Asset 1    | `r mean_rAsset1`  | `r var_rAsset1`    | (1,2)   | `r cov_rAsset1_rAsset2` 
+Asset 2    | `r mean_rAsset2`  | `r var_rAsset2`    | (2,3)   | `r cov_rAsset2_rAsset3` 
+Asset 3    | `r mean_rAsset3`  | `r var_rAsset3`    | (3,1)   | `r cov_rAsset1_rAsset3` 
+Risk Free  | `r mean_rf`       |                    |         | 
+  
+  
+Since the investor's objective is to minimize risk, we solve for the global minimum variance combination of the two assets.  
+Let $x_i$ denotes the weight of the investment in asset i $(i = 1,2,3)$, and assume all money is invested in i, meaning $\sum {x_i} = x_1 + x_2 + x_3 = 1$.
+
+\begin{equation}
+  \begin{aligned}
+    \text {The returns of the portfolio is:} \\
+    R_{p,x} & = x_1 * r_1 + x_2 * r_2 + x_3 * r_3  \\
+    \text {The expected returns on the portfolio is:} \\
+    \mu_{p,x} & = E[R_{p,x}] \\
+              & = x_1 * \mu_1 + x_2 * \mu_2 + x_3 * \mu_3 \\
+    \text {The variance of the portfolio returns is:} \\
+    \sigma_{p,x}^2 & = var(R_{p,x})  \\
+                   & = x_1^2 * \sigma_1^2 + x_2^2 * \sigma_2^2 + x_3^2 * \sigma_3^2 + 2 * x_1 * x_2 * \sigma_{1,2} + 
+                   2 * x_2 * x_3 * \sigma_{2,3} + 2 * x_3 * x_1 * \sigma_{3,1}
+  \end{aligned}
+\end{equation}
+
+Rewrite using matrix notation for simplicity:  
+
+Formulating the Markowitz portfolio problem:  
+
+\begin{equation}
+  \begin{aligned}
+     \text {The investor's objective is:} \\
+     max \mu_p & = w' * \mu \quad \text{s.t.} \\
+     \sigma_p^2 & = w' * (\sum) * w \quad \text{and} \quad w'*I = 1  \\
+     \text {where:} \\
+     w & = \quad \text{matrix of asset weights in the portfolio} \\
+       & = 
+        \begin{pmatrix}
+          w_1 \\
+          w_2 \\
+          w_3 \\
+        \end{pmatrix} \\
+     w' & = \quad \text{transpose matrix of asset weights in the portfolio} \\
+       & = 
+        \begin{pmatrix}
+          w_1 & w_2 & w_3  \\
+        \end{pmatrix} \\
+     \mu & = \quad \text{matrix of mean returns of asset in the portfolio} \\
+         & = 
+          \begin{pmatrix}
+            \mu_1 \\
+            \mu_2 \\
+            \mu_3 \\
+          \end{pmatrix} \\
+     \sum & = \quad \text{Variance-covariance matrix of asset returns in the the portfolio} \\
+          & = 
+            \begin{pmatrix}
+            \sigma_1^2     & \sigma_{1,2}  & \sigma_{3,1} \\
+            \sigma_{1,2}  & \sigma_2^2  &  \sigma_{2,3}  \\
+            \sigma_{3,1}  &  \sigma_{2,3}  & \sigma_{3}^2  \\
+          \end{pmatrix} \\
+      w'*I & = \sum_{i=1}^{n} w_n \quad \text{or the sum weights of the asset in the portfolio, I is notation for identity matrix} \\
+  \end{aligned}
+\end{equation}
+
+Let $\mu_{p,0}$ denotes a target expected return level. Formulate the problem:  
+
+\begin{equation}
+  \begin{aligned}
+     min \sigma_{p,w}^2 & = w' * (\sum) * w  \quad \text{s.t.} \\
+     \mu_p & = w' * \mu = \mu_{p,0}, \quad \text{and} \quad w'*I = 1 \\
+  \end{aligned}
+\end{equation}
+
+To solve this, form the Lagrangian function:
+
+\begin{equation}
+  \begin{aligned}
+    L(w, \lambda_1, \lambda_2) & = w'*\sum*w + \lambda_1*(w'*\mu - \mu_{p,0}) + \lambda_2*({w'*I - 1}) \\
+  \end{aligned}
+\end{equation}
+  
+Because there are two constraints ($w'*\mu = \mu_{p,0}$ and $w'1 = 1$) there are two Langrange multipliers $\lambda_1$ and $\lambda_2$. The first order condition for a minimum are the linear equations:  
+
+\begin{equation}
+  \begin{aligned}
+    \frac{\partial L(w, \lambda_1, \lambda_2)}{\partial w} & = \frac{\partial (\sum * w^2)}{\partial w} + \frac{\partial (\lambda_1*(w'*\mu - \mu_{p,0}))}{\partial w} + \frac{\lambda_2*({w'*I - 1})}{\partial w} = 0  \\
+    \frac{\partial L(w, \lambda_1, \lambda_2)}{\partial \lambda_1} & = 0 \\
+    \frac{\partial L(w, \lambda_1, \lambda_2)}{\partial \lambda_2} & = 0 \\
+  \end{aligned}
+\end{equation}
+
+Simplify, we have:  
+
+\begin{equation}
+  \begin{aligned}
+    \frac{\partial L(w, \lambda_1, \lambda_2)}{\partial w} & = 2*\sum*w + \lambda_1*\mu + \lambda_2*I = 0  \\
+    \frac{\partial L(w, \lambda_1, \lambda_2)}{\partial \lambda_1} & =  w'*\mu - \mu_{p,0} = 0  \\
+    \frac{\partial L(w, \lambda_1, \lambda_2)}{\partial \lambda_2} & =  w'*I - 1 = 0  \\
+  \end{aligned}
+\end{equation}
+
+Rewrite in matrix form:  
+
+\begin{equation}
+  \begin{aligned}
+    \begin{pmatrix}
+            2*\sum    & \mu   & I  \\
+            \mu'      & 0     & 0  \\
+            I'        & 0     & 0  \\
+    \end{pmatrix}
+    *
+    \begin{pmatrix}
+            w   \\
+            \lambda_1     \\
+            \lambda_2       \\
+    \end{pmatrix}
+    & =
+    \begin{pmatrix}
+            0   \\
+            \mu_{p,0}     \\
+            I       \\
+    \end{pmatrix}
+  \end{aligned}
+\end{equation}
+
+or  
+
+\begin{equation}
+  \begin{aligned}
+    A * z_w & = b_0 \\
+    \text{where}\\
+    A & = 
+    \begin{pmatrix}
+            2*\sum    & \mu   & I  \\
+            \mu'      & 0     & 0  \\
+            I'        & 0     & 0  \\
+    \end{pmatrix} \\
+    z_w & = 
+    \begin{pmatrix}
+            w   \\
+            \lambda_1     \\
+            \lambda_2       \\
+    \end{pmatrix} \\
+    b_0 & =
+    \begin{pmatrix}
+            0   \\
+            \mu_{p,0}     \\
+            I       \\
+    \end{pmatrix}
+  \end{aligned}
+\end{equation}
+
+The solution for $z_w$ is:  
+
+\begin{equation}
+  \begin{aligned}
+    z_w & = A^{-1} * b_0
+  \end{aligned}
+\end{equation}  
+
+Data:  
+```{r}
+library(matlib)
+
+assetNames <- c("Asset 1", "Asset 2", "Asset 3")
+returnsVector <- c(mean_rAsset1, mean_rAsset2, mean_rAsset3)
+names(returnsVector) <- assetNames
+
+vcovMatrix <- matrix(c(var_rAsset1, cov_rAsset1_rAsset2, cov_rAsset1_rAsset3,
+                       cov_rAsset1_rAsset2, var_rAsset2, cov_rAsset2_rAsset3,
+                       cov_rAsset1_rAsset3, cov_rAsset2_rAsset3, var_rAsset3),
+                     nrow=3, ncol=3)
+dimnames(vcovMatrix) = list(assetNames, assetNames)
+
+vcovInverse <- inv(vcovMatrix)
+
+vcovMatrix
+vcovInverse
+```
+
+Computations:
+```{r}
+topMatrix <- cbind(2*vcovInverse, rep(1, 3))
+bottomVector <- c(rep(1, 3), 0)
+AmMatrix <- rbind(topMatrix, bottomVector)
+bVector <- c(rep(0, 3), 1)
+zmMatrix <- solve(AmMatrix)%*%bVector
+mVector <- zmMatrix[1:3,1]
+mVector
+```
+
+## a. Find the weights of each asset in the portfolio.  
+
+Thus, the optimum weights of each stocks in the portfolio to satisfy the objective of minimum risk is:  
+
+Asset      | Weight                    | 
+---        | ---                       | 
+Asset A    | `r 0.40000000*100`\%      | 
+Asset B    | `r 0.52631579*100`\%      |   
+Asset C    | `r 0.07368421*100`\%      |   
+
+## b. Find the portfolio’s risk and return at the optimum solution.  
+
+The expected returns on this portfolio is:  
+
+```{r}
+mean_rPortfolio <- as.numeric(crossprod(mVector, returnsVector))
+mean_rPortfolio
+```
+
+The risk or standard deviation of this portfolio is:  
+
+```{r}
+var_rPortfolio <- as.numeric(t(mVector) %*% vcovMatrix %*% mVector)
+sd_rPortfolio <- sqrt(var_rPortfolio)
+sd_rPortfolio
+```
+
+## c. Write the dual to the problem.  
+As above, again:  
+
+Let $\mu_{p,0}$ denotes a target expected return level. Formulate the problem:  
+
+\begin{equation}
+  \begin{aligned}
+     min \sigma_{p,w}^2 & = w' * (\sum) * w  \quad \text{s.t.} \\
+     \mu_p & = w' * \mu = \mu_{p,0}, \quad \text{and} \quad w'*I = 1 \\
+  \end{aligned}
+\end{equation}
+
+To solve this, form the Lagrangian function:
+
+\begin{equation}
+  \begin{aligned}
+    L(w, \lambda_1, \lambda_2) & = w'*\sum*w + \lambda_1*(w'*\mu - \mu_{p,0}) + \lambda_2*({w'*I - 1}) \\
   \end{aligned}
 \end{equation}

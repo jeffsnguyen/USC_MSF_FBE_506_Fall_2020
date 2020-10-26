@@ -594,6 +594,295 @@ ev$values</code></pre>
 \end{equation}\]</span></p>
 </div>
 </div>
+<div id="question-4" class="section level1">
+<h1><strong>Question 4</strong></h1>
+<p>Given parameters</p>
+<pre class="r"><code># Mean Returns
+mean_rAsset1 &lt;- .10
+mean_rAsset2 &lt;- .12
+mean_rAsset3 &lt;- .07
+mean_rf &lt;- .05
+
+# Variance of returns
+var_rAsset1 &lt;- .025
+var_rAsset2 &lt;- .030
+var_rAsset3 &lt;- .004
+
+# Standard deviation of returns
+sd_rAsset1 &lt;- sqrt(var_rAsset1)
+sd_rAsset2 &lt;- sqrt(var_rAsset2)
+sd_rAsset3 &lt;- sqrt(var_rAsset3)
+
+# Covariance of Returns
+cov_rAsset1_rAsset2 &lt;- .015
+cov_rAsset1_rAsset3 &lt;- -.002
+cov_rAsset2_rAsset3 &lt;- .005</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th>Asset</th>
+<th>Mean Returns</th>
+<th>Variance</th>
+<th>Pair</th>
+<th>Covariance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Asset 1</td>
+<td>0.1</td>
+<td>0.025</td>
+<td>(1,2)</td>
+<td>0.015</td>
+</tr>
+<tr class="even">
+<td>Asset 2</td>
+<td>0.12</td>
+<td>0.03</td>
+<td>(2,3)</td>
+<td>0.005</td>
+</tr>
+<tr class="odd">
+<td>Asset 3</td>
+<td>0.07</td>
+<td>0.004</td>
+<td>(3,1)</td>
+<td>-0.002</td>
+</tr>
+<tr class="even">
+<td>Risk Free</td>
+<td>0.05</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Since the investor’s objective is to minimize risk, we solve for the global minimum variance combination of the two assets.<br />
+Let <span class="math inline">\(x_i\)</span> denotes the weight of the investment in asset i <span class="math inline">\((i = 1,2,3)\)</span>, and assume all money is invested in i, meaning <span class="math inline">\(\sum {x_i} = x_1 + x_2 + x_3 = 1\)</span>.</p>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    \text {The returns of the portfolio is:} \\
+    R_{p,x} &amp; = x_1 * r_1 + x_2 * r_2 + x_3 * r_3  \\
+    \text {The expected returns on the portfolio is:} \\
+    \mu_{p,x} &amp; = E[R_{p,x}] \\
+              &amp; = x_1 * \mu_1 + x_2 * \mu_2 + x_3 * \mu_3 \\
+    \text {The variance of the portfolio returns is:} \\
+    \sigma_{p,x}^2 &amp; = var(R_{p,x})  \\
+                   &amp; = x_1^2 * \sigma_1^2 + x_2^2 * \sigma_2^2 + x_3^2 * \sigma_3^2 + 2 * x_1 * x_2 * \sigma_{1,2} + 
+                   2 * x_2 * x_3 * \sigma_{2,3} + 2 * x_3 * x_1 * \sigma_{3,1}
+  \end{aligned}
+\end{equation}\]</span></p>
+<p>Rewrite using matrix notation for simplicity:</p>
+<p>Formulating the Markowitz portfolio problem:</p>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+     \text {The investor&#39;s objective is:} \\
+     max \mu_p &amp; = w&#39; * \mu \quad \text{s.t.} \\
+     \sigma_p^2 &amp; = w&#39; * (\sum) * w \quad \text{and} \quad w&#39;*I = 1  \\
+     \text {where:} \\
+     w &amp; = \quad \text{matrix of asset weights in the portfolio} \\
+       &amp; = 
+        \begin{pmatrix}
+          w_1 \\
+          w_2 \\
+          w_3 \\
+        \end{pmatrix} \\
+     w&#39; &amp; = \quad \text{transpose matrix of asset weights in the portfolio} \\
+       &amp; = 
+        \begin{pmatrix}
+          w_1 &amp; w_2 &amp; w_3  \\
+        \end{pmatrix} \\
+     \mu &amp; = \quad \text{matrix of mean returns of asset in the portfolio} \\
+         &amp; = 
+          \begin{pmatrix}
+            \mu_1 \\
+            \mu_2 \\
+            \mu_3 \\
+          \end{pmatrix} \\
+     \sum &amp; = \quad \text{Variance-covariance matrix of asset returns in the the portfolio} \\
+          &amp; = 
+            \begin{pmatrix}
+            \sigma_1^2     &amp; \sigma_{1,2}  &amp; \sigma_{3,1} \\
+            \sigma_{1,2}  &amp; \sigma_2^2  &amp;  \sigma_{2,3}  \\
+            \sigma_{3,1}  &amp;  \sigma_{2,3}  &amp; \sigma_{3}^2  \\
+          \end{pmatrix} \\
+      w&#39;*I &amp; = \sum_{i=1}^{n} w_n \quad \text{or the sum weights of the asset in the portfolio, I is notation for identity matrix} \\
+  \end{aligned}
+\end{equation}\]</span></p>
+<p>Let <span class="math inline">\(\mu_{p,0}\)</span> denotes a target expected return level. Formulate the problem:</p>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+     min \sigma_{p,w}^2 &amp; = w&#39; * (\sum) * w  \quad \text{s.t.} \\
+     \mu_p &amp; = w&#39; * \mu = \mu_{p,0}, \quad \text{and} \quad w&#39;*I = 1 \\
+  \end{aligned}
+\end{equation}\]</span></p>
+<p>To solve this, form the Lagrangian function:</p>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    L(w, \lambda_1, \lambda_2) &amp; = w&#39;*\sum*w + \lambda_1*(w&#39;*\mu - \mu_{p,0}) + \lambda_2*({w&#39;*I - 1}) \\
+  \end{aligned}
+\end{equation}\]</span></p>
+<p>Because there are two constraints (<span class="math inline">\(w&#39;*\mu = \mu_{p,0}\)</span> and <span class="math inline">\(w&#39;1 = 1\)</span>) there are two Langrange multipliers <span class="math inline">\(\lambda_1\)</span> and <span class="math inline">\(\lambda_2\)</span>. The first order condition for a minimum are the linear equations:</p>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    \frac{\partial L(w, \lambda_1, \lambda_2)}{\partial w} &amp; = \frac{\partial (\sum * w^2)}{\partial w} + \frac{\partial (\lambda_1*(w&#39;*\mu - \mu_{p,0}))}{\partial w} + \frac{\lambda_2*({w&#39;*I - 1})}{\partial w} = 0  \\
+    \frac{\partial L(w, \lambda_1, \lambda_2)}{\partial \lambda_1} &amp; = 0 \\
+    \frac{\partial L(w, \lambda_1, \lambda_2)}{\partial \lambda_2} &amp; = 0 \\
+  \end{aligned}
+\end{equation}\]</span></p>
+<p>Simplify, we have:</p>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    \frac{\partial L(w, \lambda_1, \lambda_2)}{\partial w} &amp; = 2*\sum*w + \lambda_1*\mu + \lambda_2*I = 0  \\
+    \frac{\partial L(w, \lambda_1, \lambda_2)}{\partial \lambda_1} &amp; =  w&#39;*\mu - \mu_{p,0} = 0  \\
+    \frac{\partial L(w, \lambda_1, \lambda_2)}{\partial \lambda_2} &amp; =  w&#39;*I - 1 = 0  \\
+  \end{aligned}
+\end{equation}\]</span></p>
+<p>Rewrite in matrix form:</p>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    \begin{pmatrix}
+            2*\sum    &amp; \mu   &amp; I  \\
+            \mu&#39;      &amp; 0     &amp; 0  \\
+            I&#39;        &amp; 0     &amp; 0  \\
+    \end{pmatrix}
+    *
+    \begin{pmatrix}
+            w   \\
+            \lambda_1     \\
+            \lambda_2       \\
+    \end{pmatrix}
+    &amp; =
+    \begin{pmatrix}
+            0   \\
+            \mu_{p,0}     \\
+            I       \\
+    \end{pmatrix}
+  \end{aligned}
+\end{equation}\]</span></p>
+<p>or</p>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    A * z_w &amp; = b_0 \\
+    \text{where}\\
+    A &amp; = 
+    \begin{pmatrix}
+            2*\sum    &amp; \mu   &amp; I  \\
+            \mu&#39;      &amp; 0     &amp; 0  \\
+            I&#39;        &amp; 0     &amp; 0  \\
+    \end{pmatrix} \\
+    z_w &amp; = 
+    \begin{pmatrix}
+            w   \\
+            \lambda_1     \\
+            \lambda_2       \\
+    \end{pmatrix} \\
+    b_0 &amp; =
+    \begin{pmatrix}
+            0   \\
+            \mu_{p,0}     \\
+            I       \\
+    \end{pmatrix}
+  \end{aligned}
+\end{equation}\]</span></p>
+<p>The solution for <span class="math inline">\(z_w\)</span> is:</p>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    z_w &amp; = A^{-1} * b_0
+  \end{aligned}
+\end{equation}\]</span></p>
+<p>Data:</p>
+<pre class="r"><code>library(matlib)
+
+assetNames &lt;- c(&quot;Asset 1&quot;, &quot;Asset 2&quot;, &quot;Asset 3&quot;)
+returnsVector &lt;- c(mean_rAsset1, mean_rAsset2, mean_rAsset3)
+names(returnsVector) &lt;- assetNames
+
+vcovMatrix &lt;- matrix(c(var_rAsset1, cov_rAsset1_rAsset2, cov_rAsset1_rAsset3,
+                       cov_rAsset1_rAsset2, var_rAsset2, cov_rAsset2_rAsset3,
+                       cov_rAsset1_rAsset3, cov_rAsset2_rAsset3, var_rAsset3),
+                     nrow=3, ncol=3)
+dimnames(vcovMatrix) = list(assetNames, assetNames)
+
+vcovInverse &lt;- inv(vcovMatrix)
+
+vcovMatrix</code></pre>
+<pre><code>##         Asset 1 Asset 2 Asset 3
+## Asset 1   0.025   0.015  -0.002
+## Asset 2   0.015   0.030   0.005
+## Asset 3  -0.002   0.005   0.004</code></pre>
+<pre class="r"><code>vcovInverse</code></pre>
+<pre><code>##                                    
+## [1,]  90.04739  -66.35071  127.9621
+## [2,] -66.35071   90.99526 -146.9194
+## [3,] 127.96209 -146.91943  497.6303</code></pre>
+<p>Computations:</p>
+<pre class="r"><code>topMatrix &lt;- cbind(2*vcovInverse, rep(1, 3))
+bottomVector &lt;- c(rep(1, 3), 0)
+AmMatrix &lt;- rbind(topMatrix, bottomVector)
+bVector &lt;- c(rep(0, 3), 1)
+zmMatrix &lt;- solve(AmMatrix)%*%bVector
+mVector &lt;- zmMatrix[1:3,1]
+mVector</code></pre>
+<pre><code>##                                  
+## 0.40000000 0.52631579 0.07368421</code></pre>
+<div id="a.-find-the-weights-of-each-asset-in-the-portfolio." class="section level2">
+<h2>a. Find the weights of each asset in the portfolio.</h2>
+<p>Thus, the optimum weights of each stocks in the portfolio to satisfy the objective of minimum risk is:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Asset</th>
+<th>Weight</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Asset A</td>
+<td>40%</td>
+</tr>
+<tr class="even">
+<td>Asset B</td>
+<td>52.631579%</td>
+</tr>
+<tr class="odd">
+<td>Asset C</td>
+<td>7.368421%</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="b.-find-the-portfolios-risk-and-return-at-the-optimum-solution." class="section level2">
+<h2>b. Find the portfolio’s risk and return at the optimum solution.</h2>
+<p>The expected returns on this portfolio is:</p>
+<pre class="r"><code>mean_rPortfolio &lt;- as.numeric(crossprod(mVector, returnsVector))
+mean_rPortfolio</code></pre>
+<pre><code>## [1] 0.1083158</code></pre>
+<p>The risk or standard deviation of this portfolio is:</p>
+<pre class="r"><code>var_rPortfolio &lt;- as.numeric(t(mVector) %*% vcovMatrix %*% mVector)
+sd_rPortfolio &lt;- sqrt(var_rPortfolio)
+sd_rPortfolio</code></pre>
+<pre><code>## [1] 0.1375415</code></pre>
+</div>
+<div id="c.-write-the-dual-to-the-problem." class="section level2">
+<h2>c. Write the dual to the problem.</h2>
+<p>As above, again:</p>
+<p>Let <span class="math inline">\(\mu_{p,0}\)</span> denotes a target expected return level. Formulate the problem:</p>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+     min \sigma_{p,w}^2 &amp; = w&#39; * (\sum) * w  \quad \text{s.t.} \\
+     \mu_p &amp; = w&#39; * \mu = \mu_{p,0}, \quad \text{and} \quad w&#39;*I = 1 \\
+  \end{aligned}
+\end{equation}\]</span></p>
+<p>To solve this, form the Lagrangian function:</p>
+<p><span class="math display">\[\begin{equation}
+  \begin{aligned}
+    L(w, \lambda_1, \lambda_2) &amp; = w&#39;*\sum*w + \lambda_1*(w&#39;*\mu - \mu_{p,0}) + \lambda_2*({w&#39;*I - 1}) \\
+  \end{aligned}
+\end{equation}\]</span></p>
+</div>
+</div>
 
 
 
