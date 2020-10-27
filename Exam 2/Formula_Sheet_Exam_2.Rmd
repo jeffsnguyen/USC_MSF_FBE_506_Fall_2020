@@ -78,7 +78,7 @@ Step 1: Solve the Lagrangian $L = w_1^2\sigma_{11} + w_2^2\sigma_{22} + 2w_1w_2\
 Step 2: Differentiate L wrt. $w_1$, $w_2$ and $\lambda$ or use the formula:  
 \begin{equation}
   \begin{aligned}
-    w_1 &= \frac{\sigma_{11}(R_1 - R_f) - \sigma_{12}(R_2-R_f)}{\sigma_{11}\sigma_{22} - \sigma^2_{12}}  \\
+    w_1 &= \frac{\sigma_{22}(R_1 - R_f) - \sigma_{12}(R_2-R_f)}{\sigma_{11}\sigma_{22} - \sigma^2_{12}}  \\
     w_2 &= \frac{\sigma_{11}(R_2 - R_f) - \sigma_{12}(R_1-R_f)}{\sigma_{11}\sigma_{22} - \sigma^2_{12}}  \\
   \end{aligned}  
 \end{equation}  
