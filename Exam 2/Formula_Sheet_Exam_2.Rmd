@@ -9,15 +9,12 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-**Economic**
-\begin{equation}
-  \begin{aligned}
-    \text {Price Elasticity of Demand e } & = \frac{\Delta Q}{\Delta P} \\
-    \text {where  e<1: necessity (inelastic), e>1: luxury, e=1: unit elastic}\\
-    \text {Profit maximizing Q is at MR = MC}\\
-    \text {Profit maximizing Q for perfectly competitive market is is at P = MC}\\
-  \end{aligned}
-\end{equation}
+**Economic**  
+Price Elasticity of Demand $e  = \frac{\Delta Q}{\Delta P}$  
+\quad where  $e<1$: necessity (inelastic), $e>1$: luxury, $e=1$: unit elastic  
+Profit maximizing Q is at $MR = MC$  
+Profit maximizing Q for perfectly competitive market is is at $P = MC$  
+Aggregate Demand and Supply (AD-AS) Model: Set AD = AS, solve for r.
 
 **Ratios**
 \begin{equation}
@@ -74,7 +71,7 @@ Step 1: Form the Lagrangian function: $L = 90N - 2N^2 +\lambda(20-N)$
 Step 2: Find roots of $\frac{\partial L}{\partial N} = 0$ and $\frac{\partial L}{\partial \lambda} = 0$
 Step 3: $\lambda > 0$ means binding constraint, $\lambda < 0$ non binding constraint and does not factor in solution.  
 
-**Lagrangian Function - Finance**  
+**Lagrangian Function - Finance (2 stocks)**  
 Markowitz portfolio
 Formulate the problem: $min \sigma^2_p = w_1^2\sigma_{11} + w_2^2\sigma_{22} + 2w_1w_2\sigma_{12}$ s.t. $w_1R1 + w_2R_2 \geqslant R_f$  
 Step 1: Solve the Lagrangian $L = w_1^2\sigma_{11} + w_2^2\sigma_{22} + 2w_1w_2\sigma_{12} + \lambda(R_f-w_1R_1 - w_2R_2)$  
@@ -91,3 +88,58 @@ Step 5: Risk of the tangency portfolio  $\sigma_p = \sqrt{\sigma_{11}w_p^2 + \si
 Step 6: $Sharpe Ratio = \frac{(R_p - R_f)}{\sigma_p}$  
 Step 7: The efficient frontier equation: $Y = R_f + Sharpe*X$  
 Step 8: Capital Allocation Line connects the risk-free asset to the tangency point $R = R_f + \lambda\sigma$ with $\sigma=Sharpe$ and $\lambda = \frac{R_p - R_f}{\sigma_p}$  
+
+**Lagrangian Function - Finance (3 stocks)**  
+Objective: $min \quad \sigma^2_p = w'\sum w$ s.t. $w'R \geqslant R_f$  
+Note: $w$, $R$ is a column vector.
+Dual to the problem: $max \quad R_p = w'R$ s.t. $w'\sum w \leqslant \sigma$  
+SteP 1: Form the Lagragian function: $L = w'\sum w + \lambda(R_f - w'R)$  
+Step 2: Partially differentiate w.r.t. w to solve for 1st order condition result in the z vector $z = \sum^{-1}*(R-R_f)$  
+Step 3: $\lambda = sum(z)$  
+Step 4: Normalized weights $w_i = \frac{z_i}{\lambda}$  
+Step 5: Portfolio return is: $R_p = \sum w_iR_i$  
+Step 6: Portfolio variance is: $\sigma^2_p = w'\sum w = w_1^2\sigma_{11} + w_2^2\sigma_{22} + w_3^2\sigma_{33} + 2w_1w_2\sigma_{12} + 2w_2w_3\sigma_{23} + 2w_3w_1\sigma_{31}$  
+Step 7: Slop of the Capital Alocation Line:  $slope = \frac{R_p - r_f}{\sqrt{\sigma^2_p}}$  
+Step 8: Formulate CAL: $CAL = r_f + slope*x$  
+Step 9: Tangency point is where the optimum weight is $(\sigma_p, R_p)$  
+  
+
+**Matrix Operations**  
+$A = \begin{pmatrix} a_{11} & a_{12} & a_{13} \\ a_{21} & a_{22} & a_{23} \\ a_{31} & a_{32} & a_{33} \end{pmatrix}$  
+**Matrix Dot Product (Vector Outer product):** Row elements * Column elements  
+**Inverse Matrix:**  
+\quad Step 1:  Find matrix of minor $M = \begin{pmatrix} det(a_{11}) & det(a_{12}) & det(a_{13}) \\ det(a_{21}) & det(a_{22}) & det(a_{23}) \\ det(a_{31}) & det(a_{32}) & det(a_{33}) \end{pmatrix}$  
+\quad Step 2: Apply the signs $\begin{pmatrix} + & - & + \\ - & + & - \\ + & - & + \end{pmatrix}$  
+\quad Step 3: Get matrix of cofactors: $C = \begin{pmatrix} det(a_{11}) & -det(a_{12}) & det(a_{13}) \\ -det(a_{21}) & det(a_{22}) & -det(a_{23}) \\ det(a_{31}) & -det(a_{32}) & det(a_{33}) \end{pmatrix}$  
+\quad Step 4: Find the adjoint matrix $adj(A) = C^T$  
+\quad Step 4: The inverse $A^{-1} = \frac{1}{det(A)}*adj(A)$  
+**Rank of a matrix:** Perform QR decomposition qr(A)$rank  
+**Normalize eigenvectors:** For eigenvectors $\begin{pmatrix} a_1 \\ a_2 \end{pmatrix}$ and $\begin{pmatrix} a_3 \\ a_4 \end{pmatrix}$  
+\quad Step 1: For $\begin{pmatrix} a_1 \\ a_2 \end{pmatrix}$, solve for $a_1$ and $a_2$ pair with the condition $a_1^2 + a_2^2 = 1$, the column vectors form an orthonormal matrix.  
+\quad Step 2: Do the same for $\begin{pmatrix} a_3 \\ a_4 \end{pmatrix}$, the result also forms an orthonormal matrix.  
+**Find diagonalized matrix:** The diagonalized  matrix is $\begin{pmatrix} \lambda_1 & 0 \\ 0 & \lambda_2 \end{pmatrix}$ with $\lambda$ as the eigenvalues.  
+**Quadratic form:** $X'AX$.
+\quad The coefficient matrices of the quadratic form has the form of  
+\begin{equation}
+    \begin{pmatrix} x^2 & xy \\ xy & y^2 \end{pmatrix} \\
+    \begin{pmatrix} x^2 & xy & xz \\ yx & y^2 & yz \\ zx & zy & z^2 \end{pmatrix} \\
+\end{equation}
+
+
+**Matrix/ Vector Types**  
+Orthorgonal Vector: $uv = 0$  
+Othorgonal Matrix: $det(A) \neq 0$ and $A'A = I$  
+Idempotent Matrix: $AA = A$  
+Singular matrix: $det(A) = 0$
+
+**Cramer's Rule**  
+If $Ax = b$ is a system of n linear equations such that $det(A) \neq 0$, then the system has a unique solution:  
+\begin{equation}
+    x_1 = \frac{det(A_1)}{det(A)}  \\
+    ...  \\
+    x_n = \frac{det(A_n)}{det(A)}  \\
+    \text{where A_j is the matrix obtained by replacing the entries in the jth column of A by entries of the matrix}  \\
+    b =  \begin{pmatrix} b_1 \\ b_2 \\ ... \\ b_n \end{pmatrix} \\
+\end{equation}
+
+

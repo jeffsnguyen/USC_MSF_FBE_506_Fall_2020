@@ -369,14 +369,12 @@ summary {
 </div>
 
 
-<p><strong>Economic</strong> <span class="math display">\[\begin{equation}
-  \begin{aligned}
-    \text {Price Elasticity of Demand e } &amp; = \frac{\Delta Q}{\Delta P} \\
-    \text {where  e&lt;1: necessity (inelastic), e&gt;1: luxury, e=1: unit elastic}\\
-    \text {Profit maximizing Q is at MR = MC}\\
-    \text {Profit maximizing Q for perfectly competitive market is is at P = MC}\\
-  \end{aligned}
-\end{equation}\]</span></p>
+<p><strong>Economic</strong><br />
+Price Elasticity of Demand <span class="math inline">\(e = \frac{\Delta Q}{\Delta P}\)</span><br />
+where <span class="math inline">\(e&lt;1\)</span>: necessity (inelastic), <span class="math inline">\(e&gt;1\)</span>: luxury, <span class="math inline">\(e=1\)</span>: unit elastic<br />
+Profit maximizing Q is at <span class="math inline">\(MR = MC\)</span><br />
+Profit maximizing Q for perfectly competitive market is is at <span class="math inline">\(P = MC\)</span><br />
+Aggregate Demand and Supply (AD-AS) Model: Set AD = AS, solve for r.</p>
 <p><strong>Ratios</strong> <span class="math display">\[\begin{equation}
   \begin{aligned}
     \text{Semi-Variance} SV(x) &amp; = (\sigma_{semi})^2 = \frac{\sum min((R_t - \overline R), 0)^2}{T} \\
@@ -422,7 +420,7 @@ H is positive definite -&gt; minimum at the extremum. -&gt; Concave over the ent
 Problem: Maximize <span class="math inline">\(Q = 90N - 2N^2\)</span> s.t.<span class="math inline">\(N \leqslant 20\)</span><br />
 Step 1: Form the Lagrangian function: <span class="math inline">\(L = 90N - 2N^2 +\lambda(20-N)\)</span><br />
 Step 2: Find roots of <span class="math inline">\(\frac{\partial L}{\partial N} = 0\)</span> and <span class="math inline">\(\frac{\partial L}{\partial \lambda} = 0\)</span> Step 3: <span class="math inline">\(\lambda &gt; 0\)</span> means binding constraint, <span class="math inline">\(\lambda &lt; 0\)</span> non binding constraint and does not factor in solution.</p>
-<p><strong>Lagrangian Function - Finance</strong><br />
+<p><strong>Lagrangian Function - Finance (2 stocks)</strong><br />
 Markowitz portfolio Formulate the problem: <span class="math inline">\(min \sigma^2_p = w_1^2\sigma_{11} + w_2^2\sigma_{22} + 2w_1w_2\sigma_{12}\)</span> s.t. <span class="math inline">\(w_1R1 + w_2R_2 \geqslant R_f\)</span><br />
 Step 1: Solve the Lagrangian <span class="math inline">\(L = w_1^2\sigma_{11} + w_2^2\sigma_{22} + 2w_1w_2\sigma_{12} + \lambda(R_f-w_1R_1 - w_2R_2)\)</span><br />
 Step 2: Differentiate L wrt. <span class="math inline">\(w_1\)</span>, <span class="math inline">\(w_2\)</span> and <span class="math inline">\(\lambda\)</span> or use the formula:<br />
@@ -438,6 +436,51 @@ Step 5: Risk of the tangency portfolio <span class="math inline">\(\sigma_p = \s
 Step 6: <span class="math inline">\(Sharpe Ratio = \frac{(R_p - R_f)}{\sigma_p}\)</span><br />
 Step 7: The efficient frontier equation: <span class="math inline">\(Y = R_f + Sharpe*X\)</span><br />
 Step 8: Capital Allocation Line connects the risk-free asset to the tangency point <span class="math inline">\(R = R_f + \lambda\sigma\)</span> with <span class="math inline">\(\sigma=Sharpe\)</span> and <span class="math inline">\(\lambda = \frac{R_p - R_f}{\sigma_p}\)</span></p>
+<p><strong>Lagrangian Function - Finance (3 stocks)</strong><br />
+Objective: <span class="math inline">\(min \quad \sigma^2_p = w&#39;\sum w\)</span> s.t. <span class="math inline">\(w&#39;R \geqslant R_f\)</span><br />
+Note: <span class="math inline">\(w\)</span>, <span class="math inline">\(R\)</span> is a column vector. Dual to the problem: <span class="math inline">\(max \quad R_p = w&#39;R\)</span> s.t. <span class="math inline">\(w&#39;\sum w \leqslant \sigma\)</span><br />
+SteP 1: Form the Lagragian function: <span class="math inline">\(L = w&#39;\sum w + \lambda(R_f - w&#39;R)\)</span><br />
+Step 2: Partially differentiate w.r.t. w to solve for 1st order condition result in the z vector <span class="math inline">\(z = \sum^{-1}*(R-R_f)\)</span><br />
+Step 3: <span class="math inline">\(\lambda = sum(z)\)</span><br />
+Step 4: Normalized weights <span class="math inline">\(w_i = \frac{z_i}{\lambda}\)</span><br />
+Step 5: Portfolio return is: <span class="math inline">\(R_p = \sum w_iR_i\)</span><br />
+Step 6: Portfolio variance is: <span class="math inline">\(\sigma^2_p = w&#39;\sum w = w_1^2\sigma_{11} + w_2^2\sigma_{22} + w_3^2\sigma_{33} + 2w_1w_2\sigma_{12} + 2w_2w_3\sigma_{23} + 2w_3w_1\sigma_{31}\)</span><br />
+Step 7: Slop of the Capital Alocation Line: <span class="math inline">\(slope = \frac{R_p - r_f}{\sqrt{\sigma^2_p}}\)</span><br />
+Step 8: Formulate CAL: <span class="math inline">\(CAL = r_f + slope*x\)</span><br />
+Step 9: Tangency point is where the optimum weight is <span class="math inline">\((\sigma_p, R_p)\)</span></p>
+<p><strong>Matrix Operations</strong><br />
+<span class="math inline">\(A = \begin{pmatrix} a_{11} &amp; a_{12} &amp; a_{13} \\ a_{21} &amp; a_{22} &amp; a_{23} \\ a_{31} &amp; a_{32} &amp; a_{33} \end{pmatrix}\)</span><br />
+<strong>Matrix Dot Product (Vector Outer product):</strong> Row elements * Column elements<br />
+<strong>Inverse Matrix:</strong><br />
+Step 1: Find matrix of minor <span class="math inline">\(M = \begin{pmatrix} det(a_{11}) &amp; det(a_{12}) &amp; det(a_{13}) \\ det(a_{21}) &amp; det(a_{22}) &amp; det(a_{23}) \\ det(a_{31}) &amp; det(a_{32}) &amp; det(a_{33}) \end{pmatrix}\)</span><br />
+Step 2: Apply the signs <span class="math inline">\(\begin{pmatrix} + &amp; - &amp; + \\ - &amp; + &amp; - \\ + &amp; - &amp; + \end{pmatrix}\)</span><br />
+Step 3: Get matrix of cofactors: <span class="math inline">\(C = \begin{pmatrix} det(a_{11}) &amp; -det(a_{12}) &amp; det(a_{13}) \\ -det(a_{21}) &amp; det(a_{22}) &amp; -det(a_{23}) \\ det(a_{31}) &amp; -det(a_{32}) &amp; det(a_{33}) \end{pmatrix}\)</span><br />
+Step 4: Find the adjoint matrix <span class="math inline">\(adj(A) = C^T\)</span><br />
+Step 4: The inverse <span class="math inline">\(A^{-1} = \frac{1}{det(A)}*adj(A)\)</span><br />
+<strong>Rank of a matrix:</strong> Perform QR decomposition qr(A)$rank<br />
+<strong>Normalize eigenvectors:</strong> For eigenvectors <span class="math inline">\(\begin{pmatrix} a_1 \\ a_2 \end{pmatrix}\)</span> and <span class="math inline">\(\begin{pmatrix} a_3 \\ a_4 \end{pmatrix}\)</span><br />
+Step 1: For <span class="math inline">\(\begin{pmatrix} a_1 \\ a_2 \end{pmatrix}\)</span>, solve for <span class="math inline">\(a_1\)</span> and <span class="math inline">\(a_2\)</span> pair with the condition <span class="math inline">\(a_1^2 + a_2^2 = 1\)</span>, the column vectors form an orthonormal matrix.<br />
+Step 2: Do the same for <span class="math inline">\(\begin{pmatrix} a_3 \\ a_4 \end{pmatrix}\)</span>, the result also forms an orthonormal matrix.<br />
+<strong>Find diagonalized matrix:</strong> The diagonalized matrix is <span class="math inline">\(\begin{pmatrix} \lambda_1 &amp; 0 \\ 0 &amp; \lambda_2 \end{pmatrix}\)</span> with <span class="math inline">\(\lambda\)</span> as the eigenvalues.<br />
+<strong>Quadratic form:</strong> <span class="math inline">\(X&#39;AX\)</span>. The coefficient matrices of the quadratic form has the form of<br />
+<span class="math display">\[\begin{equation}
+    \begin{pmatrix} x^2 &amp; xy \\ xy &amp; y^2 \end{pmatrix} \\
+    \begin{pmatrix} x^2 &amp; xy &amp; xz \\ yx &amp; y^2 &amp; yz \\ zx &amp; zy &amp; z^2 \end{pmatrix} \\
+\end{equation}\]</span></p>
+<p><strong>Matrix/ Vector Types</strong><br />
+Orthorgonal Vector: <span class="math inline">\(uv = 0\)</span><br />
+Othorgonal Matrix: <span class="math inline">\(det(A) \neq 0\)</span> and <span class="math inline">\(A&#39;A = I\)</span><br />
+Idempotent Matrix: <span class="math inline">\(AA = A\)</span><br />
+Singular matrix: <span class="math inline">\(det(A) = 0\)</span></p>
+<p><strong>Cramer’s Rule</strong><br />
+If <span class="math inline">\(Ax = b\)</span> is a system of n linear equations such that <span class="math inline">\(det(A) \neq 0\)</span>, then the system has a unique solution:<br />
+<span class="math display">\[\begin{equation}
+    x_1 = \frac{det(A_1)}{det(A)}  \\
+    ...  \\
+    x_n = \frac{det(A_n)}{det(A)}  \\
+    \text{where A_j is the matrix obtained by replacing the entries in the jth column of A by entries of the matrix}  \\
+    b =  \begin{pmatrix} b_1 \\ b_2 \\ ... \\ b_n \end{pmatrix} \\
+\end{equation}\]</span></p>
 
 
 
