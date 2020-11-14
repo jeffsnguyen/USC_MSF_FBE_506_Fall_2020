@@ -3,10 +3,10 @@ title: "assignment05"
 author: "Jeff Nguyen"
 date: "18/09/2020"
 output:
-  pdf_document: default
-  word_document: default
   html_document:
     code_folding: "hide"
+  word_document: default
+  pdf_document: default
 ---
 ```{r include = FALSE}
 #knitr::opts_chunk$set(echo=FALSE)
@@ -549,7 +549,7 @@ Y <- na.omit(ra - rTNX1)
 names(Y)[1] <- "Portfolio Risk Premium"  # Rename column
 Y_bar <- mean(Y)
 Y_bar
-  
+
 X <- na.omit(rGSPC1 - rTNX1)
 mean_X <- mean(X)
 
@@ -562,21 +562,21 @@ plot(data1, col='red', main="Relationship Between Market & Portfolio Risk Premiu
 abline(lm(Y~X), col="blue")  # Regression line Y ~ X
 lines(lowess(X,Y), col="black", lty=2)  # Lowess line (X,Y)
 
-legend("bottomright",c("Linear fit line", "Lowess line"), cex=.8, col=c("blue", "black"), lty=1:2)
+legend("bottomleft",c("Linear fit line", "Lowess line"), cex=.8, col=c("blue", "black"), lty=1:2)
 ```
   
-Through inspection, we observe a non linear relationship between the Market Portfolio Risk Premium (the independent $X$ variable on the x-axis) and the CAPM Portfolio Risk Premium (the dependent $Y$ variable on the y-axis).  
+Through inspection, we observe the cluster observation scattering in a big range from left to right. This implies a weak linear relationship between the Market Portfolio Risk Premium (the independent $X$ variable on the x-axis) and the CAPM Portfolio Risk Premium (the dependent $Y$ variable on the y-axis).  
 
-Therefore, we fit an equation of a line $Y = \alpha_{Jensen} + \beta * X$  
+Next, we attempts to fit an equation of a line: $Y = \alpha_{Jensen} + \beta * X + \epsilon$  
 
 ```{r}
 fit1 <- lm(Y~X, data=data1)
 summary(fit1)
 ```
    
-The estimated equation is $Y = 0.04050 - 0.34504*X$, where the $p_{value}$ for the intercept $.0308 < .05$.  
-Therefore, we reject the null hypothesis at 95% confidence level that the intercept $\alpha_{Jensen}$ statistically is no different from zero.  
-The coefficient $\beta = 1.07468$ represents the increase in portfolio risk premium relative to increase in the market portfolio risk premium. The $p_{value}$ for $\beta$ is $0.2544 > .05$, implying that the coefficient $\beta$ statistically is significant at 95% or more, and we accept the null hypothesis.  
+The estimated equation is $Y = .04050 - .34504*X$, where the $p_{value}$ for the intercept $.0308 < .05$.  
+Therefore, we reject the null hypothesis at 95% confidence level that the intercept $\alpha_{Jensen}$ statistically is no different from zero. Thus, we reject the null hypothesis $H_0: \alpha = 0$ and accept the null hypothesis $H_a: \alpha \neq 0$.    
+The coefficient $\beta = 1.07468$ represents the increase in portfolio risk premium relative to increase in the market portfolio risk premium. The $p_{value}$ for $\beta$ is $.2544 > .05$, implying that the coefficient $\beta$ statistically is insignificant at 95% or more, and we accept the null hypothesis $H_0: \beta = 0$ and reject the alternative hypothesis $H_a: \beta \neq 0$.  
 
 Goodness of Fit:  
 Through inspection, we observe the $R^2 = .07151$ value to not be close to 1 at all. $R^2 = .07151$ implies that $7.15%$ of the variations in the portfolio risk premium is explained by the market risk premium.
@@ -592,6 +592,8 @@ From this, we can calculate the forecasting efficiency statistic to be:
 \end{equation}
 This statistic implies that this is not a good forecasting model.  
 
+Thus, upon exploring the goodness of fit and standard error of regression, we confirm our initial observation that the portfolio risk premium and the market portfolio risk premium has a weak linear relationship.  
+
 The Security Market Line:  
 
 ```{r}
@@ -599,10 +601,10 @@ The Security Market Line:
 slope_SML <- (mean_X - mean_rTNX1) / (1-0)
 #slope_SML
 SML <- function(beta) mean_rTNX1 + slope_SML * beta
-SML
+
 # Plot the SML
 beta <- seq(-.5, 1.5)
-plot(beta, mean_rTNX1 + slope_SML * beta, col="red", type="l", main="CAPM portfolio beta relative to the Security Market Line", xlab="beta", ylab="Returns", ylim=c(-.01, .04))
+plot(beta, SML(beta), col="red", type="l", main="CAPM portfolio beta relative to the Security Market Line", xlab="beta", ylab="Returns", ylim=c(-.01, .04))
 
 # Plot the expected returns
 points(-.34504, -.34504*mean_X, col="blue", pch=16)
@@ -622,12 +624,160 @@ Question covered: 6).
 
 Methodology: Test whether the closing of the economy due to COVID-19 had any effect on Jensen alpha and the market risk of the CAPM model. (6)  
 
+We run regression for the model to see if the pandemic has any effect on Jensen alpha:    
 
+\begin{equation}
+  \begin{aligned}
+    Y & = \alpha_{Jensen} + \beta*X + \beta_1*D + \epsilon \\
+    \text{where: }  \\
+    Y & = \, \text{Portfolio Risk Premium} \, R_a - R_f  \\
+    \beta & = \, \text{Estimated} \, \beta \, \text{of the CAPM}  \\
+    X & = \, \text{Market portfolio risk premium} \, R_m - R_f  \\
+    \beta_1 & = \, \text{Coefficient representing the relationship of the portfolio risk premium with the pandemic factor}  \\
+    D & = \, \text{Dummy variable representing the pandemic factor}  \\
+    \epsilon & = \, \text{Standard Error of Regression}  \\
+  \end{aligned}
+\end{equation}
+
+Hypothesis for regression:  
+\begin{equation}
+  \begin{aligned}
+    H_0: \alpha & = 0  \\
+    H_a: \alpha & \neq 0  \\
+    \text{and}  \\
+    H_0: \beta_1 & = 0  \\
+    H_a: \beta_1 & \neq 0  \\
+  \end{aligned}
+\end{equation}  
+
+We examine the potential relationship between the pandemic variable and the portfolio risk premium by plotting a scatter plot as follow:  
+```{r}
+# Generating the dummy variable
+D <- rep(0, 20)
+D[15] <-1
+D
+
+data2 <- data.frame(D, Y)
+names(data2)[1] <- "Pandemic Variable"
+
+plot(data2, col='red', main="Relationship Between Pandemic & Portfolio Risk Premium", pch=20, cex=1)
+
+# Add fit lines
+#abline(lm(Y~D), col="blue")  # Regression line Y ~ X
+#lines(lowess(D,Y), col="black", lty=2)  # Lowess line (X,Y)
+
+#legend("bottomleft",c("Linear fit line", "Lowess line"), cex=.8, col=c("blue", "black"), lty=1:2)
+```
+  
+Through inspection, we can see there is not much of a linear relationship between these variables.  
+
+Let's assume linearity, we run regression on $Y = \alpha_{Jensen} + \beta*X + \beta_1*D$ as hypothesized above.  
+
+```{r}
+fit2 <- lm(Y~X+D)
+summary(fit2)
+```
+
+The estimated equation is $Y = .05447 - .72150*X - .16285*D$, where the $p_{value}$ for the intercept $.00778 < .05$.  
+Therefore, we reject the null hypothesis at 95% confidence level that the intercept $\alpha_{Jensen}$ statistically is no different from zero. Thus, we reject the null hypothesis $H_0: \alpha = 0$ and accept the null hypothesis $H_a: \alpha \neq 0$.  
+In addition, the coefficient $\beta_1 = -.16285$ represents the increase in portfolio risk premium relative to increase in the pandemic variable. The $p_{value}$ for $\beta_1$ is $.08979 > .05$, implying that the coefficient $\beta_1$ statistically is insignificant at 95% or more, and we accept the null hypothesis $H_0: \beta_1 = 0$ and reject the alternative hypothesis $H_a: \beta_1 \neq 0$.  
+
+Goodness of Fit:  
+Through inspection, we observe the $R^2 = .22$ value to not be close to 1 at all. $R^2 = .22$ implies that $22%$ of the variations in the portfolio risk premium is explained by the pandemic variable.
+  
+Standard Error of Regression:  
+We can see that the Standard Error of Regression is $S.E. = .07034$.  
+From this, we can calculate the forecasting efficiency statistic to be:  
+\begin{equation}
+  \begin{aligned}
+    \frac{S.E.}{\overline Y} & = \frac{.07034}{`r Y_bar`}   \\
+                             & = `r round(.07034*100/Y_bar,2)`\% > 10\%  \\
+  \end{aligned}
+\end{equation}
+This statistic implies that this is not a good forecasting model.  
+
+Now, we want to explore the affect of the pandemic lockdowns on market risk. Thus, we want to explore the following regression model:  
+
+\begin{equation}
+  \begin{aligned}
+    Y & = \alpha_{Jensen} + \beta*X + \beta_2*D*X +\epsilon \\
+    \text{where: }  \\
+    Y & = \, \text{Portfolio Risk Premium} \, R_a - R_f  \\
+    \beta & = \, \text{Estimated} \, \beta \, \text{of the CAPM}  \\
+    X & = \, \text{Market portfolio risk premium} \, R_m - R_f  \\
+    \beta_2 & = \, \text{Coefficient representing the relationship of the portfolio risk premium with the pandemic factor}  \\
+    D & = \, \text{Dummy variable representing the pandemic factor}  \\
+    \epsilon & = \, \text{Standard Error of Regression}  \\
+  \end{aligned}
+\end{equation}
+  
+Hypothesis for regression:  
+\begin{equation}
+  \begin{aligned}
+    H_0: \alpha & = 0  \\
+    H_a: \alpha & \neq 0  \\
+    \text{and}  \\
+    H_0: \beta_2 & = 0  \\
+    H_a: \beta_2 & \neq 0  \\
+  \end{aligned}
+\end{equation}  
+
+```{r}
+# Generate the new variable dx = D*X
+DX <- D*X
+fit3 <- lm(Y~X+DX)
+summary(fit3)
+```
+  
+The estimated equation is $Y = .05447 - .72150*X + 1.21306*D*X$  
+
+We see $\beta_2 = 1.21306$ represents the increase in portfolio risk premium relative to increase in the pandemic variable. The $p_{value}$ for $\beta_1$ is $.08979 > .05$, implying that the coefficient $\beta_1$ statistically is insignificant at 95% or more, and we accept the null hypothesis $H_0: \beta_1 = 0$ and reject the alternative hypothesis $H_a: \beta_1 \neq 0$.  
+
+Goodness of Fit:  
+Through inspection, we observe the $R^2 = .22$ value to not be close to 1 at all. $R^2 = .22$ implies that $22%$ of the variations in the portfolio risk premium is explained by the pandemic variable.
+  
+Standard Error of Regression:  
+We can see that the Standard Error of Regression is $S.E. = .07034$.  
+From this, we can calculate the forecasting efficiency statistic to be:  
+\begin{equation}
+  \begin{aligned}
+    \frac{S.E.}{\overline Y} & = \frac{.07034}{`r Y_bar`}   \\
+                             & = `r round(.07034*100/Y_bar,2)`\% > 10\%  \\
+  \end{aligned}
+\end{equation}
+This statistic implies that this is not a good forecasting model.  
+
+To visualize:  
+
+```{r}
+# Generating the dummy variable
+data3 <- data.frame(DX, Y)
+data3
+
+plot(data3, col='red', main="Relationship Between Pandemic & Portfolio Risk Premium", pch=20, cex=1)
+
+# Add fit lines
+#abline(lm(Y~D), col="blue")  # Regression line Y ~ X
+#lines(lowess(D,Y), col="black", lty=2)  # Lowess line (X,Y)
+
+#legend("bottomleft",c("Linear fit line", "Lowess line"), cex=.8, col=c("blue", "black"), lty=1:2)
+```
+    
 ## 3) Compare the CAPM portfolio to a diversified State Street's SPDR S&P 500 Trust ETF portfolio (7,8,9)  
 Methodology:  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 7) Calculate CV, Sharpe, Treynor, and Sortino ratios for your portfolio and compare them to a similarly diversified portfolio of Vanguard, Fidelity, or any other similar portfolio.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 8) Calculate 2% and 3% VaRs as a percentage of the mean return of your portfolio when the risk horizon is one year, six months, and one month. Calculate the same VaRs for the selected portfolio in item 6. Compare the VaRs of your portfolio to the ones of the market portfolios.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 9) Graph the scatter diagram of your portfolio and comment on trends, outliers, structural breaks and any other special features. Graph the scatter diagram of your portfolio and S&P 500 on the same coordinate system and compare the trends.  
+
+### 7) Calculate CV, Sharpe, Treynor, and Sortino ratios for your portfolio and compare them to a similarly diversified portfolio of Vanguard, Fidelity, or any other similar portfolio.
+
+```{r}
+# Create Optimal Stats Table
+PTBL <- matrix(c(ROPT, VOPT, SDOPT, SRatio), nrow = 4)  # create a matrix of return, variance, std dev, Sharpe
+optstat.names <- c("Return", "Variance", "Std Dev", "Sharpe")  # labels for PTBL matrix
+
+dimnames(PTBL) <- list(optstat.names, "Opt. Portfolio")  # label the optimal portfolio matrix values
+```
 
 ## 4) Forecast the returns of the portfolio CATsed on the CAPM model (10,11,12)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 10) Using the CAPM equation of your portfolio do two periods ex-post forecasting of the returns to your portfolio and compare your forecast to the actual returns. Find the accuracy statistics of your forecast and report them.  
