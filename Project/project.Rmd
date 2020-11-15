@@ -57,7 +57,7 @@ library(quantmod)
 start_date <- "2014-01-01"
 end_date <- "2018-12-31"
 
-# Get data for JPM, FB and the 10 year T-bill (TNX)
+# Get data
 getSymbols("MSFT", src = "yahoo", from = start_date, to = end_date)
 getSymbols("GWPH", src = "yahoo", , from = start_date, to = end_date)
 getSymbols("DIS", src = "yahoo", , from = start_date, to = end_date)
@@ -106,29 +106,29 @@ reCAT <- rCAT - rTNX
 reAMZN <- rAMZN - rTNX
 
 # Information Tables:
-pricTab1 <- data.frame(MSFT, GWPH, DIS, CAT, AMZN)
+pricTabl <- data.frame(MSFT, GWPH, DIS, CAT, AMZN)
 
 # Creates data frame of asset prices
-retTab1 <- data.frame(rMSFT, rGWPH, rDIS, rCAT, rAMZN)
+retTabl <- data.frame(rMSFT, rGWPH, rDIS, rCAT, rAMZN)
 
 # Creates data frame of returns
-EretTab1 <- data.frame(reMSFT, reGWPH, reDIS, reCAT, reAMZN) 
+EretTabl <- data.frame(reMSFT, reGWPH, reDIS, reCAT, reAMZN) 
 
 # Excess return data frame
-retTab1 <- retTab1[-1,]  # remove missing data due to lagging
-EretTab1 <- EretTab1[-1,]  # remove missing data due to lagging
-priceMat1 <- matrix(c(MSFT, GWPH, DIS, CAT, AMZN), nrow= length(MSFT), ncol=5, byrow=TRUE)  # creates a matrix of prices
+retTabl <- retTabl[-1,]  # remove missing data due to lagging
+EretTabl <- EretTabl[-1,]  # remove missing data due to lagging
+priceMat <- matrix(c(MSFT, GWPH, DIS, CAT, AMZN), nrow= length(MSFT), ncol=5, byrow=TRUE)  # creates a matrix of prices
 
 # Variance/Covariance Matrix
 asset.names <- c("MSFT", "GWPH", "DIS", "CAT", "AMZN")
 
 # Create a list of row and col names for the var/cov matrix
-VCV <- matrix(c(cov(retTab1)), nrow=5, ncol = 5, byrow=TRUE) # create a var/cov matrix by finding cov of the assets in retTab2
+VCV <- matrix(c(cov(retTabl)), nrow=5, ncol = 5, byrow=TRUE) # create a var/cov matrix by finding cov of the assets in retTab2
 dimnames(VCV) <- list(asset.names, asset.names)  # assigns asset.names to the VCV matrix
 
 #Calculate Returns
-rm <- matrix(colMeans(retTab1, na.rm=TRUE))  # creates an average return matrix, omitting missing values
-erm <- matrix(colMeans(EretTab1, na.rm=TRUE))  # creates an average excess return matrix, omitting missing values
+rm <- matrix(colMeans(retTabl, na.rm=TRUE))  # creates an average return matrix, omitting missing values
+erm <- matrix(colMeans(EretTabl, na.rm=TRUE))  # creates an average excess return matrix, omitting missing values
 tnxy = mean((rTNX)[-1,])  # calculates the average bond yield excluding Jan (risk free rate)
 
 #Create Return Table
@@ -190,7 +190,7 @@ hist(adjAMZN,
   
 ## CAPM Portfolio Construction   
 Question covered: 2,3,4,5  
-Methodology:  
+**Methodology**  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2a) Find the optimum weights using MPT.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2b) Allocate $100.00 among the selected stocks using adjusted closing prices at 2018M12. 2019M1 will have a value of 100 as an index.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2c) Using the adjusted closing prices from 2018M12 to 2020M8 calculate the holding values of the portfolio (assume fixed holdings with no re-balancing taking place over time).  
@@ -370,7 +370,7 @@ PTBL
 start_date1 <- "2018-12-01"
 end_date1 <- "2020-08-31"
 
-# Get data for JPM, FB and the 10 year T-bill (TNX)
+# Get data
 getSymbols("MSFT", src = "yahoo", from = start_date1, to = end_date1)
 getSymbols("GWPH", src = "yahoo", , from = start_date1, to = end_date1)
 getSymbols("DIS", src = "yahoo", , from = start_date1, to = end_date1)
@@ -379,6 +379,11 @@ getSymbols("AMZN", src = "yahoo", , from = start_date1, to = end_date1)
 getSymbols("^GSPC", src = "yahoo", , from = start_date1, to = end_date1) # S&P 500
 getSymbols("^TNX", src = "yahoo", from=start_date1, to=end_date1) # TNX (10-year T-bill)
 
+rMSFT1 <- diff(log(to.monthly(MSFT)$MSFT.Adjusted))
+rGWPH1 <- diff(log(to.monthly(GWPH)$GWPH.Adjusted))
+rDIS1 <- diff(log(to.monthly(DIS)$DIS.Adjusted))
+rCAT1 <- diff(log(to.monthly(CAT)$CAT.Adjusted))
+rAMZN1 <- diff(log(to.monthly(AMZN)$AMZN.Adjusted))
 rGSPC1 <- diff(log(to.monthly(GSPC)$GSPC.Adjusted))
 rTNX1 <- to.monthly(TNX)$TNX.Adjusted /1200  # Using monthly rate
 rTNX1 <- rTNX1[-1,]  # remove missing data due to lagging
@@ -622,7 +627,7 @@ Relative to its market risk of $beta = -.34504$, the expected return is $`r -.34
 ## 2) Understand the impact of COVID-19 on the alpha and market risk of the CAPM model.  
 Question covered: 6).  
 
-Methodology: Test whether the closing of the economy due to COVID-19 had any effect on Jensen alpha and the market risk of the CAPM model. (6)  
+**Methodology** Test whether the closing of the economy due to COVID-19 had any effect on Jensen alpha and the market risk of the CAPM model. (6)  
 
 We run regression for the model to see if the pandemic has any effect on Jensen alpha:    
 
@@ -700,14 +705,16 @@ Now, we want to explore the affect of the pandemic lockdowns on market risk. Thu
 
 \begin{equation}
   \begin{aligned}
-    Y & = \alpha_{Jensen} + \beta*X + \beta_2*D*X +\epsilon \\
+    Y & = \alpha_{Jensen} + \beta*X + \beta_1*D + \beta_2*D*X +\epsilon_1 \\
     \text{where: }  \\
     Y & = \, \text{Portfolio Risk Premium} \, R_a - R_f  \\
     \beta & = \, \text{Estimated} \, \beta \, \text{of the CAPM}  \\
     X & = \, \text{Market portfolio risk premium} \, R_m - R_f  \\
-    \beta_2 & = \, \text{Coefficient representing the relationship of the portfolio risk premium with the pandemic factor}  \\
+    \beta_1 & = \, \text{Coefficient representing the relationship of the portfolio risk premium with the pandemic factor}  \\
     D & = \, \text{Dummy variable representing the pandemic factor}  \\
-    \epsilon & = \, \text{Standard Error of Regression}  \\
+    \beta_2 & = \, \text{Coefficient representing the relationship of the market risk premium with the pandemic factor}  \\
+    D*X & = \, \text{Slope dummy variable representing the pandemic factor correlation with market risk premium}  \\
+    \epsilon_1 & = \, \text{Standard Error of Regression}  \\
   \end{aligned}
 \end{equation}
   
@@ -725,13 +732,13 @@ Hypothesis for regression:
 ```{r}
 # Generate the new variable dx = D*X
 DX <- D*X
-fit3 <- lm(Y~X+DX)
+fit3 <- lm(Y~X+D+DX)
 summary(fit3)
 ```
   
-The estimated equation is $Y = .05447 - .72150*X + 1.21306*D*X$  
+The estimated equation is $Y = .05447 - .72150*X - .16285*D*X$  
 
-We see $\beta_2 = 1.21306$ represents the increase in portfolio risk premium relative to increase in the pandemic variable. The $p_{value}$ for $\beta_1$ is $.08979 > .05$, implying that the coefficient $\beta_1$ statistically is insignificant at 95% or more, and we accept the null hypothesis $H_0: \beta_1 = 0$ and reject the alternative hypothesis $H_a: \beta_1 \neq 0$.  
+We see $\beta_2 = NA$ implying that the slope dummy is an unnecessary predictor. The coefficient $\beta_2$ is not estimated.  
 
 Goodness of Fit:  
 Through inspection, we observe the $R^2 = .22$ value to not be close to 1 at all. $R^2 = .22$ implies that $22%$ of the variations in the portfolio risk premium is explained by the pandemic variable.
@@ -752,7 +759,6 @@ To visualize:
 ```{r}
 # Generating the dummy variable
 data3 <- data.frame(DX, Y)
-data3
 
 plot(data3, col='red', main="Relationship Between Pandemic & Portfolio Risk Premium", pch=20, cex=1)
 
@@ -764,7 +770,9 @@ plot(data3, col='red', main="Relationship Between Pandemic & Portfolio Risk Prem
 ```
     
 ## 3) Compare the CAPM portfolio to a diversified State Street's SPDR S&P 500 Trust ETF portfolio (7,8,9)  
-Methodology:  
+Questions covered: 7,8,9.  
+
+**Methodology**  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 7) Calculate CV, Sharpe, Treynor, and Sortino ratios for your portfolio and compare them to a similarly diversified portfolio of Vanguard, Fidelity, or any other similar portfolio.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 8) Calculate 2% and 3% VaRs as a percentage of the mean return of your portfolio when the risk horizon is one year, six months, and one month. Calculate the same VaRs for the selected portfolio in item 6. Compare the VaRs of your portfolio to the ones of the market portfolios.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 9) Graph the scatter diagram of your portfolio and comment on trends, outliers, structural breaks and any other special features. Graph the scatter diagram of your portfolio and S&P 500 on the same coordinate system and compare the trends.  
@@ -772,12 +780,135 @@ Methodology:
 ### 7) Calculate CV, Sharpe, Treynor, and Sortino ratios for your portfolio and compare them to a similarly diversified portfolio of Vanguard, Fidelity, or any other similar portfolio.
 
 ```{r}
-# Create Optimal Stats Table
-PTBL <- matrix(c(ROPT, VOPT, SDOPT, SRatio), nrow = 4)  # create a matrix of return, variance, std dev, Sharpe
-optstat.names <- c("Return", "Variance", "Std Dev", "Sharpe")  # labels for PTBL matrix
+# Calculate statistics
+MSFT1_return_mean <- mean(rMSFT1, na.rm = TRUE)
+GWPH1_return_mean <- mean(rGWPH1, na.rm = TRUE)
+DIS1_return_mean <- mean(rDIS1, na.rm = TRUE)
+CAT1_return_mean <- mean(rCAT1, na.rm = TRUE)
+AMZN1_return_mean <- mean(rAMZN1, na.rm = TRUE)
+GSPC1_return_mean <- mean(rGSPC1, na.rm = TRUE)
+TNX1_return_mean <- mean(rTNX1, na.rm = TRUE)
 
-dimnames(PTBL) <- list(optstat.names, "Opt. Portfolio")  # label the optimal portfolio matrix values
+MSFT1_return_var <- var(rMSFT1, na.rm = TRUE)
+GWPH1_return_var <- var(rGWPH1, na.rm = TRUE)
+DIS1_return_var <- var(rDIS1, na.rm = TRUE)
+CAT1_return_var <- var(rCAT1, na.rm = TRUE)
+AMZN1_return_var <- var(rAMZN1, na.rm = TRUE)
+GSPC1_return_var <- var(rGSPC1, na.rm = TRUE)
+
+# Excess Returns
+reMSFT1 <- rMSFT1 - rTNX1
+reGWPH1 <- rGWPH1 - rTNX1
+reDIS1 <- rDIS1 - rTNX1
+reCAT1 <- rCAT1 - rTNX1
+reAMZN1 <- rAMZN1 - rTNX1
+
+# Information Tables:
+#pricTabl1 <- data.frame(MSFT, GWPH, DIS, CAT, AMZN)
+
+# Creates data frame of asset prices
+retTabl1 <- data.frame(rMSFT1, rGWPH1, rDIS1, rCAT1, rAMZN1)
+
+# Creates data frame of returns
+EretTabl1 <- data.frame(reMSFT1, reGWPH1, reDIS1, reCAT1, reAMZN1) 
+
+# Excess return data frame
+retTabl1 <- retTabl1[-1,]  # remove missing data due to lagging
+EretTabl1 <- EretTabl1[-1,]  # remove missing data due to lagging
+priceMat1 <- matrix(c(MSFT, GWPH, DIS, CAT, AMZN), nrow= length(MSFT), ncol=5, byrow=TRUE)  # creates a matrix of prices
+
+# Variance/Covariance Matrix
+asset.names <- c("MSFT", "GWPH", "DIS", "CAT", "AMZN")
+
+# Create a list of row and col names for the var/cov matrix
+VCV1 <- matrix(c(cov(retTabl1)), nrow=5, ncol = 5, byrow=TRUE) # create a var/cov matrix by finding cov of the assets in retTab2
+dimnames(VCV1) <- list(asset.names, asset.names)  # assigns asset.names to the VCV matrix
+
+#Calculate Returns
+rm1 <- matrix(colMeans(retTabl1, na.rm=TRUE))  # creates an average return matrix, omitting missing values
+erm1 <- matrix(colMeans(EretTabl1, na.rm=TRUE))  # creates an average excess return matrix, omitting missing values
+tnxy1 = mean((rTNX1)[-1,])  # calculates the average bond yield excluding Jan (risk free rate)
+
+#Create Return Table
+retmat1 <- matrix(c(rm1, erm1), ncol=2)
+dimnames(retmat1) = list(asset.names, c("Return ", "Excess Return"))
+
+# Calculate stats
+ROPT1 <- t(WOPT)%*%rm1  # calculate optimal portfolio's return
+VOPT1 <- t(WOPT)%*%VCV1%*%WOPT  # calculate optimal portfolio's variance
+SDOPT1 <- VOPT1^0.5  # calculate optimal portfolio's std dev
+SRatio1 <-(ROPT1-tnxy1)/(SDOPT1)  # calculate optimal portfolio's Sharpe ratio
+CV1 <- as.numeric(sqrt(var(holdings))) / as.numeric(colMeans(holdings[1]))  # calculate portfolio's coefficient of variation
+TrRatio1 <- (ROPT1 - tnxy1)/ -0.34504  # calculate portfolio's Treynor Ratio
+
+# Calculating downside deviation using lower partial moment of order 2
+mar <- tnxy1  # Assuming the 10 year T-bill returns as minimum acceptable returns MAR
+rHoldings <- diff(log(holdings[,1]))  # calculate portfolio holding returns data
+dev_rHoldings_mar <- na.omit(rHoldings - mar)  # Deviation from MAR, this is a data frame, remove NA values
+devNegative_rHoldings_mar <- subset(dev_rHoldings_mar, dev_rHoldings_mar < 0)  # Get the subset of negative values
+downsideDev_Holdings <- var(devNegative_rHoldings_mar)  # Calculate the Lower Partial Moment
+sd_downsideDev_Holdings <- sqrt(downsideDev_Holdings)  # Downside deviation
+
+SoRatio1 <- (ROPT1 - tnxy1) / sd_downsideDev_Holdings  # calculate portfolio Sortino Ratio
+
+# Create Optimal Stats Table
+PTBL1 <- matrix(c(CV1, SRatio1, TrRatio1, SoRatio1), nrow = 4)  # create a matrix of return, variance, std dev, Sharpe
+optstat.names <- c("CV", "Sharpe", "Treynor", "Sortino")  # labels for PTBL matrix
+
+dimnames(PTBL1) <- list(optstat.names, "Holdings")  # label the optimal portfolio matrix values
 ```
+  
+
+```{r}
+# Get data
+getSymbols("SPY", src = "yahoo", from = start_date1, to = end_date1)
+rSPY1 <- na.omit(diff(log(to.monthly(SPY)$SPY.Adjusted)))
+mean_rSPY1 <- mean(rSPY1)
+var_rSPY1 <- var(rSPY1)
+sd_rSPY1 <- sqrt(var_rSPY1)
+
+adjSPY1 <- SPY$SPY.Adjusted
+mean_adjSPY1 <- mean(adjSPY1)
+var_adjSPY1 <- var(adjSPY1)
+sd_adjSPY1 <- sqrt(var_adjSPY1)
+
+SRatioSPY1 <-(mean_rSPY1-tnxy1) / sd_rSPY1  # calculate optimal portfolio's Sharpe ratio
+CVSPY1 <- sd_adjSPY1 / mean_adjSPY1  # calculate portfolio's coefficient of variation
+TrRatioSPY1 <- (mean_rSPY1 - tnxy1)/ 1  # calculate portfolio's Treynor Ratio
+
+# Calculating downside deviation using lower partial moment of order 2
+marSPY1 <- tnxy1  # Assuming the 10 year T-bill returns as minimum acceptable returns MAR
+dev_rSPY1_mar <- na.omit(rSPY1 - mar)  # Deviation from MAR, this is a data frame, remove NA values
+devNegative_rSPY1_mar <- subset(dev_rSPY1_mar, dev_rSPY1_mar < 0)  # Get the subset of negative values
+downsideDev_SPY1 <- var(devNegative_rSPY1_mar)  # Calculate the Lower Partial Moment
+sd_downsideDev_SPY1 <- sqrt(downsideDev_SPY1)  # Downside deviation
+
+SoRatioSPY1 <- (mean_rSPY1 - tnxy1) / sd_downsideDev_SPY1  # calculate portfolio Sortino Ratio
+
+# Create Optimal Stats Table
+SPYTBL1 <- matrix(c(CVSPY1, SRatioSPY1, TrRatioSPY1, SoRatioSPY1), nrow = 4)  # create a matrix of return, variance, std dev, Sharpe
+optstat.names <- c("CV", "Sharpe", "Treynor", "Sortino")  # labels for PTBL matrix
+
+dimnames(SPYTBL1) <- list(optstat.names, "SPY")  # label the optimal portfolio matrix values
+
+SPY_PTBL1 <- data.frame(PTBL1, SPYTBL1)
+```
+  
+Compare the key financial ratio of the portfolio to that of the State Street's SPDR S&P 500 Trust ETF portfolio (SPY), we see:  
+
+```{r}
+SPY_PTBL1
+```
+  
+**Remarks:**
+**Coefficient of Variations:** The SPY has extremely low dispersion of value (based on Adjusted Closing Price) compared to that of the holding portfolio. This implies the holding portfolio carry significantly more volatility in comparison to the SPY.  
+**Sharpe Ratio:** The holding portfolio has higher Sharpe ratio compare to the SPY. Assuming returns are normally distributed, this implies the holding portfolio generates significantly higher returns than the SPY.  
+**Treynor Ratio:** The SPY has a higher and positive Treynor Ratio compared to a lower and negative Treynor Ratio. This implies that the SPY is much better at generating excess returns per unit of risk that it takes on. Compared to the holding portfolio, the SPY is a more suitable investment.  
+**Sortino Ratio:** The holding portfolio has significantly higher Sortino Ratio compared to the SPY. This implies that it is earning returns more efficiently than the SPY given downside deviations: earning more turns per unit of the bad risk it is taking on.  
+
+### 8) Calculate 2% and 3% VaRs as a percentage of the mean return of your portfolio when the risk horizon is one year, six months, and one month. Calculate the same VaRs for the selected portfolio in item 6. Compare the VaRs of your portfolio to the ones of the market portfolios.
+
+
 
 ## 4) Forecast the returns of the portfolio CATsed on the CAPM model (10,11,12)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 10) Using the CAPM equation of your portfolio do two periods ex-post forecasting of the returns to your portfolio and compare your forecast to the actual returns. Find the accuracy statistics of your forecast and report them.  

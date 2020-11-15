@@ -548,7 +548,7 @@ summary {
 start_date &lt;- &quot;2014-01-01&quot;
 end_date &lt;- &quot;2018-12-31&quot;
 
-# Get data for JPM, FB and the 10 year T-bill (TNX)
+# Get data
 getSymbols(&quot;MSFT&quot;, src = &quot;yahoo&quot;, from = start_date, to = end_date)</code></pre>
 <pre><code>## &#39;getSymbols&#39; currently uses auto.assign=TRUE by default, but will
 ## use auto.assign=FALSE in 0.5-0. You will still be able to use
@@ -615,29 +615,29 @@ reCAT &lt;- rCAT - rTNX
 reAMZN &lt;- rAMZN - rTNX
 
 # Information Tables:
-pricTab1 &lt;- data.frame(MSFT, GWPH, DIS, CAT, AMZN)
+pricTabl &lt;- data.frame(MSFT, GWPH, DIS, CAT, AMZN)
 
 # Creates data frame of asset prices
-retTab1 &lt;- data.frame(rMSFT, rGWPH, rDIS, rCAT, rAMZN)
+retTabl &lt;- data.frame(rMSFT, rGWPH, rDIS, rCAT, rAMZN)
 
 # Creates data frame of returns
-EretTab1 &lt;- data.frame(reMSFT, reGWPH, reDIS, reCAT, reAMZN) 
+EretTabl &lt;- data.frame(reMSFT, reGWPH, reDIS, reCAT, reAMZN) 
 
 # Excess return data frame
-retTab1 &lt;- retTab1[-1,]  # remove missing data due to lagging
-EretTab1 &lt;- EretTab1[-1,]  # remove missing data due to lagging
-priceMat1 &lt;- matrix(c(MSFT, GWPH, DIS, CAT, AMZN), nrow= length(MSFT), ncol=5, byrow=TRUE)  # creates a matrix of prices
+retTabl &lt;- retTabl[-1,]  # remove missing data due to lagging
+EretTabl &lt;- EretTabl[-1,]  # remove missing data due to lagging
+priceMat &lt;- matrix(c(MSFT, GWPH, DIS, CAT, AMZN), nrow= length(MSFT), ncol=5, byrow=TRUE)  # creates a matrix of prices
 
 # Variance/Covariance Matrix
 asset.names &lt;- c(&quot;MSFT&quot;, &quot;GWPH&quot;, &quot;DIS&quot;, &quot;CAT&quot;, &quot;AMZN&quot;)
 
 # Create a list of row and col names for the var/cov matrix
-VCV &lt;- matrix(c(cov(retTab1)), nrow=5, ncol = 5, byrow=TRUE) # create a var/cov matrix by finding cov of the assets in retTab2
+VCV &lt;- matrix(c(cov(retTabl)), nrow=5, ncol = 5, byrow=TRUE) # create a var/cov matrix by finding cov of the assets in retTab2
 dimnames(VCV) &lt;- list(asset.names, asset.names)  # assigns asset.names to the VCV matrix
 
 #Calculate Returns
-rm &lt;- matrix(colMeans(retTab1, na.rm=TRUE))  # creates an average return matrix, omitting missing values
-erm &lt;- matrix(colMeans(EretTab1, na.rm=TRUE))  # creates an average excess return matrix, omitting missing values
+rm &lt;- matrix(colMeans(retTabl, na.rm=TRUE))  # creates an average return matrix, omitting missing values
+erm &lt;- matrix(colMeans(EretTabl, na.rm=TRUE))  # creates an average excess return matrix, omitting missing values
 tnxy = mean((rTNX)[-1,])  # calculates the average bond yield excluding Jan (risk free rate)
 
 #Create Return Table
@@ -912,7 +912,7 @@ dimnames(PTBL) &lt;- list(optstat.names, &quot;Opt. Portfolio&quot;)  # label th
 start_date1 &lt;- &quot;2018-12-01&quot;
 end_date1 &lt;- &quot;2020-08-31&quot;
 
-# Get data for JPM, FB and the 10 year T-bill (TNX)
+# Get data
 getSymbols(&quot;MSFT&quot;, src = &quot;yahoo&quot;, from = start_date1, to = end_date1)</code></pre>
 <pre><code>## [1] &quot;MSFT&quot;</code></pre>
 <pre class="r"><code>getSymbols(&quot;GWPH&quot;, src = &quot;yahoo&quot;, , from = start_date1, to = end_date1)</code></pre>
@@ -930,7 +930,12 @@ getSymbols(&quot;MSFT&quot;, src = &quot;yahoo&quot;, from = start_date1, to = e
 ## contain missing values in the middle of the series. Consider using na.omit(),
 ## na.approx(), na.fill(), etc to remove or replace them.</code></pre>
 <pre><code>## [1] &quot;^TNX&quot;</code></pre>
-<pre class="r"><code>rGSPC1 &lt;- diff(log(to.monthly(GSPC)$GSPC.Adjusted))
+<pre class="r"><code>rMSFT1 &lt;- diff(log(to.monthly(MSFT)$MSFT.Adjusted))
+rGWPH1 &lt;- diff(log(to.monthly(GWPH)$GWPH.Adjusted))
+rDIS1 &lt;- diff(log(to.monthly(DIS)$DIS.Adjusted))
+rCAT1 &lt;- diff(log(to.monthly(CAT)$CAT.Adjusted))
+rAMZN1 &lt;- diff(log(to.monthly(AMZN)$AMZN.Adjusted))
+rGSPC1 &lt;- diff(log(to.monthly(GSPC)$GSPC.Adjusted))
 rTNX1 &lt;- to.monthly(TNX)$TNX.Adjusted /1200  # Using monthly rate</code></pre>
 <pre><code>## Warning in to.period(x, &quot;months&quot;, indexAt = indexAt, name = name, ...): missing
 ## values removed from data</code></pre>
@@ -1277,14 +1282,16 @@ From this, we can calculate the forecasting efficiency statistic to be:<br />
 <p>Now, we want to explore the affect of the pandemic lockdowns on market risk. Thus, we want to explore the following regression model:</p>
 <p><span class="math display">\[\begin{equation}
   \begin{aligned}
-    Y &amp; = \alpha_{Jensen} + \beta*X + \beta_2*D*X +\epsilon \\
+    Y &amp; = \alpha_{Jensen} + \beta*X + \beta_1*D + \beta_2*D*X +\epsilon_1 \\
     \text{where: }  \\
     Y &amp; = \, \text{Portfolio Risk Premium} \, R_a - R_f  \\
     \beta &amp; = \, \text{Estimated} \, \beta \, \text{of the CAPM}  \\
     X &amp; = \, \text{Market portfolio risk premium} \, R_m - R_f  \\
-    \beta_2 &amp; = \, \text{Coefficient representing the relationship of the portfolio risk premium with the pandemic factor}  \\
+    \beta_1 &amp; = \, \text{Coefficient representing the relationship of the portfolio risk premium with the pandemic factor}  \\
     D &amp; = \, \text{Dummy variable representing the pandemic factor}  \\
-    \epsilon &amp; = \, \text{Standard Error of Regression}  \\
+    \beta_2 &amp; = \, \text{Coefficient representing the relationship of the market risk premium with the pandemic factor}  \\
+    D*X &amp; = \, \text{Slope dummy variable representing the pandemic factor correlation with market risk premium}  \\
+    \epsilon_1 &amp; = \, \text{Standard Error of Regression}  \\
   \end{aligned}
 \end{equation}\]</span></p>
 <p>Hypothesis for regression:<br />
@@ -1299,29 +1306,30 @@ From this, we can calculate the forecasting efficiency statistic to be:<br />
 \end{equation}\]</span></p>
 <pre class="r"><code># Generate the new variable dx = D*X
 DX &lt;- D*X
-fit3 &lt;- lm(Y~X+DX)
+fit3 &lt;- lm(Y~X+D+DX)
 summary(fit3)</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = Y ~ X + DX)
+## lm(formula = Y ~ X + D + DX)
 ## 
 ## Residuals:
 ##       Min        1Q    Median        3Q       Max 
 ## -0.119935 -0.048422 -0.008044  0.028370  0.143203 
 ## 
-## Coefficients:
+## Coefficients: (1 not defined because of singularities)
 ##             Estimate Std. Error t value Pr(&gt;|t|)   
 ## (Intercept)  0.05447    0.01806   3.017  0.00778 **
 ## X           -0.72150    0.34667  -2.081  0.05284 . 
-## DX           1.21306    0.67427   1.799  0.08979 . 
+## D           -0.16285    0.09052  -1.799  0.08979 . 
+## DX                NA         NA      NA       NA   
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## Residual standard error: 0.07034 on 17 degrees of freedom
 ## Multiple R-squared:   0.22,  Adjusted R-squared:  0.1282 
 ## F-statistic: 2.398 on 2 and 17 DF,  p-value: 0.121</code></pre>
-<p>The estimated equation is <span class="math inline">\(Y = .05447 - .72150*X + 1.21306*D*X\)</span></p>
-<p>We see <span class="math inline">\(\beta_2 = 1.21306\)</span> represents the increase in portfolio risk premium relative to increase in the pandemic variable. The <span class="math inline">\(p_{value}\)</span> for <span class="math inline">\(\beta_1\)</span> is <span class="math inline">\(.08979 &gt; .05\)</span>, implying that the coefficient <span class="math inline">\(\beta_1\)</span> statistically is insignificant at 95% or more, and we accept the null hypothesis <span class="math inline">\(H_0: \beta_1 = 0\)</span> and reject the alternative hypothesis <span class="math inline">\(H_a: \beta_1 \neq 0\)</span>.</p>
+<p>The estimated equation is <span class="math inline">\(Y = .05447 - .72150*X - .16285*D*X\)</span></p>
+<p>We see <span class="math inline">\(\beta_2 = NA\)</span> implying that the slope dummy is an unnecessary predictor. The coefficient <span class="math inline">\(\beta_2\)</span> is not estimated.</p>
 <p>Goodness of Fit:<br />
 Through inspection, we observe the <span class="math inline">\(R^2 = .22\)</span> value to not be close to 1 at all. <span class="math inline">\(R^2 = .22\)</span> implies that <span class="math inline">\(22%\)</span> of the variations in the portfolio risk premium is explained by the pandemic variable.</p>
 <p>Standard Error of Regression:<br />
@@ -1336,29 +1344,8 @@ From this, we can calculate the forecasting efficiency statistic to be:<br />
 <p>To visualize:</p>
 <pre class="r"><code># Generating the dummy variable
 data3 &lt;- data.frame(DX, Y)
-data3</code></pre>
-<pre><code>##          Market.Risk.Premium Portfolio.Risk.Premium
-## Jan 2019           0.0000000           -0.118530383
-## Feb 2019           0.0000000            0.011877241
-## Mar 2019           0.0000000            0.064710622
-## Apr 2019           0.0000000            0.076808196
-## May 2019           0.0000000            0.081594367
-## Jun 2019           0.0000000           -0.081653009
-## Jul 2019           0.0000000            0.129419647
-## Aug 2019           0.0000000            0.011792096
-## Sep 2019           0.0000000           -0.009997907
-## Oct 2019           0.0000000           -0.005942793
-## Nov 2019           0.0000000            0.015286804
-## Dec 2019           0.0000000            0.043619474
-## Jan 2020           0.0000000            0.069999642
-## Feb 2020           0.0000000            0.099152348
-## Mar 2020          -0.1342494           -0.011522652
-## Apr 2020           0.0000000           -0.091230569
-## May 2020           0.0000000            0.166107656
-## Jun 2020           0.0000000            0.052790686
-## Jul 2020           0.0000000            0.134562376
-## Aug 2020           0.0000000            0.064183232</code></pre>
-<pre class="r"><code>plot(data3, col=&#39;red&#39;, main=&quot;Relationship Between Pandemic &amp; Portfolio Risk Premium&quot;, pch=20, cex=1)</code></pre>
+
+plot(data3, col=&#39;red&#39;, main=&quot;Relationship Between Pandemic &amp; Portfolio Risk Premium&quot;, pch=20, cex=1)</code></pre>
 <p><img src="data:image/png;base64,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" width="672" /></p>
 <pre class="r"><code># Add fit lines
 #abline(lm(Y~D), col=&quot;blue&quot;)  # Regression line Y ~ X
@@ -1374,6 +1361,126 @@ data3</code></pre>
        9) Graph the scatter diagram of your portfolio and comment on trends, outliers, structural breaks and any other special features. Graph the scatter diagram of your portfolio and S&amp;P 500 on the same coordinate system and compare the trends.</p>
 <div id="calculate-cv-sharpe-treynor-and-sortino-ratios-for-your-portfolio-and-compare-them-to-a-similarly-diversified-portfolio-of-vanguard-fidelity-or-any-other-similar-portfolio." class="section level3">
 <h3>7) Calculate CV, Sharpe, Treynor, and Sortino ratios for your portfolio and compare them to a similarly diversified portfolio of Vanguard, Fidelity, or any other similar portfolio.</h3>
+<pre class="r"><code># Calculate statistics
+MSFT1_return_mean &lt;- mean(rMSFT1, na.rm = TRUE)
+GWPH1_return_mean &lt;- mean(rGWPH1, na.rm = TRUE)
+DIS1_return_mean &lt;- mean(rDIS1, na.rm = TRUE)
+CAT1_return_mean &lt;- mean(rCAT1, na.rm = TRUE)
+AMZN1_return_mean &lt;- mean(rAMZN1, na.rm = TRUE)
+GSPC1_return_mean &lt;- mean(rGSPC1, na.rm = TRUE)
+TNX1_return_mean &lt;- mean(rTNX1, na.rm = TRUE)
+
+MSFT1_return_var &lt;- var(rMSFT1, na.rm = TRUE)
+GWPH1_return_var &lt;- var(rGWPH1, na.rm = TRUE)
+DIS1_return_var &lt;- var(rDIS1, na.rm = TRUE)
+CAT1_return_var &lt;- var(rCAT1, na.rm = TRUE)
+AMZN1_return_var &lt;- var(rAMZN1, na.rm = TRUE)
+GSPC1_return_var &lt;- var(rGSPC1, na.rm = TRUE)
+
+# Excess Returns
+reMSFT1 &lt;- rMSFT1 - rTNX1
+reGWPH1 &lt;- rGWPH1 - rTNX1
+reDIS1 &lt;- rDIS1 - rTNX1
+reCAT1 &lt;- rCAT1 - rTNX1
+reAMZN1 &lt;- rAMZN1 - rTNX1
+
+# Information Tables:
+#pricTabl1 &lt;- data.frame(MSFT, GWPH, DIS, CAT, AMZN)
+
+# Creates data frame of asset prices
+retTabl1 &lt;- data.frame(rMSFT1, rGWPH1, rDIS1, rCAT1, rAMZN1)
+
+# Creates data frame of returns
+EretTabl1 &lt;- data.frame(reMSFT1, reGWPH1, reDIS1, reCAT1, reAMZN1) 
+
+# Excess return data frame
+retTabl1 &lt;- retTabl1[-1,]  # remove missing data due to lagging
+EretTabl1 &lt;- EretTabl1[-1,]  # remove missing data due to lagging
+priceMat1 &lt;- matrix(c(MSFT, GWPH, DIS, CAT, AMZN), nrow= length(MSFT), ncol=5, byrow=TRUE)  # creates a matrix of prices
+
+# Variance/Covariance Matrix
+asset.names &lt;- c(&quot;MSFT&quot;, &quot;GWPH&quot;, &quot;DIS&quot;, &quot;CAT&quot;, &quot;AMZN&quot;)
+
+# Create a list of row and col names for the var/cov matrix
+VCV1 &lt;- matrix(c(cov(retTabl1)), nrow=5, ncol = 5, byrow=TRUE) # create a var/cov matrix by finding cov of the assets in retTab2
+dimnames(VCV1) &lt;- list(asset.names, asset.names)  # assigns asset.names to the VCV matrix
+
+#Calculate Returns
+rm1 &lt;- matrix(colMeans(retTabl1, na.rm=TRUE))  # creates an average return matrix, omitting missing values
+erm1 &lt;- matrix(colMeans(EretTabl1, na.rm=TRUE))  # creates an average excess return matrix, omitting missing values
+tnxy1 = mean((rTNX1)[-1,])  # calculates the average bond yield excluding Jan (risk free rate)
+
+#Create Return Table
+retmat1 &lt;- matrix(c(rm1, erm1), ncol=2)
+dimnames(retmat1) = list(asset.names, c(&quot;Return &quot;, &quot;Excess Return&quot;))
+
+# Calculate stats
+ROPT1 &lt;- t(WOPT)%*%rm1  # calculate optimal portfolio&#39;s return
+VOPT1 &lt;- t(WOPT)%*%VCV1%*%WOPT  # calculate optimal portfolio&#39;s variance
+SDOPT1 &lt;- VOPT1^0.5  # calculate optimal portfolio&#39;s std dev
+SRatio1 &lt;-(ROPT1-tnxy1)/(SDOPT1)  # calculate optimal portfolio&#39;s Sharpe ratio
+CV1 &lt;- as.numeric(sqrt(var(holdings))) / as.numeric(colMeans(holdings[1]))  # calculate portfolio&#39;s coefficient of variation
+TrRatio1 &lt;- (ROPT1 - tnxy1)/ -0.34504  # calculate portfolio&#39;s Treynor Ratio
+
+# Calculating downside deviation using lower partial moment of order 2
+mar &lt;- tnxy1  # Assuming the 10 year T-bill returns as minimum acceptable returns MAR
+rHoldings &lt;- diff(log(holdings[,1]))  # calculate portfolio holding returns data
+dev_rHoldings_mar &lt;- na.omit(rHoldings - mar)  # Deviation from MAR, this is a data frame, remove NA values
+devNegative_rHoldings_mar &lt;- subset(dev_rHoldings_mar, dev_rHoldings_mar &lt; 0)  # Get the subset of negative values
+downsideDev_Holdings &lt;- var(devNegative_rHoldings_mar)  # Calculate the Lower Partial Moment
+sd_downsideDev_Holdings &lt;- sqrt(downsideDev_Holdings)  # Downside deviation
+
+SoRatio1 &lt;- (ROPT1 - tnxy1) / sd_downsideDev_Holdings  # calculate portfolio Sortino Ratio
+
+# Create Optimal Stats Table
+PTBL1 &lt;- matrix(c(CV1, SRatio1, TrRatio1, SoRatio1), nrow = 4)  # create a matrix of return, variance, std dev, Sharpe
+optstat.names &lt;- c(&quot;CV&quot;, &quot;Sharpe&quot;, &quot;Treynor&quot;, &quot;Sortino&quot;)  # labels for PTBL matrix
+
+dimnames(PTBL1) &lt;- list(optstat.names, &quot;Holdings&quot;)  # label the optimal portfolio matrix values</code></pre>
+<pre class="r"><code># Get data
+getSymbols(&quot;SPY&quot;, src = &quot;yahoo&quot;, from = start_date1, to = end_date1)</code></pre>
+<pre><code>## [1] &quot;SPY&quot;</code></pre>
+<pre class="r"><code>rSPY1 &lt;- na.omit(diff(log(to.monthly(SPY)$SPY.Adjusted)))
+mean_rSPY1 &lt;- mean(rSPY1)
+var_rSPY1 &lt;- var(rSPY1)
+sd_rSPY1 &lt;- sqrt(var_rSPY1)
+
+adjSPY1 &lt;- SPY$SPY.Adjusted
+mean_adjSPY1 &lt;- mean(adjSPY1)
+var_adjSPY1 &lt;- var(adjSPY1)
+sd_adjSPY1 &lt;- sqrt(var_adjSPY1)
+
+SRatioSPY1 &lt;-(mean_rSPY1-tnxy1) / sd_rSPY1  # calculate optimal portfolio&#39;s Sharpe ratio
+CVSPY1 &lt;- sd_adjSPY1 / mean_adjSPY1  # calculate portfolio&#39;s coefficient of variation
+TrRatioSPY1 &lt;- (mean_rSPY1 - tnxy1)/ 1  # calculate portfolio&#39;s Treynor Ratio
+
+# Calculating downside deviation using lower partial moment of order 2
+marSPY1 &lt;- tnxy1  # Assuming the 10 year T-bill returns as minimum acceptable returns MAR
+dev_rSPY1_mar &lt;- na.omit(rSPY1 - mar)  # Deviation from MAR, this is a data frame, remove NA values
+devNegative_rSPY1_mar &lt;- subset(dev_rSPY1_mar, dev_rSPY1_mar &lt; 0)  # Get the subset of negative values
+downsideDev_SPY1 &lt;- var(devNegative_rSPY1_mar)  # Calculate the Lower Partial Moment
+sd_downsideDev_SPY1 &lt;- sqrt(downsideDev_SPY1)  # Downside deviation
+
+SoRatioSPY1 &lt;- (mean_rSPY1 - tnxy1) / sd_downsideDev_SPY1  # calculate portfolio Sortino Ratio
+
+# Create Optimal Stats Table
+SPYTBL1 &lt;- matrix(c(CVSPY1, SRatioSPY1, TrRatioSPY1, SoRatioSPY1), nrow = 4)  # create a matrix of return, variance, std dev, Sharpe
+optstat.names &lt;- c(&quot;CV&quot;, &quot;Sharpe&quot;, &quot;Treynor&quot;, &quot;Sortino&quot;)  # labels for PTBL matrix
+
+dimnames(SPYTBL1) &lt;- list(optstat.names, &quot;SPY&quot;)  # label the optimal portfolio matrix values
+
+SPY_PTBL1 &lt;- data.frame(PTBL1, SPYTBL1)</code></pre>
+<p>Compare the key financial ratio of the portfolio to that of the State Street’s SPDR S&amp;P 500 Trust ETF portfolio (SPY), we see:</p>
+<pre class="r"><code>SPY_PTBL1</code></pre>
+<pre><code>##           Holdings        SPY
+## CV       0.2475044 0.08583704
+## Sharpe   0.7609424 0.29444966
+## Treynor -0.1369133 0.01710602
+## Sortino  2.8067889 0.32133508</code></pre>
+<p><strong>Remarks:</strong> <strong>Coefficient of Variations:</strong> The SPY has extremely low dispersion of value (based on Adjusted Closing Price) compared to that of the holding portfolio. This implies the holding portfolio carry significantly more volatility in comparison to the SPY.<br />
+<strong>Sharpe Ratio:</strong> The holding portfolio has higher Sharpe ratio compare to the SPY. Assuming returns are normally distributed, this implies the holding portfolio generates significantly higher returns than the SPY.<br />
+<strong>Treynor Ratio:</strong> The SPY has a higher and positive Treynor Ratio compared to a lower and negative Treynor Ratio. This implies that the SPY is much better at generating excess returns per unit of risk that it takes on. Compared to the holding portfolio, the SPY is a more suitable investment.<br />
+<strong>Sortino Ratio:</strong> The holding portfolio has significantly higher Sortino Ratio compared to the SPY. This implies that it is earning returns more efficiently than the SPY given downside deviations: earning more turns per unit of the bad risk it is taking on.</p>
 </div>
 </div>
 <div id="forecast-the-returns-of-the-portfolio-catsed-on-the-capm-model-101112" class="section level2">
