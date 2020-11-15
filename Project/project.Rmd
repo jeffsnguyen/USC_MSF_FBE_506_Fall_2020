@@ -838,7 +838,11 @@ ROPT1 <- t(WOPT)%*%rm1  # calculate optimal portfolio's return
 VOPT1 <- t(WOPT)%*%VCV1%*%WOPT  # calculate optimal portfolio's variance
 SDOPT1 <- VOPT1^0.5  # calculate optimal portfolio's std dev
 SRatio1 <-(ROPT1-tnxy1)/(SDOPT1)  # calculate optimal portfolio's Sharpe ratio
-CV1 <- as.numeric(sqrt(var(holdings))) / as.numeric(colMeans(holdings[1]))  # calculate portfolio's coefficient of variation
+
+mean_Holdings1 <- as.numeric(colMeans(holdings[1]))  # Mearn 
+sd_Holdings1 <- as.numeric(sqrt(var(holdings)))
+CV1 <- sd_Holdings1 / mean_Holdings1   # calculate portfolio's coefficient of variation
+
 TrRatio1 <- (ROPT1 - tnxy1)/ -0.34504  # calculate portfolio's Treynor Ratio
 
 # Calculating downside deviation using lower partial moment of order 2
@@ -906,9 +910,80 @@ SPY_PTBL1
 **Treynor Ratio:** The SPY has a higher and positive Treynor Ratio compared to a lower and negative Treynor Ratio. This implies that the SPY is much better at generating excess returns per unit of risk that it takes on. Compared to the holding portfolio, the SPY is a more suitable investment.  
 **Sortino Ratio:** The holding portfolio has significantly higher Sortino Ratio compared to the SPY. This implies that it is earning returns more efficiently than the SPY given downside deviations: earning more turns per unit of the bad risk it is taking on.  
 
-### 8) Calculate 2% and 3% VaRs as a percentage of the mean return of your portfolio when the risk horizon is one year, six months, and one month. Calculate the same VaRs for the selected portfolio in item 6. Compare the VaRs of your portfolio to the ones of the market portfolios.
+### 8) Calculate 2% and 3% VaRs as a percentage of the mean return of your portfolio when the risk horizon is one year, six months, and one month. Compare the VaRs of your portfolio to the ones of the market portfolios.
 
+```{r}
+# 2% VaR Holding Portfolio
+VaR_threshold <- 2
 
+# Set scaling factor based on the period of evaluation
+# In this example: {1: '1 year', 1/2: '6 months', 1/12: '1 month', 1/250: '1 day'}
+
+# 2% 1 year VAR
+scalingFactor <- 1
+z_stat <- qnorm(VaR_threshold/100, 0, 1, lower.tail = TRUE)
+VaR_1year_p_2percent <- ROPT1*scalingFactor + SDOPT1*sqrt(scalingFactor) * z_stat
+VaR_1year_SPY_2percent <- mean_rSPY1*scalingFactor + sd_rSPY1*sqrt(scalingFactor) * z_stat
+
+# 2% 6 month VAR
+scalingFactor <- 1/2
+VaR_6month_p_2percent <- ROPT1*scalingFactor + SDOPT1*sqrt(scalingFactor) * z_stat
+VaR_6month_SPY_2percent <- mean_rSPY1*scalingFactor + sd_rSPY1*sqrt(scalingFactor) * z_stat
+
+# 2% 1 month VAR
+scalingFactor <- 1/12
+VaR_1month_p_2percent <- ROPT1*scalingFactor + SDOPT1*sqrt(scalingFactor) * z_stat
+VaR_1month_SPY_2percent <- mean_rSPY1*scalingFactor + sd_rSPY1*sqrt(scalingFactor) * z_stat
+#########################################
+
+# 3% VaR Holding Portfolio
+VaR_threshold <- 3
+
+# Set scaling factor based on the period of evaluation
+# In this example: {1: '1 year', 1/2: '6 months', 1/12: '1 month', 1/250: '1 day'}
+
+# 3% 1 year VAR
+scalingFactor <- 1
+z_stat <- qnorm(VaR_threshold/100, 0, 1, lower.tail = TRUE)
+VaR_1year_p_3percent <- ROPT1*scalingFactor + SDOPT1*sqrt(scalingFactor) * z_stat
+VaR_1year_SPY_3percent <- mean_rSPY1*scalingFactor + sd_rSPY1*sqrt(scalingFactor) * z_stat
+
+# 3% 6 month VAR
+scalingFactor <- 1/2
+VaR_6month_p_3percent <- ROPT1*scalingFactor + SDOPT1*sqrt(scalingFactor) * z_stat
+VaR_6month_SPY_3percent <- mean_rSPY1*scalingFactor + sd_rSPY1*sqrt(scalingFactor) * z_stat
+
+# 3% 1 month VAR
+scalingFactor <- 1/12
+VaR_1month_p_3percent <- ROPT1*scalingFactor + SDOPT1*sqrt(scalingFactor) * z_stat
+VaR_1month_SPY_3percent <- mean_rSPY1*scalingFactor + sd_rSPY1*sqrt(scalingFactor) * z_stat
+#########################################
+
+# Generate comparison table
+VaR_stat_p <- matrix(c(VaR_1year_p_2percent, VaR_6month_p_2percent, VaR_1month_p_2percent, 
+                       VaR_1year_p_3percent, VaR_6month_p_3percent, VaR_1month_p_3percent), nrow = 6) 
+
+VaR_stat_SPY <- matrix(c(VaR_1year_SPY_2percent, VaR_6month_SPY_2percent, VaR_1month_SPY_2percent, 
+                       VaR_1year_SPY_3percent, VaR_6month_SPY_3percent, VaR_1month_SPY_3percent), nrow = 6) 
+
+optstat.names <- c("2% 1yr", "2% 6mth", "2% 1month", 
+                   "3% 1yr", "3% 6mth", "3% 1month")
+
+dimnames(VaR_stat_p) <- list(optstat.names, "Holdings")
+dimnames(VaR_stat_SPY) <- list(optstat.names, "SPY")
+
+VaR_stat <- data.frame(VaR_stat_p, VaR_stat_SPY)
+```
+  
+The VaR statistics is as follow:  
+
+```{r}
+VaR_stat
+```
+  
+Through inspection, we observe that on shorter time horizon (1 month), both the holding and SPY portfolio has comparable value at risk. When the time horizon increase, the value at risk for the SPY portfolio starts to increase more than that of the holding portfolio.  
+
+### 
 
 ## 4) Forecast the returns of the portfolio CATsed on the CAPM model (10,11,12)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 10) Using the CAPM equation of your portfolio do two periods ex-post forecasting of the returns to your portfolio and compare your forecast to the actual returns. Find the accuracy statistics of your forecast and report them.  

@@ -747,7 +747,7 @@ dimnames(retmat) = list(asset.names, c(&quot;Return &quot;, &quot;Excess Return&
 <div id="capm-portfolio-construction" class="section level2">
 <h2>CAPM Portfolio Construction</h2>
 <p>Question covered: 2,3,4,5<br />
-Methodology:<br />
+<strong>Methodology</strong><br />
        2a) Find the optimum weights using MPT.<br />
        2b) Allocate $100.00 among the selected stocks using adjusted closing prices at 2018M12. 2019M1 will have a value of 100 as an index.<br />
        2c) Using the adjusted closing prices from 2018M12 to 2020M8 calculate the holding values of the portfolio (assume fixed holdings with no re-balancing taking place over time).<br />
@@ -1202,7 +1202,7 @@ Relative to its market risk of <span class="math inline">\(beta = -.34504\)</spa
 <div id="understand-the-impact-of-covid-19-on-the-alpha-and-market-risk-of-the-capm-model." class="section level2">
 <h2>2) Understand the impact of COVID-19 on the alpha and market risk of the CAPM model.</h2>
 <p>Question covered: 6).</p>
-<p>Methodology: Test whether the closing of the economy due to COVID-19 had any effect on Jensen alpha and the market risk of the CAPM model. (6)</p>
+<p><strong>Methodology</strong> Test whether the closing of the economy due to COVID-19 had any effect on Jensen alpha and the market risk of the CAPM model. (6)</p>
 <p>We run regression for the model to see if the pandemic has any effect on Jensen alpha:</p>
 <p><span class="math display">\[\begin{equation}
   \begin{aligned}
@@ -1355,7 +1355,8 @@ plot(data3, col=&#39;red&#39;, main=&quot;Relationship Between Pandemic &amp; Po
 </div>
 <div id="compare-the-capm-portfolio-to-a-diversified-state-streets-spdr-sp-500-trust-etf-portfolio-789" class="section level2">
 <h2>3) Compare the CAPM portfolio to a diversified State Street’s SPDR S&amp;P 500 Trust ETF portfolio (7,8,9)</h2>
-<p>Methodology:<br />
+<p>Questions covered: 7,8,9.</p>
+<p><strong>Methodology</strong><br />
        7) Calculate CV, Sharpe, Treynor, and Sortino ratios for your portfolio and compare them to a similarly diversified portfolio of Vanguard, Fidelity, or any other similar portfolio.<br />
        8) Calculate 2% and 3% VaRs as a percentage of the mean return of your portfolio when the risk horizon is one year, six months, and one month. Calculate the same VaRs for the selected portfolio in item 6. Compare the VaRs of your portfolio to the ones of the market portfolios.<br />
        9) Graph the scatter diagram of your portfolio and comment on trends, outliers, structural breaks and any other special features. Graph the scatter diagram of your portfolio and S&amp;P 500 on the same coordinate system and compare the trends.</p>
@@ -1419,7 +1420,11 @@ ROPT1 &lt;- t(WOPT)%*%rm1  # calculate optimal portfolio&#39;s return
 VOPT1 &lt;- t(WOPT)%*%VCV1%*%WOPT  # calculate optimal portfolio&#39;s variance
 SDOPT1 &lt;- VOPT1^0.5  # calculate optimal portfolio&#39;s std dev
 SRatio1 &lt;-(ROPT1-tnxy1)/(SDOPT1)  # calculate optimal portfolio&#39;s Sharpe ratio
-CV1 &lt;- as.numeric(sqrt(var(holdings))) / as.numeric(colMeans(holdings[1]))  # calculate portfolio&#39;s coefficient of variation
+
+mean_Holdings1 &lt;- as.numeric(colMeans(holdings[1]))  # Mearn 
+sd_Holdings1 &lt;- as.numeric(sqrt(var(holdings)))
+CV1 &lt;- sd_Holdings1 / mean_Holdings1   # calculate portfolio&#39;s coefficient of variation
+
 TrRatio1 &lt;- (ROPT1 - tnxy1)/ -0.34504  # calculate portfolio&#39;s Treynor Ratio
 
 # Calculating downside deviation using lower partial moment of order 2
@@ -1481,6 +1486,78 @@ SPY_PTBL1 &lt;- data.frame(PTBL1, SPYTBL1)</code></pre>
 <strong>Sharpe Ratio:</strong> The holding portfolio has higher Sharpe ratio compare to the SPY. Assuming returns are normally distributed, this implies the holding portfolio generates significantly higher returns than the SPY.<br />
 <strong>Treynor Ratio:</strong> The SPY has a higher and positive Treynor Ratio compared to a lower and negative Treynor Ratio. This implies that the SPY is much better at generating excess returns per unit of risk that it takes on. Compared to the holding portfolio, the SPY is a more suitable investment.<br />
 <strong>Sortino Ratio:</strong> The holding portfolio has significantly higher Sortino Ratio compared to the SPY. This implies that it is earning returns more efficiently than the SPY given downside deviations: earning more turns per unit of the bad risk it is taking on.</p>
+</div>
+<div id="calculate-2-and-3-vars-as-a-percentage-of-the-mean-return-of-your-portfolio-when-the-risk-horizon-is-one-year-six-months-and-one-month.-calculate-the-same-vars-for-the-selected-portfolio-in-item-6.-compare-the-vars-of-your-portfolio-to-the-ones-of-the-market-portfolios." class="section level3">
+<h3>8) Calculate 2% and 3% VaRs as a percentage of the mean return of your portfolio when the risk horizon is one year, six months, and one month. Calculate the same VaRs for the selected portfolio in item 6. Compare the VaRs of your portfolio to the ones of the market portfolios.</h3>
+<pre class="r"><code># 2% VaR Holding Portfolio
+VaR_threshold &lt;- 2
+
+# Set scaling factor based on the period of evaluation
+# In this example: {1: &#39;1 year&#39;, 1/2: &#39;6 months&#39;, 1/12: &#39;1 month&#39;, 1/250: &#39;1 day&#39;}
+
+# 2% 1 year VAR
+scalingFactor &lt;- 1
+z_stat &lt;- qnorm(VaR_threshold/100, 0, 1, lower.tail = TRUE)
+VaR_1year_p_2percent &lt;- ROPT1*scalingFactor + SDOPT1*sqrt(scalingFactor) * z_stat
+VaR_1year_SPY_2percent &lt;- mean_rSPY1*scalingFactor + sd_rSPY1*sqrt(scalingFactor) * z_stat
+
+# 2% 6 month VAR
+scalingFactor &lt;- 1/2
+VaR_6month_p_2percent &lt;- ROPT1*scalingFactor + SDOPT1*sqrt(scalingFactor) * z_stat
+VaR_6month_SPY_2percent &lt;- mean_rSPY1*scalingFactor + sd_rSPY1*sqrt(scalingFactor) * z_stat
+
+# 2% 1 month VAR
+scalingFactor &lt;- 1/12
+VaR_1month_p_2percent &lt;- ROPT1*scalingFactor + SDOPT1*sqrt(scalingFactor) * z_stat
+VaR_1month_SPY_2percent &lt;- mean_rSPY1*scalingFactor + sd_rSPY1*sqrt(scalingFactor) * z_stat
+#########################################
+
+# 3% VaR Holding Portfolio
+VaR_threshold &lt;- 3
+
+# Set scaling factor based on the period of evaluation
+# In this example: {1: &#39;1 year&#39;, 1/2: &#39;6 months&#39;, 1/12: &#39;1 month&#39;, 1/250: &#39;1 day&#39;}
+
+# 3% 1 year VAR
+scalingFactor &lt;- 1
+z_stat &lt;- qnorm(VaR_threshold/100, 0, 1, lower.tail = TRUE)
+VaR_1year_p_3percent &lt;- ROPT1*scalingFactor + SDOPT1*sqrt(scalingFactor) * z_stat
+VaR_1year_SPY_3percent &lt;- mean_rSPY1*scalingFactor + sd_rSPY1*sqrt(scalingFactor) * z_stat
+
+# 3% 6 month VAR
+scalingFactor &lt;- 1/2
+VaR_6month_p_3percent &lt;- ROPT1*scalingFactor + SDOPT1*sqrt(scalingFactor) * z_stat
+VaR_6month_SPY_3percent &lt;- mean_rSPY1*scalingFactor + sd_rSPY1*sqrt(scalingFactor) * z_stat
+
+# 3% 1 month VAR
+scalingFactor &lt;- 1/12
+VaR_1month_p_3percent &lt;- ROPT1*scalingFactor + SDOPT1*sqrt(scalingFactor) * z_stat
+VaR_1month_SPY_3percent &lt;- mean_rSPY1*scalingFactor + sd_rSPY1*sqrt(scalingFactor) * z_stat
+#########################################
+
+# Generate comparison table
+VaR_stat_p &lt;- matrix(c(VaR_1year_p_2percent, VaR_6month_p_2percent, VaR_1month_p_2percent, 
+                       VaR_1year_p_3percent, VaR_6month_p_3percent, VaR_1month_p_3percent), nrow = 6) 
+
+VaR_stat_SPY &lt;- matrix(c(VaR_1year_SPY_2percent, VaR_6month_SPY_2percent, VaR_1month_SPY_2percent, 
+                       VaR_1year_SPY_3percent, VaR_6month_SPY_3percent, VaR_1month_SPY_3percent), nrow = 6) 
+
+optstat.names &lt;- c(&quot;2% 1yr&quot;, &quot;2% 6mth&quot;, &quot;2% 1month&quot;, 
+                   &quot;3% 1yr&quot;, &quot;3% 6mth&quot;, &quot;3% 1month&quot;)
+
+dimnames(VaR_stat_p) &lt;- list(optstat.names, &quot;Holdings&quot;)
+dimnames(VaR_stat_SPY) &lt;- list(optstat.names, &quot;SPY&quot;)
+
+VaR_stat &lt;- data.frame(VaR_stat_p, VaR_stat_SPY)</code></pre>
+<p>The VaR statistics is as follow:</p>
+<pre class="r"><code>VaR_stat</code></pre>
+<pre><code>##              Holdings         SPY
+## 2% 1yr    -0.07899253 -0.10093927
+## 2% 6mth   -0.06590240 -0.07518002
+## 2% 1month -0.03276381 -0.03291141
+## 3% 1yr    -0.06825518 -0.09089145
+## 3% 6mth   -0.05830995 -0.06807514
+## 3% 1month -0.02966421 -0.03001085</code></pre>
 </div>
 </div>
 <div id="forecast-the-returns-of-the-portfolio-catsed-on-the-capm-model-101112" class="section level2">
