@@ -3,10 +3,10 @@ title: "assignment05"
 author: "Jeff Nguyen"
 date: "18/09/2020"
 output:
-  pdf_document: default
-  word_document: default
   html_document:
     code_folding: "hide"
+  word_document: default
+  pdf_document: default
 ---
 ```{r include = FALSE}
 #knitr::opts_chunk$set(echo=FALSE)
@@ -740,6 +740,43 @@ The estimated equation is $Y = .05447 - .72150*X - .16285*D*X$
 
 We see $\beta_2 = NA$ implying that the slope dummy is an unnecessary predictor. The coefficient $\beta_2$ is not estimated.  
 
+Let's run the regression with the slope dummy separately, so the equation of the regression becomes:  
+
+\begin{equation}
+  \begin{aligned}
+    Y & = \alpha_{Jensen} + \beta*X + \beta_2*D*X +\epsilon_2 \\
+    \text{where: }  \\
+    Y & = \, \text{Portfolio Risk Premium} \, R_a - R_f  \\
+    \beta & = \, \text{Estimated} \, \beta \, \text{of the CAPM}  \\
+    X & = \, \text{Market portfolio risk premium} \, R_m - R_f  \\
+    D & = \, \text{Dummy variable representing the pandemic factor}  \\
+    \beta_2 & = \, \text{Coefficient representing the relationship of the market risk premium with the pandemic factor}  \\
+    D*X & = \, \text{Slope dummy variable representing the pandemic factor correlation with market risk premium}  \\
+    \epsilon_1 & = \, \text{Standard Error of Regression}  \\
+  \end{aligned}
+\end{equation}
+  
+Again, stating the hypothesis for regression:  
+\begin{equation}
+  \begin{aligned}
+    H_0: \alpha & = 0  \\
+    H_a: \alpha & \neq 0  \\
+    \text{and}  \\
+    H_0: \beta_2 & = 0  \\
+    H_a: \beta_2 & \neq 0  \\
+  \end{aligned}
+\end{equation}  
+  
+```{r}
+# Generate the new variable dx = D*X
+fit4 <- lm(Y~X+DX)
+summary(fit4)
+```
+
+The estimated equation is $Y = .05447 - .72150*X - 1.21306*D$, where the $p_{value}$ for the intercept $.00778 < .05$.  
+Therefore, we reject the null hypothesis at 95% confidence level that the intercept $\alpha_{Jensen}$ statistically is no different from zero. Thus, we reject the null hypothesis $H_0: \alpha = 0$ and accept the null hypothesis $H_a: \alpha \neq 0$.  
+In addition, the coefficient $\beta_2 = 1.21306$ represents the increase in market risk premium relative to increase in the pandemic variable. The $p_{value}$ for $\beta_2$ is $.08979 > .05$, implying that the coefficient $\beta_1$ statistically is insignificant at 95% or more, and we accept the null hypothesis $H_0: \beta_1 = 0$ and reject the alternative hypothesis $H_a: \beta_1 \neq 0$.  
+
 Goodness of Fit:  
 Through inspection, we observe the $R^2 = .22$ value to not be close to 1 at all. $R^2 = .22$ implies that $22%$ of the variations in the portfolio risk premium is explained by the pandemic variable.
   
@@ -753,20 +790,16 @@ From this, we can calculate the forecasting efficiency statistic to be:
   \end{aligned}
 \end{equation}
 This statistic implies that this is not a good forecasting model.  
-
+  
 To visualize:  
 
 ```{r}
-# Generating the dummy variable
-data3 <- data.frame(DX, Y)
-
-plot(data3, col='red', main="Relationship Between Pandemic & Portfolio Risk Premium", pch=20, cex=1)
-
-# Add fit lines
-#abline(lm(Y~D), col="blue")  # Regression line Y ~ X
-#lines(lowess(D,Y), col="black", lty=2)  # Lowess line (X,Y)
-
-#legend("bottomleft",c("Linear fit line", "Lowess line"), cex=.8, col=c("blue", "black"), lty=1:2)
+X_var <- seq(0,1,.01)
+DX_var <- X_var
+f <- function(X, DX) {fit4$coefficient[2]*X + fit4$coefficient[3]*DX}
+Y_var <- outer(X_var, DX_var, f)
+persp(X_var, DX_var, Y_var, col="cadet blue", 
+      theta=15, phi=20, r=50, d=0.1, expand=0.5, ltheta=90, lphi=20, shade=0.75, ticktype="detailed", nticks=5)
 ```
     
 ## 3) Compare the CAPM portfolio to a diversified State Street's SPDR S&P 500 Trust ETF portfolio (7,8,9)  
@@ -1021,7 +1054,9 @@ SPY looks to have several outliers corresponded to the March 2020 sell-off when 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 11) Do two-periods ex-ante forecasting of returns to your portfolio assuming that the monthly risk premiums to S&P 500 will be 1.10% in 2020M9 and 1.25 in 2020M10.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 12) Do forecasting of the returns to your portfolio for the period 2014M1-2020M8. Find the accuracy statistics of your forecast. Do a naïve forecasting of the returns to your portfolio for the period 2014M1-2020M8. Find the accuracy statistics of your forecast. Compare the forecasting accuracy criterion for the two forecasting methods. Which one results in a better forecasting outcome?  
 
-## ****
+### 10) Using the CAPM equation of your portfolio do two periods ex-post forecasting of the returns to your portfolio and compare your forecast to the actual returns. Find the accuracy statistics of your forecast and report them.  
+
+#####
 
 # Citations
 
