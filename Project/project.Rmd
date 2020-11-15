@@ -3,10 +3,10 @@ title: "assignment05"
 author: "Jeff Nguyen"
 date: "18/09/2020"
 output:
-  html_document:
-    code_folding: "hide"
   word_document: default
   pdf_document: default
+  html_document:
+    code_folding: "hide"
 ---
 ```{r include = FALSE}
 #knitr::opts_chunk$set(echo=FALSE)
@@ -33,7 +33,7 @@ MSFT   | Microsoft Corporation      | Technology              | Software-Infrast
 GWPH   | GW Pharmaceuticals PLC     | Healthcare              | Drug Manufacturers-General            | 1998     | 901
 DIS    | The Walt Disney Company    | Communication Services  | Entertainment                         | 1923     | 223,000
 CAT    | Caterpillar INC            | Industrials             | Farm & Heavy Construction Machinery   | 1925     | 102,300
-AMZN   | Twitter INC                | Consumer Cyclical       | Internet Retail                       | 1994     | 1,125,300
+AMZN   | Amazon.com INC             | Consumer Cyclical       | Internet Retail                       | 1994     | 1,125,300
 
 All information and data related to the securities are obtained from Yahoo Finance: MSFT, GWPH, DIS, CAT, and AMZN.  
 
@@ -404,12 +404,7 @@ sharesDIS <- as.numeric(investedAmount * WOPT[3] / adjDIS1[1])
 sharesCAT <- as.numeric(investedAmount * WOPT[4] / adjCAT1[1])
 sharesAMZN <- as.numeric(investedAmount * WOPT[5] / adjAMZN1[1])
 
-holdings <- data.frame(#"MSFT"=sharesMSFT*adjMSFT1, 
-                       #"GWPH"=sharesGWPH*adjGWPH1, 
-                       #"DIS"=sharesDIS*adjDIS1, 
-                       #"CAT"=sharesCAT*adjCAT1, 
-                       #"AMZN"=sharesAMZN*adjAMZN1, 
-                       "Holding Value"=sharesMSFT*adjMSFT1 + 
+holdings <- data.frame("Holding Value"=sharesMSFT*adjMSFT1 + 
                                        sharesGWPH*adjGWPH1 +
                                        sharesDIS*adjDIS1 + 
                                        sharesCAT*adjCAT1 +
@@ -624,7 +619,7 @@ legend("bottomright",c("SML", "Expected Returns", "Mean Actual Returns"), cex=.8
 The Security Market Line pass through the point $(0, \overline {R_f})$ and $(1, \overline X)$, which are $(0, `r mean_rTNX1`)$ and $(1, `r mean_X`)$.   
 Relative to its market risk of $beta = -.34504$, the expected return is $`r -.34504*mean_X`$ and the average return is $`r Y_bar`$. We can observe that at this estimated $\beta$, the expected return is below the security market line and the actual average return is above the security market line.
   
-## 2) Understand the impact of COVID-19 on the alpha and market risk of the CAPM model.  
+## 6) Understand the impact of COVID-19 on the alpha and market risk of the CAPM model.  
 Question covered: 6).  
 
 **Methodology** Test whether the closing of the economy due to COVID-19 had any effect on Jensen alpha and the market risk of the CAPM model. (6)  
@@ -666,12 +661,6 @@ data2 <- data.frame(D, Y)
 names(data2)[1] <- "Pandemic Variable"
 
 plot(data2, col='red', main="Relationship Between Pandemic & Portfolio Risk Premium", pch=20, cex=1)
-
-# Add fit lines
-#abline(lm(Y~D), col="blue")  # Regression line Y ~ X
-#lines(lowess(D,Y), col="black", lty=2)  # Lowess line (X,Y)
-
-#legend("bottomleft",c("Linear fit line", "Lowess line"), cex=.8, col=c("blue", "black"), lty=1:2)
 ```
   
 Through inspection, we can see there is not much of a linear relationship between these variables.  
@@ -872,7 +861,7 @@ VOPT1 <- t(WOPT)%*%VCV1%*%WOPT  # calculate optimal portfolio's variance
 SDOPT1 <- VOPT1^0.5  # calculate optimal portfolio's std dev
 SRatio1 <-(ROPT1-tnxy1)/(SDOPT1)  # calculate optimal portfolio's Sharpe ratio
 
-mean_Holdings1 <- as.numeric(colMeans(holdings[1]))  # Mearn 
+mean_Holdings1 <- as.numeric(colMeans(holdings[1]))  # Mean 
 sd_Holdings1 <- as.numeric(sqrt(var(holdings)))
 CV1 <- sd_Holdings1 / mean_Holdings1   # calculate portfolio's coefficient of variation
 
@@ -1049,14 +1038,149 @@ Both does not experience any structural break during this time frame. During the
 **7. Outliers:**  
 SPY looks to have several outliers corresponded to the March 2020 sell-off when the indicies retreated 30% in a short period of a few weeks before quickly recovered.  
 
-## 4) Forecast the returns of the portfolio CATsed on the CAPM model (10,11,12)  
+## 4) Forecast the returns of the portfolio based on the CAPM model   
+Question covered: (10,11,12)  
+**Methodology**
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 10) Using the CAPM equation of your portfolio do two periods ex-post forecasting of the returns to your portfolio and compare your forecast to the actual returns. Find the accuracy statistics of your forecast and report them.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 11) Do two-periods ex-ante forecasting of returns to your portfolio assuming that the monthly risk premiums to S&P 500 will be 1.10% in 2020M9 and 1.25 in 2020M10.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 12) Do forecasting of the returns to your portfolio for the period 2014M1-2020M8. Find the accuracy statistics of your forecast. Do a naïve forecasting of the returns to your portfolio for the period 2014M1-2020M8. Find the accuracy statistics of your forecast. Compare the forecasting accuracy criterion for the two forecasting methods. Which one results in a better forecasting outcome?  
 
 ### 10) Using the CAPM equation of your portfolio do two periods ex-post forecasting of the returns to your portfolio and compare your forecast to the actual returns. Find the accuracy statistics of your forecast and report them.  
 
-#####
+Rerun the regression with the whole data set from 2018M12 to 2020M10:  
+```{r}
+# Set start date and end date of data
+start_date2 <- "2018-12-01"
+end_date2 <- "2020-10-31"
+
+# Get data
+getSymbols("MSFT", src = "yahoo", from = start_date2, to = end_date2)
+getSymbols("GWPH", src = "yahoo", , from = start_date2, to = end_date2)
+getSymbols("DIS", src = "yahoo", , from = start_date2, to = end_date2)
+getSymbols("CAT", src = "yahoo", , from = start_date2, to = end_date2)
+getSymbols("AMZN", src = "yahoo", , from = start_date2, to = end_date2)
+getSymbols("^GSPC", src = "yahoo", , from = start_date2, to = end_date2) # S&P 500
+getSymbols("^TNX", src = "yahoo", from=start_date2, to=end_date2) # TNX (10-year T-bill)
+
+rMSFT2 <- diff(log(to.monthly(MSFT)$MSFT.Adjusted))
+rGWPH2 <- diff(log(to.monthly(GWPH)$GWPH.Adjusted))
+rDIS2 <- diff(log(to.monthly(DIS)$DIS.Adjusted))
+rCAT2 <- diff(log(to.monthly(CAT)$CAT.Adjusted))
+rAMZN2 <- diff(log(to.monthly(AMZN)$AMZN.Adjusted))
+rGSPC2 <- diff(log(to.monthly(GSPC)$GSPC.Adjusted))
+rTNX2 <- to.monthly(TNX)$TNX.Adjusted /1200  # Using monthly rate
+rTNX2_day <- TNX$TNX.Adjusted /1200
+rTNX2 <- rTNX2[-1,]  # remove missing data due to lagging
+
+# Adjusted Prices
+adjMSFT2 <- MSFT$MSFT.Adjusted
+adjGWPH2 <- GWPH$GWPH.Adjusted
+adjDIS2 <- DIS$DIS.Adjusted
+adjCAT2 <- CAT$CAT.Adjusted
+adjAMZN2 <- AMZN$AMZN.Adjusted
+adjGSPC2 <- GSPC$GSPC.Adjusted
+
+holdings2 <- data.frame("Holding Value"=sharesMSFT*adjMSFT2 + 
+                                       sharesGWPH*adjGWPH2 +
+                                       sharesDIS*adjDIS2 + 
+                                       sharesCAT*adjCAT2 +
+                                       sharesAMZN*adjAMZN2)
+names(holdings2)[1] <- "Port. Holdings Val"  # rename column
+
+# Calculate and normalized the CAPM holdings
+ra2 <- diff(log(to.monthly(holdings2)[,1]))
+
+Y_data <- na.omit(ra - rTNX2)
+names(Y_data)[1] <- "Port. Risk. Prem."
+X_data <- na.omit(rGSPC2 - rTNX2)
+names(X_data)[1] <- "Mrkt. Risk. Prem."
+# Market risk premium
+data <- data.frame(Y_data, X_data)
+names(data)[1] <- "Port. Risk. Prem."
+names(data)[2] <- "Mrkt. Risk. Prem."
+```
+
+Do the ex-post forecast:  
+```{r}
+fit_expost <- lm(Y_data~X_data, data)
+fit_expost
+
+pred_expost <- predict(fit_expost, data)
+pred_expost
+```
+  
+Evaluating the errors:  
+```{r}
+actual_expost <- data[, "Port. Risk. Prem."]
+sqrt(mean((pred_expost - actual_expost)^2))
+```
+  
+This error value means the model is off by $.0760$ on average. Significant!  
+
+
+### 11) Do two-periods ex-ante forecasting of returns to your portfolio assuming that the monthly risk premiums to S&P 500 will be 1.10% in 2020M9 and 1.25 in 2020M10.  
+
+Do the ex-ante forecast:  
+```{r}
+data1 <- data[1:20,]
+data2 <- data[21:22,]
+
+fit_exante <- lm(Y_data~X_data, data=data1)
+fit_exante
+
+pred_exante <- predict(fit_exante, newdata=data2)
+pred_exante
+```
+  
+Evaluating the errors:  
+```{r}
+actual_exante <- data[21:22, "Port. Risk. Prem."]
+sqrt(mean((pred_exante - actual_exante)^2))
+```
+  
+This error value means the model is off by $.1044$ on average. Even more significant than the ex-post forecast.  
+
+12) Do forecasting of the returns to your portfolio for the period 2014M1-2020M8. Find the accuracy statistics of your forecast. Do a naïve forecasting of the returns to your portfolio for the period 2014M1-2020M8. Find the accuracy statistics of your forecast. Compare the forecasting accuracy criterion for the two forecasting methods. Which one results in a better forecasting outcome?  
+
+Run a naive forecasting $error = Y_t - Y_{t-1}$:  
+```{r}
+# Naive forecasting
+error <- diff(Y_data)
+error
+```
+The $\epsilon$ residual of regression is:  
+```{r}
+fit_exante$residuals
+
+```
+As discussed above, ex-post (in-sample) forecasting yields a better forecast outcome with lower error.  
+
+The Mean Absolute Percent Error statistics:  
+
+\begin{equation}
+  \begin{aligned}
+    MAPE & = \frac{\sum \left\lvert \frac{\epsilon_t}{Y_t} \right\rvert}{n}  \\
+         & = `r (sum(fit_exante$residuals/Y_data))/nrow(Y_data)`  \\
+  \end{aligned}
+\end{equation}
+
+The Mean Absolute Deviation statistics:  
+
+\begin{equation}
+  \begin{aligned}
+    MAD & = \frac{\sum \left\lvert \epsilon_i \right\rvert}{n}  \\
+         & = `r sum(fit_exante$residuals)/nrow(Y_data)`  \\
+  \end{aligned}
+\end{equation}
+
+The Real Mean Squared Error statistics:  
+\begin{equation}
+  \begin{aligned}
+    RMSE & = \sqrt{\frac{\sum \epsilon^2}{n}}  \\
+         & = `r sqrt((sum(fit_exante$residuals^2))/nrow(Y_data))`
+  \end{aligned}
+\end{equation}
+
 
 # Citations
 
