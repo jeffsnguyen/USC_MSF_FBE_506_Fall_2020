@@ -1,0 +1,259 @@
+---
+title: "Formula Sheet"
+author: "Jeff Nguyen"
+date: "17/11/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Economic**  
+For Linear Model, Price Elasticity of Demand $\xi_p  = \frac{\Delta q\%}{\Delta p\%} = \frac{\Delta q}{\Delta p}*\frac{p}{q}$  
+\quad where  $e<1$: necessity (inelastic), $e>1$: luxury, $e=1$: unit elastic  
+
+**Ratios**
+\begin{equation}
+  \begin{aligned}
+    \text{Semi-Variance} SV(x) & = (\sigma_{semi})^2 = \frac{\sum min((R_t - \overline R), 0)^2}{T} \\
+    \text{Lower Partial Moment} LPM2(x)_\tau & = \frac{\sum min((R_t - R_{\tau}), 0)^2}{T} \\
+    \text{Coefficient of variation} CV & = \frac{\sigma}{\mu} \\
+    \text{Sharpe Ratio} S_{JPM} & = \frac{E(r_p) - r_f}{\sigma_p}  \\
+    \text{Sortino Ratio} SortinoRatio & = \frac{r_p - r_f}{\sigma_{downside}}  \\
+    \text{Treynor Ratio} TreynorRatio & = \frac{r_p - r_f}{\beta_p} \\
+    Cov_{X,Y}  & =  \sum_{i=1}^{n} \frac{(X_i - \overline{X}) * (Y_i - \overline{Y})}{n-1} \\
+    Corr_{X,Y} & =  \frac{Cov_{X,Y}}{\sigma_X * \sigma_Y}  \\
+  \end{aligned}
+\end{equation}
+
+**Value at Risk**  
+Step 1: Get Scaling Factor 1: '1 year', 1/2: '6 months', 1/12: '1 month', 1/250: '1 day'  
+Step 2: Calculate scaled mean returns $\mu_{scaled} = \mu*scalingFactor$  
+Step 3: Calculate scaled standard deviation $\sigma_{scaled} = \sigma*\sqrt{scalingFactor}$  
+Step 4: Look up the $z_{statistics} = 1 - VaR$  
+Step 5: $VaR = \mu_{scaled} + \sigma_{scaled} * z_{statistics}$  
+Others:
+\begin{equation}
+  \begin{aligned}
+    \text{Risk Adjusted Portfolio} \quad RAP & = \sum \beta_i*R_i \\
+    \text{Equity VaR} \quad EVaR & = RAP * VaR \\
+    \text{Global Minimum Variance Solution} \quad w_1 & = \frac{\sigma_{22} - \sigma_{12}}{\sigma_{11} + \sigma_{22} - 2\sigma_{12}} \\
+    \text{Return of portfolio} \quad R_p & = w_1.R_1 + w_2.R_2 \\
+    \text{Standard Deviation of Portfolio} \quad \sigma_{p} & = \sqrt{\sigma_1^2(w_1^2) + \sigma_2^2(w_2^2) + 2(w_1)(w_2)\sigma_{12}} \\
+    \text{Portfolio function} \quad Y & = R_f + \frac{R_p - R_f}{\sigma_p}*X \\
+    \text{Covariance} \quad \sigma_{12} &= \rho_{12} * \sigma_1 * \sigma_2 \quad \text{where} \rho_{12} \text{ is the correlation} \\
+  \end{aligned}
+\end{equation}
+  
+  
+**Lagrangian Function - Finance (2 stocks)**  
+Markowitz portfolio
+Formulate the problem: $min \sigma^2_p = w_1^2\sigma_{11} + w_2^2\sigma_{22} + 2w_1w_2\sigma_{12}$ s.t. $w_1R1 + w_2R_2 \geqslant R_f$  
+Step 1: Solve the Lagrangian $L = w_1^2\sigma_{11} + w_2^2\sigma_{22} + 2w_1w_2\sigma_{12} + \lambda(R_f-w_1R_1 - w_2R_2)$  
+Step 2: Differentiate L wrt. $w_1$, $w_2$ and $\lambda$ or use the formula:  
+\begin{equation}
+  \begin{aligned}
+    w_1 &= \frac{\sigma_{22}(R_1 - R_f) - \sigma_{12}(R_2-R_f)}{\sigma_{11}\sigma_{22} - \sigma^2_{12}}  \\
+    w_2 &= \frac{\sigma_{11}(R_2 - R_f) - \sigma_{12}(R_1-R_f)}{\sigma_{11}\sigma_{22} - \sigma^2_{12}}  \\
+  \end{aligned}  
+\end{equation}  
+Step 3: Normalize $w_1$, $w_2$ to find $w_p = \frac{w_1}{w_1+w_2}$  
+Step 4: Returns of the tangency portfolio $R_p = R_1w_p + R_2(1 - w_p)$  
+Step 5: Risk of the tangency portfolio  $\sigma_p = \sqrt{\sigma_{11}w_p^2 + \sigma_{22}(1 - w_p)^2 + 2w_p(1-w_p)\sigma_{12}}$  
+Step 6: $Sharpe Ratio = \frac{(R_p - R_f)}{\sigma_p}$  
+Step 7: The efficient frontier equation: $Y = R_f + Sharpe*X$  
+Step 8: Capital Allocation Line connects the risk-free asset to the tangency point $R = R_f + \lambda\sigma$ with $\sigma=Sharpe$ and $\lambda = \frac{R_p - R_f}{\sigma_p}$  
+
+**Lagrangian Function - Finance (3 stocks)**  
+Objective: $min \quad \sigma^2_p = w'\sum w$ s.t. $w'R \geqslant R_f$  
+Note: $w$, $R$ is a column vector.
+Dual to the problem: $max \quad R_p = w'R$ s.t. $w'\sum w \leqslant \sigma$  
+SteP 1: Form the Lagragian function: $L = w'\sum w + \lambda(R_f - w'R)$  
+Step 2: Partially differentiate w.r.t. w to solve for 1st order condition result in the z vector $z = \sum^{-1}*(R-R_f)$  
+Step 3: $\lambda = sum(z)$  
+Step 4: Normalized weights $w_i = \frac{z_i}{\lambda}$  
+Step 5: Portfolio return is: $R_p = \sum w_iR_i$  
+Step 6: Portfolio variance is: $\sigma^2_p = w'\sum w = w_1^2\sigma_{11} + w_2^2\sigma_{22} + w_3^2\sigma_{33} + 2w_1w_2\sigma_{12} + 2w_2w_3\sigma_{23} + 2w_3w_1\sigma_{31}$  
+Step 7: Slop of the Capital Alocation Line:  $slope = \frac{R_p - r_f}{\sqrt{\sigma^2_p}}$  
+Step 8: Formulate CAL: $CAL = r_f + slope*x$  
+Step 9: Tangency point is where the optimum weight is $(\sigma_p, R_p)$  
+  
+  
+**Standard Form of Presenting Regression Result**  
+\begin{equation}
+  \begin{aligned}
+    \hat{Y} =& \hat{\beta_0} + \hat{\beta_1}*X  \\
+    \\
+    \text{Coefficients} \\
+    \text{X} \quad \hat{\beta_1} =& \frac{\sum xy}{\sum x^2} \quad \text{add conclusion of positive-> positive relationship and vice versa}  \\
+    \text{intercept} \quad \hat{\beta_0} =& \overline y - \hat{\beta_1} * \overline x  \\
+    \\
+    \text{Statistics}  \\
+    R^2 =& \hat{\beta_1}^2 * \frac{\sum x^2}{\sum y^2} \\
+    SE_{Regression} =& \sqrt{\frac{(\sum y^2) - \hat{\beta_1}^2 * (\sum x^2)}{n-2}}  \\
+    \\
+    \text{Forecasting Efficiency}  \\
+    S_{\hat{\beta_1}} =& \frac{SE_{Regression}}{\sqrt{\sum x^2}}  \\
+    t_{\hat{\beta_1}} =& \frac{\hat{\beta_1}}{S_{\hat{\beta_1}}}  \\
+    \\
+    \text{To compare with a fix constant for hypothesis testing:} 
+    t = \frac{\hat{\beta_1} - C_{H_0}}{S_{\hat{\beta_1}}}  \\
+    \text{Null Hypothesis} \, \beta_1 =& C_{H_0}  \\
+    \text{Alternative Hypothesis} \, \beta_1 \neq& C_{H_0}  \\
+    \text{If} \, t > t_{critical} \, \text{reject the null hypothesis, otherwise, fail to reject the null}  \\
+    \\
+    S_{\hat{\beta_0}} =& S_{\hat{\beta_1}}*\sqrt{\frac{\sum X^2}{n}}  \\
+    t_{\hat{\beta_0}} =& \frac{\hat{\beta_0}}{S_{\hat{\beta_0}}}  \\
+    \\
+    \text{Forecasting} \\
+    \text{Given} \, X_F \\
+    Y_F =& \hat{\beta_0} + \hat{\beta_1} * X_F  \\
+    SE_{F} =& SE_{Regression} * \sqrt{1 + \frac{1}{n} + \frac{\sum (X_F - \overline X)^2}{\sum x^2}}  \\
+    \text{High} \, R^2 \, \text{means more errors.}  \\
+    \text{More observations means smaller errors.}  \\
+    \text{If} \, n>40 \, \text{use} \, t_critical = Z \, \text{instead} \\
+    \text{Confidence Interval of Forecasting} & \, P(Y_F - t_{critical} * SE_F) \leqslant Y_F \leqslant P(Y_F + t_{critical} * SE_F)  \\
+    \text{Expected Returns} \, =& \overline{r_f} + \hat{\beta_0} + \hat{\beta_1} * X_F \, \hat{beta_0} = 0 \, \text{if insignificant, failed to reject null, p-value > .05} \\
+  \end{aligned}  
+\end{equation}  
+
+**Statistics of Forecasting**
+\begin{equation}
+  \begin{aligned}
+    \text{Random Walk/ Naive} \\
+    \epsilon =& Y_t - Y{t-1}  \\
+    \\
+    \text{MAD (Mean Absolute Deviation)} \\
+    MAD =& \frac{\sum \epsilon_i}{n}  \\
+    \\
+    \text{MAPE (Mean Absolute Percent Error)}  \\
+    MAPE =& \frac{\sum |\frac{\epsilon_t}{Y_t}|}{n}  \\
+    \\
+    \text{RMSE (Real Mean Squared Error)} \\
+    RMSE =& \sqrt{\frac{\sum \hat{\epsilon}^2}{n}}  \\
+    \\
+    \text{MASE (Mean Absolute Scaled Error)}  \\
+    MASE =& \frac{MAD}{\frac{1}{T-1} * \sum |Y_t - Y_{t-1}|}  \\
+    \\
+    \text{In-sample Forecasting (ex-post, unconditional)}  \\
+    SE_F =& SE_{Regression} * \sqrt{\frac{1}{n} + \frac{(X_F - \overline{X})^2}{\sum{x^2}}}  \\
+    \\
+    \text{Out-of-sample Forecasting (ex-ante, conditional)}  \\
+    SE_F =& SE_{Regression} * \sqrt{1 + \frac{1}{n} + \frac{(X_F - \overline{X})^2}{\sum{x^2}}}  \\
+  \end{aligned}  
+\end{equation}
+
+Simple linear regression
+```{r}
+# Simple linear regression
+x <- c(1, 4, 2, 3, 5)
+y <- c(3, 2, 3, 2.5, 2)
+data <- cbind(x, y) 
+
+fit <- lm(y~x) 
+summary(fit)
+plot(x, y, col="red") 
+abline(lm(y ~ x))
+```
+  
+Log linear  
+```{r}
+# Log linear
+# Price, quantity and the corresponding data file
+p <- c(6,6.30,6.50,6.55,6.30,8,7.95,8.25,7.10,7.25,6.90,6.60,8.15,7.75,8.20) 
+q <- c(255,228,212,198,185,140,135,131,178,170,193,199,142,156,139)
+data_demand <- data.frame(p, q)
+
+plot(p,q, pch = 16, cex = 1, col = "red", xlab = "p", ylab = "q")
+fit_linear <- lm(q~p) 
+summary(fit_linear)
+plot(p, q) 
+abline(lm(q~p), col="red")
+
+fit_log_linear <- lm(log(q)~log(p)) 
+summary(fit_log_linear)
+plot(log(p), log(q)) 
+abline(lm(log(q)~log(p)), col = "red")
+```
+  
+Polynomials model
+```{r}
+# Production data:
+L <- c(23,21,22,	26, 28, 25, 23, 20, 22, 24, 25, 29) 
+Q <- c(254,202,252,342,379,330,275,176,233,306,308,375)
+
+production <- data.frame(Q, L) 
+plot(L,Q,col='red', pch = 16, cex = 1)
+
+# Estimating the production function.
+Z <- L^2
+production <- lm(Q~Z)	#An alternative is estimating the model as production <- lm(Q~ L^2)
+summary(production)
+```
+  
+Rational model
+```{r}
+u	<- c(3.0,	4.5,	4.0,	3.8,	2.5,	2.2,	3.8,	4.5,	5.5,	6.2)
+p	<- c(5.2,	4.2,	3.2,	4.9,	5.9,	7.3,	4.3,	4.2,	2.6,	2.2)
+datafile <- data.frame(u, p)
+
+plot(u, p, col="red", pch=16, cex=1)
+
+# Estimating the Phillips curve:
+z <- 1/u
+Phillips <- lm(p~(z)) 
+summary(Phillips)
+```
+  
+Multiple Regression
+```{r}
+#	Plot Q against K.	
+
+N	<- c(1,	2,	3,	5,	6,	9,	12, 14,	15,	15,	15)
+K	<-c(1,	5,	6,	6,	6,	7	,10,	10,	12,	15, 18)
+Q	<- c(1,	24,	30,	34,	46,	64,	68, 68,	78,	90,	102)
+
+
+plot(x=K, y=Q, col="red")
+fit <- lm(Q~N+K)
+summary(fit)
+```
+  
+Interpolating polynomials
+```{r}
+x <-c(1,3,5,8)
+y <- c(5,3,6,8)
+lm(x ~ y + I(y^2) + I(y^3))
+```
+
+Ex-post
+```{r}
+x <- c(2300, 2360, 2395, 2407, 2389, 2430, 2395, 2413, 2430, 2467, 2480, 2490)
+y <-	c(2145, 2173, 2189, 2190, 2185, 2206, 2195, 2215, 2235, 2251, 2279, 2281)
+dat <- data.frame(y, x) 
+
+fit <- lm(y~x)
+fit
+
+data1 <- dat[1:10,] 
+data2 <- dat[11:12,]
+fit1 <- lm(y~x, data=data1) 
+fit1
+pred <- predict(fit1, newdata=data2) 
+pred
+```
+
+Ex-ante
+```{r}
+library(forecast)
+
+x <- c(2300, 2360, 2395, 2407, 2389, 2430, 2395, 2413, 2430, 2467, 2480, 2490)
+y <-	c(2145, 2173, 2189, 2190, 2185, 2206, 2195, 2215, 2235, 2251, 2279, 2281)
+dat <- data.frame(y, x) 
+data1 <- dat[1:10,] 
+data2 <- dat[11:12,]
+fore <- forecast(fit, newdata=data.frame(x=c(mean(x), mean(y)), se.fit=TRUE)) 
+fore
+```
+  
